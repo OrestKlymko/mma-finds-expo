@@ -49,7 +49,7 @@ export default function Index() {
     const [socialList, setSocialList] = useState<
         { network: string; link: string }[]
     >([]);
-    const route = useRouter();
+    const router = useRouter();
     const {secondProfile} = useLocalSearchParams<{ secondProfile?: string }>();
 
     const [loading, setLoading] = useState(false);
@@ -118,7 +118,7 @@ export default function Index() {
             createManagerSecond(formData)
                 .then(async res => {
                     await handleSuccessAuth(res);
-                    setTimeout(() => route.push('/(app)/(tabs)'), 1000);
+                    setTimeout(() => router.push('/(app)/(tabs)'), 1000);
                 })
                 .catch(err => {
                     if (err?.response?.status === 409) {
@@ -131,8 +131,8 @@ export default function Index() {
                 })
                 .finally(() => setLoading(false));
         } else {
-            route.push({
-                pathname: '/sign-up/method',
+            router.push({
+                pathname: '/(auth)/sign-up/method',
                 params: {
                     data: JSON.stringify(dataToSend),
                     role: 'MANAGER'

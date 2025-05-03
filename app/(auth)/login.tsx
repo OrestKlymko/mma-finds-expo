@@ -186,7 +186,7 @@ const LoginScreen = () => {
 
                 <TouchableOpacity
                     style={styles.forgotPassword}
-                    onPress={() => router.push('/password/recovery')}>
+                    onPress={() => router.push('/(auth)/forgot-password')}>
                     <Text style={styles.forgotPasswordText}>Forgot password?</Text>
                 </TouchableOpacity>
 

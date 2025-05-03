@@ -62,18 +62,18 @@ export default function Welcome() {
                 <Text style={styles.subtitle}>MMA MATCHMAKING, REDEFINED.</Text>
             </View>
             <View style={styles.buttonsOverlay}>
-                {/*<TouchableOpacity*/}
-                {/*    style={styles.button}*/}
-                {/*    onPress={() => router.push('SignUpPromotionScreen', {secondProfile: false})}>*/}
-                {/*    <Text style={styles.buttonText}>I'm a Promoter</Text>*/}
-                {/*    <Text style={styles.buttonSubText}>*/}
-                {/*        I'm looking for talented fighters for my event.*/}
-                {/*    </Text>*/}
-                {/*</TouchableOpacity>*/}
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => router.push({pathname: '/(auth)/sign-up/promotion', params: {secondProfile: 'false'}})}>
+                    <Text style={styles.buttonText}>I&apos;m a Promoter</Text>
+                    <Text style={styles.buttonSubText}>
+                        I&apos;m looking for talented fighters for my event.
+                    </Text>
+                </TouchableOpacity>
 
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => router.push({pathname: '/sign-up/manager', params: {secondProfile: 'false'}})}>
+                    onPress={() => router.push({pathname: '/(auth)/sign-up/manager', params: {secondProfile: 'false'}})}>
                     <Text style={styles.buttonText}>I Manage Fighters</Text>
                     <Text style={styles.buttonSubText}>
                         I&apos;d like the best fight deals for my fighters.
