@@ -1,14 +1,10 @@
 import {Text, View} from "react-native";
 
-export default function Index() {
-    // return (
-    //           <HomeManagerScreen/>
-    // );
-
+export default function Messages() {
     return <>
         <View>
             <Text>
-                Index
+                Messages
             </Text>
         </View>
     </>
