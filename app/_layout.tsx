@@ -1,20 +1,10 @@
-import {Slot, Redirect} from 'expo-router';
-import {useAuth, AuthProvider} from '@/context/AuthContext';
-
-function RootLayoutInner() {
-    const {token} = useAuth();
-
-    if (token) {
-        return <Redirect href="/welcome"/>;
-    }
-
-    return <Slot/>;
-}
+import {Slot} from 'expo-router';
+import {AuthProvider} from '@/context/AuthContext';
 
 export default function RootLayout() {
     return (
         <AuthProvider>
-            <RootLayoutInner/>
+           <Slot />
         </AuthProvider>
     );
 }

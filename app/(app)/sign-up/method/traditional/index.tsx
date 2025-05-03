@@ -93,7 +93,7 @@ export default function Index() {
                     setMethodAuth(res.methodAuth);
                     setRole(res.role);
                     setTimeout(() => {
-                        router.push('/(tabs)');
+                        router.push('/(app)/(tabs)');
                     }, 1000);
                 })
                 .catch(err => {

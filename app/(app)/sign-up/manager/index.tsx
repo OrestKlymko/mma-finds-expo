@@ -118,7 +118,7 @@ export default function Index() {
             createManagerSecond(formData)
                 .then(async res => {
                     await handleSuccessAuth(res);
-                    setTimeout(() => route.push('/(tabs)'), 1000);
+                    setTimeout(() => route.push('/(app)/(tabs)'), 1000);
                 })
                 .catch(err => {
                     if (err?.response?.status === 409) {

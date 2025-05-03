@@ -12,7 +12,7 @@ import {useAuth} from "@/context/AuthContext";
 import {useFocusEffect, useRouter} from "expo-router";
 
 
-export default function Index() {
+export default function Welcome() {
     const {setToken, setMethodAuth, setRole, role} = useAuth();
     const router = useRouter();
     useFocusEffect(
@@ -48,7 +48,7 @@ export default function Index() {
                 source={require('@/assets/back.mp4')}
                 style={styles.backgroundVideo}
                 isMuted
-                isLooping
+                isLooping={true}
                 resizeMode={ResizeMode.COVER}
                 shouldPlay
             />
