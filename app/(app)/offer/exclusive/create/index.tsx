@@ -3,12 +3,12 @@ import {Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, Vie
 import colors from '@/styles/colors';
 import GoBackButton from '@/components/GoBackButton';
 import {useRoute} from '@react-navigation/native';
-import {SingleBoutOfferFlow} from '../../component/SingleBoutOfferFlow';
-import MultiFightOfferFlow from '../../../multi/component/MultiFightOfferFlow';
+
 import {useDispatch} from 'react-redux';
 import {resetOffer} from '@/store/createExclusiveOfferSlice';
 import {resetOffer as MultiContractReset} from '@/store/createMultiContractOfferSlice';
 import {ContractTypeButton} from "@/components/offers/ContractTypeButton";
+import {SingleBoutOfferFlow} from "@/components/offers/SingleBoutOfferFlow";
 
 const CreateExclusiveOfferScreen = () => {
     const dispatch = useDispatch();
@@ -55,7 +55,9 @@ const CreateExclusiveOfferScreen = () => {
         return contractType === 'Single Bout' ? (
             <SingleBoutOfferFlow eventId={eventId} fighterId={fighterId} />
         ) : (
-            <MultiFightOfferFlow fighterId={fighterId} />
+            // <MultiFightOfferFlow fighterId={fighterId} />
+            // TODO: Fix multi fight offer flow
+            <SingleBoutOfferFlow eventId={eventId} fighterId={fighterId} />
         );
     }, [contractType, eventId, fighterId]);
 
