@@ -57,9 +57,9 @@ export const ProfileSwitcherBottomSheet: React.FC<Props> = ({
   const onAddProfile = () => {
     onClose();
     if (role === 'MANAGER') {
-      router.push({pathname: '/(auth)/sign-up/manager', params: {secondProfile: 'true'}})
-    } else {
       router.push({pathname: '/(auth)/sign-up/promotion', params: {secondProfile: 'true'}})
+    } else {
+      router.push({pathname: '/(auth)/sign-up/manager', params: {secondProfile: 'true'}})
     }
   };
 
