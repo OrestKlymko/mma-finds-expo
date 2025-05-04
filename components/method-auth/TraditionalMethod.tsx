@@ -7,7 +7,7 @@ import {useRouter} from "expo-router";
 import colors from "@/styles/colors";
 
 type TraditionalMethodProps = {
-    data: SignUpDataPromotion | SignUpDataManager;
+    data: SignUpDataPromotion | SignUpDataManager | undefined;
     role: 'MANAGER' | 'PROMOTION';
 };
 

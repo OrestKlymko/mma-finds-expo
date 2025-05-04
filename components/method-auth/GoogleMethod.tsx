@@ -11,7 +11,7 @@ import {createManager, createPromotion} from "@/service/service";
 import {useRouter} from "expo-router";
 
 type GoogleMethodProps = {
-  data: SignUpDataManager | SignUpDataPromotion;
+  data: SignUpDataManager | SignUpDataPromotion | undefined;
   handleSuccessAuth: (res: LoginResponse) => void;
   role: 'MANAGER' | 'PROMOTION';
 };

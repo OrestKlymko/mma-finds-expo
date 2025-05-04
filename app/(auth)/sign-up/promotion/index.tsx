@@ -17,7 +17,7 @@ import {useAuth} from "@/context/AuthContext";
 import { LoginResponse } from '@/service/response';
 import { changeNotificationState, createPromotionSecond } from '@/service/service';
 import { createFormDataForPromotionAsSecondProfile } from '@/service/create-entity/formDataService';
-import {useRouter} from "expo-router";
+import {useLocalSearchParams, useRouter} from "expo-router";
 import colors from "@/styles/colors";
 import GoBackButton from '@/components/GoBackButton';
 import ImageProfileSection from "@/components/ImageProfileSection";
@@ -30,7 +30,6 @@ import FooterSignIn from "@/context/FooterSignIn";
 
 
 const SignUpPromotionScreen = () => {
-    const router = useRouter();
     const insets = useSafeAreaInsets();
     const [profileImage, setProfileImage] = useState<Photo | null>(null);
     const [nameSurname, setNameSurname] = useState('');
@@ -42,11 +41,10 @@ const SignUpPromotionScreen = () => {
     const [country, setCountry] = useState('');
     const [loading, setLoading] = useState(false);
     const [continent, setContinent] = useState('');
-    const route = useRoute();
+    const router = useRouter();
     const {setToken, setMethodAuth, setRole,setEntityId} = useAuth();
-    const {secondProfile} = route.params as {
-        secondProfile?: boolean |undefined;
-    };
+    const {secondProfile} = useLocalSearchParams<{ secondProfile?: string }>();
+    const isSecondProfile = secondProfile === 'true';
     const [socialList, setSocialList] = useState<
         {network: string; link: string}[]
     >([]);
@@ -80,7 +78,7 @@ const SignUpPromotionScreen = () => {
             Alert.alert('Please fill all required fields correctly');
             return;
         }
-        if (!agreeTerms&&!secondProfile) {
+        if (!agreeTerms&&!isSecondProfile) {
             Alert.alert(
                 'Please read and agree to the Terms and Conditions and Privacy Policy',
             );
@@ -103,7 +101,7 @@ const SignUpPromotionScreen = () => {
             image: profileImage || '',
         };
 
-        if (secondProfile) {
+        if (isSecondProfile) {
             setLoading(true);
             const formData = await createFormDataForPromotionAsSecondProfile(
                 dataToSend,
@@ -128,7 +126,7 @@ const SignUpPromotionScreen = () => {
                 pathname: '/(auth)/sign-up/method',
                 params: {
                     data: JSON.stringify(dataToSend),
-                    role: 'MANAGER'
+                    role: 'PROMOTION'
                 }
             });
         }
@@ -189,7 +187,7 @@ const SignUpPromotionScreen = () => {
                     setPhoneNumber={setPhoneNumber}
                 />
 
-                {!secondProfile && (
+                {!isSecondProfile && (
                     <TermAndConditionComponent
                         setAgree={setAgreeTerms}
                         agreeState={agreeTerms}
@@ -199,7 +197,7 @@ const SignUpPromotionScreen = () => {
                     style={styles.signUpButton}
                     onPress={onSignUpPress}
                     disabled={loading}>
-                    {secondProfile ? (
+                    {isSecondProfile ? (
                         loading ? (
                             <ActivityIndicator size="small" color={colors.white} />
                         ) : (
@@ -209,7 +207,7 @@ const SignUpPromotionScreen = () => {
                         <Text style={styles.signUpButtonText}>Sign Up</Text>
                     )}
                 </TouchableOpacity>
-                {!secondProfile && <FooterSignIn />}
+                {!isSecondProfile && <FooterSignIn />}
             </ScrollView>
         </KeyboardAvoidingView>
     );

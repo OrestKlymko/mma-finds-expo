@@ -5,10 +5,11 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mmafindsexpo",
+    "scheme": "mmafinds",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.mmafinds.app",
       "supportsTablet": true
     },
     "android": {
@@ -17,7 +18,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.aposidev.mmafindsexpo"
+      "package": "com.mmafinds.app"
     },
     "web": {
       "bundler": "metro",

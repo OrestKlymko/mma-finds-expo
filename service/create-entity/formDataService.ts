@@ -22,6 +22,9 @@ export const createFormDataForPromotion = async (
     formData.append('snapchat', data.snapchat);
     formData.append('email', email);
     formData.append('method', method);
+    if(method==='standard'&&data.password){
+        formData.append('password', data.password);
+    }
     if (referralUserId) {
         formData.append('referralUserId', referralUserId);
     }
@@ -67,6 +70,9 @@ export const createFormDataForManager = async (
     formData.append('continent', data.continent);
     formData.append('email', email);
     formData.append('method', method);
+    if(method==='standard'&&data.password){
+        formData.append('password', data.password);
+    }
     if (referralUserId) {
         formData.append('referralUserId', referralUserId);
     }

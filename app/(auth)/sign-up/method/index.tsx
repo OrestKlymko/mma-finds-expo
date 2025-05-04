@@ -13,16 +13,17 @@ import {GoogleMethod} from "@/components/method-auth/GoogleMethod";
 import {FacebookMethod} from "@/components/method-auth/FacebookMethod";
 import {AppleMethod} from "@/components/method-auth/AppleMethod";
 import GoBackButton from "@/components/GoBackButton";
+import {useLocalSearchParams, useRouter} from "expo-router";
 
 
 export default function Index() {
-    const route = useRoute();
+    const router = useRouter();
+    const params = useLocalSearchParams();
+    const data = params.data ? JSON.parse(params.data as string) as SignUpDataManager | SignUpDataPromotion : undefined;
+    const role = params.role as 'MANAGER' | 'PROMOTION';
 
     const {setToken, setMethodAuth, setRole, setEntityId} = useAuth();
-    const {data, role} = route.params as {
-        data: SignUpDataPromotion | SignUpDataManager;
-        role: 'MANAGER' | 'PROMOTION';
-    };
+
 
     const handleSuccessAuth = async (res: LoginResponse) => {
         setEntityId(res.entityId);

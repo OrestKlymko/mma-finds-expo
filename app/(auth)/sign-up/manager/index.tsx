@@ -51,6 +51,7 @@ export default function Index() {
     >([]);
     const router = useRouter();
     const {secondProfile} = useLocalSearchParams<{ secondProfile?: string }>();
+    const isSecondProfile = secondProfile === 'true';
 
     const [loading, setLoading] = useState(false);
 
@@ -85,7 +86,7 @@ export default function Index() {
             Alert.alert('Please fill all required fields and correct errors');
             return;
         }
-        if (!agreeTerms && !secondProfile) {
+        if (!agreeTerms && !isSecondProfile) {
             Alert.alert(
                 'User must agree to the Terms and Conditions and Privacy Policy',
             );
@@ -110,7 +111,7 @@ export default function Index() {
             isFighter: iAmAFighter,
         };
 
-        if (secondProfile) {
+        if (isSecondProfile) {
             setLoading(true);
             const formData = await createFormDataForManagerAsSecondProfile(
                 dataToSend,
@@ -145,7 +146,7 @@ export default function Index() {
         <KeyboardAvoidingView
             style={{flex: 1, backgroundColor: colors.background}}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <GoBackButton />
+            <GoBackButton/>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -227,7 +228,7 @@ export default function Index() {
                     style={styles.signUpButton}
                     onPress={onSignUpPress}
                     disabled={loading}>
-                    {secondProfile ? (
+                    {isSecondProfile ? (
                         loading ? (
                             <ActivityIndicator size="small" color={colors.white}/>
                         ) : (

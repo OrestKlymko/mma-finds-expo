@@ -35,6 +35,7 @@ export interface SignUpDataManager {
         name: string;
     };
     isFighter: boolean;
+    password?: string;
 }
 
 export interface SignUpDataPromotion {
@@ -47,6 +48,7 @@ export interface SignUpDataPromotion {
     phone: string;
     country: string;
     continent: string;
+    password?: string;
     image: Photo;
 }
 

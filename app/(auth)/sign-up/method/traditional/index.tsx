@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useRouter} from "expo-router";
+import {useLocalSearchParams, useRouter} from "expo-router";
 import {SignUpDataManager, SignUpDataPromotion} from "@/models/model";
 import {useAuth} from "@/context/AuthContext";
 import {createManager, createPromotion} from "@/service/service";
@@ -25,14 +25,11 @@ import PasswordInputSection from "@/components/method-auth/PasswordInputSection"
 import GoBackButton from "@/components/GoBackButton";
 
 export default function Index() {
-    const router = useRouter();
     const insets = useSafeAreaInsets();
-    const route = useRoute();
-
-    const {data, role} = route.params as {
-        data: SignUpDataManager | SignUpDataPromotion;
-        role: 'MANAGER' | 'PROMOTION';
-    };
+    const router = useRouter();
+    const params = useLocalSearchParams();
+    const role = params.role as 'MANAGER' | 'PROMOTION';
+    const data = params.data ? JSON.parse(params.data as string) as SignUpDataManager | SignUpDataPromotion : undefined;
 
     const [loading, setLoading] = useState(false);
     const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -87,6 +84,8 @@ export default function Index() {
                 email,
                 'standard',
             );
+            formData.append('password', password);
+            console.log(formData);
             createPromotion(formData)
                 .then(res => {
                     setToken(res.token);
@@ -114,6 +113,8 @@ export default function Index() {
                 email,
                 'standard',
             );
+            console.log(formData);
+            formData.append('password', password);
             createManager(formData)
                 .then(res => {
                     setToken(res.token);
