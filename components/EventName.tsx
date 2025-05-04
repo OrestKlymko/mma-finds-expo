@@ -2,17 +2,19 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import colors from '@/styles/colors';
 import React from 'react';
+import {useRouter} from "expo-router";
 
 interface EventNameProps {
     event?: any;
 }
 
 export const EventName = ({event}: EventNameProps) => {
+    const router = useRouter();
     return (
         <TouchableOpacity
             style={[styles.inputRow]}
             onPress={() => {
-                navigation.navigate('AllMyEventsForChoose');
+                router.push('/event/choose')
             }}>
             <Text style={[styles.inputText]}>{event?.eventName || 'Event*'}</Text>
             <Icon name="chevron-right" size={24} color={colors.primaryBlack} />

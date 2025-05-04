@@ -53,7 +53,10 @@ const CreatePublicOfferFirstStepScreen = () => {
     const params = useLocalSearchParams();
     const {eventId} = params as { eventId: string };
     useEffect(() => {
+
         if (event?.id || eventId) {
+            console.log('event', event);
+            console.log('eventId', eventId);
             getEventById(event?.id || eventId).then(res => {
                 dispatch(setEvent(res));
             });
