@@ -45,7 +45,7 @@ export const EventFullInfoScreen = () => {
 
     const handleEditEvent = () => {
         if (event) {
-            router.push(`/event/${event.id}`);
+            router.push({pathname: `/event/create`, params: {eventId: event.id}});
             setMenuVisible(false);
         }
     };
@@ -152,7 +152,7 @@ export const EventFullInfoScreen = () => {
                     {/* Exclusive Offer Button */}
                     <TouchableOpacity
                         style={styles.ctaButton}
-                        onPress={() =>{
+                        onPress={() => {
                             router.push({pathname: '/offer/exclusive/create', params: {eventId}});
                         }}>
                         <Text style={styles.ctaButtonText}>Create Exclusive Offer</Text>
