@@ -3,7 +3,7 @@ import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {EventDetailsResponse} from "@/service/response";
-import {useFocusEffect} from "expo-router";
+import {useFocusEffect, useRouter} from "expo-router";
 import {getEvents} from "@/service/service";
 import GoBackButton from "@/components/GoBackButton";
 import ContentLoader from "@/components/ContentLoader";
@@ -14,7 +14,7 @@ import EventList from "@/components/EventList";
 const MyEventsScreen = () => {
     const insets = useSafeAreaInsets();
     const [events, setEvents] = useState<EventDetailsResponse[]>([]);
-
+    const router = useRouter();
     const [contentLoading, setContentLoading] = useState(false);
 
     useFocusEffect(
@@ -47,7 +47,7 @@ const MyEventsScreen = () => {
                 <EventList events={events} />
                 <TouchableOpacity
                     style={styles.modalButton}
-                    onPress={() => navigation.navigate('CreateEventScreen')}>
+                    onPress={() => router.push('/event/create') }>
                     <Text style={styles.modalButtonText}>Create New Event</Text>
                 </TouchableOpacity>
             </View>

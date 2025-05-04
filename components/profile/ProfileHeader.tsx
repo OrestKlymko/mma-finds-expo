@@ -19,7 +19,7 @@ export const ProfileHeader = ({userInfo}: ProfileHeaderProps) => {
     <View style={styles.profileHeader}>
       <TouchableOpacity
         style={styles.iconButton}
-        onPress={() => router.push('/(app)/notification')}>
+        onPress={() => router.push('/notification')}>
         <Icon name="bell-outline" size={24} color={colors.white} />
       </TouchableOpacity>
       <View style={styles.profileImageContainer}>

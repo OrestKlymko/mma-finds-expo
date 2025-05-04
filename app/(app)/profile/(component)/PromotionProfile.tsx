@@ -7,6 +7,7 @@ import {ProfileHeader} from "@/components/profile/ProfileHeader";
 import {SectionItem} from "@/components/profile/SectionItem";
 import {ShareFeedbackSection} from "@/components/profile/ShareFeedbackSection";
 import {useFocusEffect} from "expo-router";
+import ContentLoader from "@/components/ContentLoader";
 
 export const PromotionProfile = () => {
     const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
@@ -25,9 +26,9 @@ export const PromotionProfile = () => {
         }, []),
     );
 
-    // if (contentLoading) {
-    //     return <ContentLoader />;
-    // }
+    if (contentLoading) {
+        return <ContentLoader />;
+    }
     return (
         <ScrollView
             showsVerticalScrollIndicator={false}

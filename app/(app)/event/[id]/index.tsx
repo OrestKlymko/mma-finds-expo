@@ -24,13 +24,13 @@ export const EventFullInfoScreen = () => {
     const [event, setEvent] = useState<EventDetailsResponse | null>(null);
     const params = useLocalSearchParams();
     const router = useRouter();
-    const eventId = params.eventId as string | undefined;
+    const eventId = params.id as string | undefined;
     const fighterId = params.fighterId as string | undefined;
     const [contentLoading, setContentLoading] = useState(false);
     const [isMenuVisible, setMenuVisible] = useState(false);
 
     const handleBack = () => {
-       router.back();
+        router.back();
     };
     useEffect(() => {
         if (eventId) {
@@ -45,7 +45,7 @@ export const EventFullInfoScreen = () => {
 
     const handleEditEvent = () => {
         if (event) {
-            navigation.navigate('CreateEventScreen', {eventId: eventId});
+            router.push(`/event/${event.id}`);
             setMenuVisible(false);
         }
     };
@@ -68,7 +68,7 @@ export const EventFullInfoScreen = () => {
                     </Text>
 
                     <TouchableOpacity onPress={() => setMenuVisible(!isMenuVisible)}>
-                        <Icon name="dots-vertical" size={24} color={colors.primaryBlack} />
+                        <Icon name="dots-vertical" size={24} color={colors.primaryBlack}/>
                     </TouchableOpacity>
 
                     {isMenuVisible && (
@@ -121,7 +121,7 @@ export const EventFullInfoScreen = () => {
                 {/* Description */}
 
                 {event?.description && (
-                    <EventDescription eventDescription={event?.description} />
+                    <EventDescription eventDescription={event?.description}/>
                 )}
 
                 <View
@@ -132,11 +132,12 @@ export const EventFullInfoScreen = () => {
                     }}>
                     <TouchableOpacity
                         style={styles.ctaButton}
-                        onPress={() =>
-                            navigation.navigate('CreatePublicOfferFirstStepScreen', {
-                                eventId,
-                            })
-                        }>
+                        onPress={() => {
+                            router.push({pathname: '/offer/public/create', params: {eventId}});
+                            // navigation.navigate('CreatePublicOfferFirstStepScreen', {
+                            //     eventId,
+                            // })
+                        }}>
                         <Text style={styles.ctaButtonText}>Create Public Offer</Text>
                         <TouchableOpacity
                             onPress={() =>
@@ -144,19 +145,16 @@ export const EventFullInfoScreen = () => {
                                     'Create and send public fight offers to attract fighters worldwide. The offer is visible to all managers in our database.',
                                 )
                             }>
-                            <Icon name="information-outline" size={20} color={colors.white} />
+                            <Icon name="information-outline" size={20} color={colors.white}/>
                         </TouchableOpacity>
                     </TouchableOpacity>
 
                     {/* Exclusive Offer Button */}
                     <TouchableOpacity
                         style={styles.ctaButton}
-                        onPress={() =>
-                            navigation.navigate('CreateExclusiveOfferScreen', {
-                                eventId,
-                                fighterId,
-                            })
-                        }>
+                        onPress={() =>{
+                            router.push({pathname: '/offer/exclusive/create', params: {eventId}});
+                        }}>
                         <Text style={styles.ctaButtonText}>Create Exclusive Offer</Text>
                         <TouchableOpacity
                             onPress={() =>
@@ -164,7 +162,7 @@ export const EventFullInfoScreen = () => {
                                     'Create and send an exclusive fight offer tailored to a specific fighter, whether for a single bout or a multi-fight contract. The offer is visible only to the fighter’s manager.',
                                 )
                             }>
-                            <Icon name="information-outline" size={20} color={colors.white} />
+                            <Icon name="information-outline" size={20} color={colors.white}/>
                         </TouchableOpacity>
                     </TouchableOpacity>
                 </View>
@@ -177,7 +175,7 @@ export const EventFullInfoScreen = () => {
     };
 
     if (contentLoading) {
-        return <ContentLoader />;
+        return <ContentLoader/>;
     }
     return (
         <KeyboardAvoidingView
