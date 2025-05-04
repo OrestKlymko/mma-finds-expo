@@ -1,12 +1,12 @@
 import {StyleSheet, Text, View} from 'react-native'
 import React from 'react'
 
-const FighterList = () => {
+const FighterIndex = () => {
     return (
         <View>
-            <Text>FighterList</Text>
+            <Text>FighterIndex</Text>
         </View>
     )
 }
-export default FighterList
+export default FighterIndex
 const styles = StyleSheet.create({})
