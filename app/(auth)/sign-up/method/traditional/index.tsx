@@ -11,7 +11,6 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
-import {useRoute} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useLocalSearchParams, useRouter} from "expo-router";
 import {SignUpDataManager, SignUpDataPromotion} from "@/models/model";
@@ -85,7 +84,6 @@ export default function Index() {
                 'standard',
             );
             formData.append('password', password);
-            console.log(formData);
             createPromotion(formData)
                 .then(res => {
                     setToken(res.token);
@@ -113,7 +111,6 @@ export default function Index() {
                 email,
                 'standard',
             );
-            console.log(formData);
             formData.append('password', password);
             createManager(formData)
                 .then(res => {
