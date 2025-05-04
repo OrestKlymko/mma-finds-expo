@@ -74,7 +74,7 @@ export const PromotionProfile = () => {
             <SectionItem
                 title="Settings"
                 items={[
-                    {label: 'Account', icon: 'account-circle', pathToScreen: '/profile/account'},
+                    {label: 'Account', icon: 'account-circle', pathToScreen: '/profile/settings/account/account-info'},
                     {label: 'Preferences', icon: 'cog-outline', pathToScreen: 'PreferencespathToScreen'},
                 ]}
             />
@@ -82,8 +82,8 @@ export const PromotionProfile = () => {
             <SectionItem
                 title="Resources"
                 items={[
-                    {label: 'Legal', icon: 'scale-balance', pathToScreen: 'LegalpathToScreen'},
-                    {label: 'Support', icon: 'lifebuoy', pathToScreen: 'TicketSubmissionpathToScreen'},
+                    {label: 'Legal', icon: 'scale-balance', pathToScreen: '/profile/settings/resource/legal'},
+                    {label: 'Support', icon: 'lifebuoy', pathToScreen: '/profile/settings/resource/support'},
                 ]}
             />
 
