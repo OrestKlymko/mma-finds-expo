@@ -74,7 +74,7 @@ export const PromotionProfile = () => {
             <SectionItem
                 title="Settings"
                 items={[
-                    {label: 'Account', icon: 'account-circle', pathToScreen: 'AccountManagerpathToScreen'},
+                    {label: 'Account', icon: 'account-circle', pathToScreen: '/profile/account'},
                     {label: 'Preferences', icon: 'cog-outline', pathToScreen: 'PreferencespathToScreen'},
                 ]}
             />
