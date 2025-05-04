@@ -42,11 +42,11 @@ export const PromotionProfile = () => {
                         icon: 'currency-usd',
                         pathToScreen: '/profile/balance',
                     },
-                    {label: 'My Events', icon: 'calendar-outline', pathToScreen: 'MyEvents'},
+                    {label: 'My Events', icon: 'calendar-outline', pathToScreen: '/event'},
                     {
                         label: 'Required Documents',
                         icon: 'file-document-multiple-outline',
-                        pathToScreen: 'DocumentSetup',
+                        pathToScreen: '/profile/offer-documents',
                     },
                     {
                         label: 'Sub-Accounts',
@@ -61,12 +61,12 @@ export const PromotionProfile = () => {
                     {
                         label: 'Invite & Earn',
                         icon: 'account-plus',
-                        pathToScreen: 'InviteFriends',
+                        pathToScreen: '/profile/invite-friends',
                     },
                     {
                         label: 'Featured Offers',
                         icon: 'star-outline',
-                        pathToScreen: 'FeaturedOffersList',
+                        pathToScreen: '/profile/featured-offers',
                     },
                 ]}
             />

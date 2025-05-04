@@ -1,22 +1,21 @@
 import React from 'react';
-import {ImageBackground, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import Team from '@/assets/team.svg';
 import Question from '@/assets/question.svg';
+import Staro from '@/assets/staro.svg';
+import {ImageBackground} from "expo-image";
 import {useRouter} from "expo-router";
 import colors from "@/styles/colors";
-import {ReferralInputComponent} from "@/components/ReferralInputComponent";
-const InviteFriendsScreen = () => {
-    const router = useRouter();
+
+const FeaturedOffersListScreen = () => {
     const insets = useSafeAreaInsets();
+    const router = useRouter();
     return (
         <View style={{flex: 1}}>
-            {/* Top Section with Image B  ackground */}
+
             <ImageBackground
-                onLoadEnd={() => {
-                }}
-                source={require('@/assets/Invite.png')} // Replace with your image path
+                source={require('@/assets/Feature.png')}
                 style={[styles.imageBackground, {paddingTop: insets.top}]}
                 resizeMode="cover">
                 {/* Back Button */}
@@ -29,18 +28,25 @@ const InviteFriendsScreen = () => {
 
                 {/* Top Section Content */}
                 <View style={styles.topSection}>
-                    <Icon name="account-plus" size={72} color={colors.white} />
-                    <Text style={styles.title}>Invite &amp; Earn</Text>
-                    <Text style={styles.subtitle}>
-                        Earn up to €500 in credits with Referrals!
-                    </Text>
+                    <Icon name="star-outline" size={72} color={colors.white} />
+                    <Text style={styles.title}>Featured Offers</Text>
+                    <Text style={styles.subtitle}>Boost Your Fight Offers&apos; Visibility!</Text>
                     <Text style={styles.description}>
-                        Referring new members to our platform gives you exclusive rewards!
-                        Whether you invite promotions or fighter representatives, you’ll
-                        receive up to €50 in credits to use on your future purchases.
+                        Featured offers stay at the top of the fight offers feed, increasing exposure and
+                        attracting high-quality fighters.
                     </Text>
 
-                    <ReferralInputComponent blackBackground={true} />
+                    <View style={styles.referralSection}>
+                        <View style={styles.referralContainer}>
+                            <TouchableOpacity
+                                style={styles.featuredButton}
+                                onPress={() => router.push('/(app)/offer/public')}>
+                                <Text style={{color: colors.primaryBlack, fontWeight: '500'}}>
+                                    Feature Your Offers
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                 </View>
             </ImageBackground>
 
@@ -48,37 +54,42 @@ const InviteFriendsScreen = () => {
             <View style={styles.bottomSheet}>
                 <TouchableOpacity
                     style={styles.bottomItem}
-                    onPress={() => router.push('/profile/invite-friends/conditions')}>
+                    onPress={() =>
+                        router.push('/profile/featured-offers/conditions')
+                    }>
                     <Question height={24} width={24} color={colors.primaryBlack} />
                     <Text style={styles.bottomText}>How It Works</Text>
                 </TouchableOpacity>
+
                 <TouchableOpacity
                     style={styles.bottomItem}
-                    onPress={() => router.push('/profile/invite-friends/list')}>
-                    <Team height={24} width={24} color={colors.primaryBlack} />
-                    <Text style={styles.bottomText}>Your Referrals</Text>
+                    onPress={() =>
+                        router.push('/profile/featured-offers/list')
+                    }>
+                    <Staro height={24} width={24} color={colors.primaryBlack} />
+                    <Text style={styles.bottomText}>Featured Offers</Text>
                 </TouchableOpacity>
             </View>
         </View>
     );
 };
 
-export default InviteFriendsScreen;
+export default FeaturedOffersListScreen;
 
 const styles = StyleSheet.create({
     /** Image Background **/
     imageBackground: {
         flex: 1,
+        justifyContent: 'center',
         marginTop: -10,
         marginBottom: -30,
-        justifyContent: 'center',
     },
 
     /** Back Button **/
     backButton: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 20,
+        marginTop: 10,
         marginLeft: 20,
     },
     backText: {
@@ -109,7 +120,7 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         color: colors.white,
         lineHeight: 18,
-        marginTop: 5,
+        marginTop: 20,
         textAlign: 'center',
     },
     description: {
@@ -121,6 +132,18 @@ const styles = StyleSheet.create({
         marginTop: 15,
         textAlign: 'center',
         lineHeight: 15,
+    },
+
+    /** Referral Section **/
+    referralSection: {
+        marginTop: 30,
+        width: '100%',
+        paddingHorizontal: 20,
+    },
+    referralContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        overflow: 'hidden',
     },
 
     /** Bottom Sheet **/
@@ -143,12 +166,22 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         paddingHorizontal: 20,
         borderBottomWidth: 1,
-        borderColor: colors.whiteGray,
+        borderBottomColor: colors.lightGray
     },
     bottomText: {
         marginLeft: 10,
         fontSize: 16,
         fontFamily: 'Roboto',
         color: colors.primaryBlack,
+    },
+    featuredButton: {
+        marginTop: 30,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        borderRadius: 8,
+        width: '100%',
+        paddingVertical: 17,
+        height: 56,
+        justifyContent: 'center',
     },
 });
