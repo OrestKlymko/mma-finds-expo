@@ -1,12 +1,12 @@
 import {StyleSheet, Text, View} from 'react-native'
 import React from 'react'
 
-const MyFighters = () => {
+const AllPromotions = () => {
     return (
         <View>
-            <Text>MyFighters</Text>
+            <Text>AllPromotions</Text>
         </View>
     )
 }
-export default MyFighters
+export default AllPromotions
 const styles = StyleSheet.create({})

@@ -1,12 +1,12 @@
 import {StyleSheet, Text, View} from 'react-native'
 import React from 'react'
 
-const MyFighters = () => {
+const FeaturedFighters = () => {
     return (
         <View>
-            <Text>MyFighters</Text>
+            <Text>FeaturedFighters</Text>
         </View>
     )
 }
-export default MyFighters
+export default FeaturedFighters
 const styles = StyleSheet.create({})
