@@ -52,7 +52,7 @@ export const GoogleMethod = ({ data, handleSuccessAuth, role }: GoogleMethodProp
             const formData = await createFormDataForPromotion(data as SignUpDataPromotion, email, 'google');
             const res = await createPromotion(formData);
             handleSuccessAuth(res);
-            router.push('/(tabs)');
+            router.push('/(app)/(tabs)');
           } else if (role === 'MANAGER') {
             const formData = await createFormDataForManager(data as SignUpDataManager, email, 'google');
             const res = await createManager(formData);

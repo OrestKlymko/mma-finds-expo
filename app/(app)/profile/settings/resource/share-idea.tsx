@@ -21,7 +21,7 @@ const TABS = [
 const ShareAnIdeaScreen = () => {
     const [activeTab, setActiveTab] = useState('My Account');
     const [idea, setIdea] = useState('');
-    const [fileAttached, setFileAttached] = useState(null); // Об'єкт файлу
+    const [fileAttached, setFileAttached] = useState<any>(null); // Об'єкт файлу
     const insets = useSafeAreaInsets();
     const {token, methodAuth} = useAuth();
     const router = useRouter();
@@ -78,7 +78,7 @@ const ShareAnIdeaScreen = () => {
                 uri: fileAttached.uri,
                 type: fileAttached.type,
                 name: fileAttached.name,
-            });
+            } as any);
         }
 
         sendFeedback(data)

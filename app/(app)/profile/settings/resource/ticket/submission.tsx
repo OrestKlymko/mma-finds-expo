@@ -20,7 +20,6 @@ import colors from "@/styles/colors";
 import GoBackButton from "@/components/GoBackButton";
 
 
-// Мокаційні дані для Subject Picker
 const SUBJECTS = [
     'Account Details',
     'Change Password',
@@ -37,7 +36,7 @@ const TicketSubmissionScreen = () => {
     // Стейти
     const [subject, setSubject] = useState('');
     const [description, setDescription] = useState('');
-    const [fileAttached, setFileAttached] = useState(null);
+    const [fileAttached, setFileAttached] = useState<any>(null);
     const [isSubjectModalVisible, setSubjectModalVisible] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
