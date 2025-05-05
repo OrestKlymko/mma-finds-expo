@@ -43,6 +43,11 @@ import {WeightClassComponent} from "@/components/WeightClassComponent";
 import OpponentInfoSection from "@/components/OpponentInfoSection";
 import BenefitBottomSheet from "@/components/BenefitBottomSheet";
 import FloatingLabelInput from "@/components/FloatingLabelInput";
+import {PromotionTailoringRequiredDocuments} from "@/components/PromotionTailoringRequiredDocuments";
+import {SportTypeSingleSelectDropdown} from "@/components/SportTypeSingleSelectDropdown";
+import {FighterForOffer} from "@/components/FighterForOffer";
+import PurseExclusiveFightComponent from "@/components/offers/PurseExclusiveFightComponent";
+import {useRouter} from "expo-router";
 
 interface SingleBoutOfferFlowProps {
     eventId?: any;
@@ -89,6 +94,7 @@ export function SingleBoutOfferFlow({
     const [documents, setDocuments] = useState<DocumentRequiredResponse[]>([]);
     const [dueDate, setDueDate] = useState<Date | null>(null);
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
     const onConfirmPurse = (
         values: {
             win: string;
@@ -166,13 +172,13 @@ export function SingleBoutOfferFlow({
             Alert.alert('Please fill all fields');
             return;
         }
-        navigation.navigate('ExclusiveOfferDueDate');
+        router.push('/offer/exclusive/create/due-date-single-bout');
     };
 
     return (
         <View style={styles.container}>
-            <EventName event={event} />
-            <FighterForOffer fighterName={fighterName} type="Exclusive" />
+            <EventName event={event}/>
+            <FighterForOffer fighterName={fighterName} type="Exclusive"/>
             <RuleSelector
                 mmaRule={mmaRule ?? 'Amateur'}
                 setMmaRule={mmaRuleChoose => dispatch(setMmaRule(mmaRuleChoose))}

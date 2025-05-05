@@ -1,6 +1,6 @@
 import {useAuth} from "@/context/AuthContext";
-import {PromotionProfile} from "@/app/(app)/profile/(component)/PromotionProfile";
-import ManagerProfile from "@/app/(app)/profile/(component)/ManagerProfile";
+import {PromotionProfile} from "@/components/PromotionProfile";
+import ManagerProfile from "@/components/ManagerProfile";
 
 export default function Profile() {
     // const {role} = useAuth();

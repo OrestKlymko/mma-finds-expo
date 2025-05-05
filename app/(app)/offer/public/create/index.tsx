@@ -55,8 +55,6 @@ const CreatePublicOfferFirstStepScreen = () => {
     useEffect(() => {
 
         if (event?.id || eventId) {
-            console.log('event', event);
-            console.log('eventId', eventId);
             getEventById(event?.id || eventId).then(res => {
                 dispatch(setEvent(res));
             });

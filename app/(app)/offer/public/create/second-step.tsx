@@ -10,7 +10,6 @@ import {
     View,
 } from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
-import {useNavigation} from '@react-navigation/native';
 
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import colors from '@/styles/colors';
