@@ -16,9 +16,7 @@ export const FighterForOffer = ({fighterName,type}: FighterForOfferProps) => {
         <TouchableOpacity
             style={[styles.inputRow]}
             onPress={() => {
-                navigation.navigate('PromotionAllFighterExclusiveTypeOffersListScreen', {
-                    type: type,
-                });
+                router.push({pathname:'/offer/exclusive/create/fighter',params:{type}});
             }}>
             <Text style={[styles.inputText]}>{fighterName || 'Fighter*'}</Text>
             <Icon name="chevron-right" size={24} color={colors.primaryBlack} />

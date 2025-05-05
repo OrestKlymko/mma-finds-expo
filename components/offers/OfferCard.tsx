@@ -7,6 +7,7 @@ import {PublicOfferInfo} from "@/service/response";
 import {useAuth} from "@/context/AuthContext";
 import colors from "@/styles/colors";
 import {getCurrencySymbol} from "@/utils/utils";
+import {useRouter} from "expo-router";
 
 
 interface OfferCardProps {
@@ -31,18 +32,15 @@ export const OfferCard: React.FC<OfferCardProps> = ({
     const setWidth = React.useMemo(() => {
         return horizontal ? {width: CARD_WIDTH, marginRight: 13} : {};
     }, [CARD_WIDTH, horizontal]);
+    const router = useRouter();
 
     const handleOfferDetail = useCallback(() => {
-        if (role === 'PROMOTION') {
-            navigation.navigate('PromotionOfferDetailsScreen', {
-                offerId: item.offerId,
-            });
+        if (onClick) {
+            onClick();
         } else {
-            navigation.navigate('ManagerPublicOfferDetailsScreen', {
-                offerId: item.offerId,
-            });
+            router.push(`/offer/public/${item.offerId}`)
         }
-    }, [navigation, item.offerId, role]);
+    }, [item.offerId, role]);
 
     return (
         <TouchableOpacity

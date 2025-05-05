@@ -1,3 +1,6 @@
+export type OfferType = 'Public' | 'Exclusive' | 'Multi-fight contract';
+
+
 export interface ImageSelectorComponentProps {
     image?: Photo | null;
     setPhoto: (photo: Photo) => void;
@@ -58,3 +61,24 @@ export type Photo = {
     name: string;
 };
 
+
+export interface Filter  {
+    eventPlace: string[];
+    promotion: string[];
+    rules: string[];
+    weightClass: string[];
+    eventName: string[];
+    activeTab: 'Public' | 'Exclusive';
+    fighterName: string[];
+    offerType: string[];
+}
+
+export type MessageItem ={
+    id?: string;
+    senderId: string;
+    message?: string;
+    type?: 'text' | 'file' | 'image';
+    attachmentUrl?: string;
+    fileName?: string;
+    timestamp?: any;
+}

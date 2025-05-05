@@ -8,7 +8,7 @@ import {getShortInfoFightersByManager} from "@/service/service";
 import ContentLoader from "@/components/ContentLoader";
 import GoBackButton from "@/components/GoBackButton";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import FighterList from "@/app/(app)/manager/fighter/list";
+import FighterList from "@/app/(app)/manager/fighter";
 
 const MyFighters = () => {
     const router = useRouter();
