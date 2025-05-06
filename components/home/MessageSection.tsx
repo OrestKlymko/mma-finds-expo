@@ -81,8 +81,7 @@ export const MessageSection = () => {
             <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Messages</Text>
                 <TouchableOpacity onPress={() => {
-                    // GO TO MESSAGE SCREEN
-                    // router.push()
+                    router.push('/(app)/(tabs)/messages')
                 }}>
                     <Text style={styles.seeAll}>See All</Text>
                 </TouchableOpacity>

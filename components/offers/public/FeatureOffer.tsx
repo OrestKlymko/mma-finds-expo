@@ -26,7 +26,7 @@ export const FeatureOffer = ({offer}: Props) => {
       .catch(error => {
         if (error.response.status === 406) {
           router.push({
-            pathname:'/profile/settings/payment/credit',
+            pathname:'/profile/balance/credit-option',
             params: {
               offerId: offer?.offerId,
               fighterId: undefined,

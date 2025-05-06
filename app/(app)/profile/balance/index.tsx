@@ -86,7 +86,7 @@ const BalanceOverviewScreen = () => {
                     <TouchableOpacity
                         onPress={() => {
                             router.push({
-                                pathname: '/(app)/profile/balance/credit-option', params: {
+                                pathname: '/profile/balance/credit-option', params: {
                                     offerId: undefined,
                                     fighterId: undefined,
                                 }
