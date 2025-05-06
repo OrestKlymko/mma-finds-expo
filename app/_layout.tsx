@@ -7,21 +7,24 @@ import {FilterProvider} from "@/context/FilterContext";
 import {ExclusiveOfferFilterProvider} from "@/context/ExclusiveOfferFilterContext";
 import {SubmittedFilterFighterProvider} from "@/context/SubmittedFilterFighterContext";
 import {FilterFighterProvider} from "@/context/FilterFighterContext";
+import {NotificationProvider} from "@/context/NotificationContext";
 
 
 export default function RootLayout() {
     return (
         <ReduxProvider store={store}>
             <AuthProvider>
-                <FilterProvider>
-                    <ExclusiveOfferFilterProvider>
-                        <SubmittedFilterFighterProvider>
-                            <FilterFighterProvider>
-                                <Slot/>
-                            </FilterFighterProvider>
-                        </SubmittedFilterFighterProvider>
-                    </ExclusiveOfferFilterProvider>
-                </FilterProvider>
+                <NotificationProvider>
+                    <FilterProvider>
+                        <ExclusiveOfferFilterProvider>
+                            <SubmittedFilterFighterProvider>
+                                <FilterFighterProvider>
+                                    <Slot/>
+                                </FilterFighterProvider>
+                            </SubmittedFilterFighterProvider>
+                        </ExclusiveOfferFilterProvider>
+                    </FilterProvider>
+                </NotificationProvider>
             </AuthProvider>
         </ReduxProvider>
     );

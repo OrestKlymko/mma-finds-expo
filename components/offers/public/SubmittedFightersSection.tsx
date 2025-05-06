@@ -41,7 +41,7 @@ export const SubmittedFightersSection = ({fighters, offer}: Props) => {
             offerId: offer?.offerId ?? null,
           }));
           router.push({
-            pathname: `/public/${offer.offerId}/fighter`,
+            pathname: `/offer/public/${offer.offerId}/fighter`,
             params: {
               currency: offer?.currency,
               eligibleToSelect: (

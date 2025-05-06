@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-
-import {RouteProp, useFocusEffect, useRoute} from '@react-navigation/native';
 import colors from '@/styles/colors';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {getBenefitsInPublicOffer, getPublicOfferInfoById,} from '@/service/service';
 import ContentLoader from "@/components/ContentLoader";
 import {Benefit, PublicOfferInfo, ShortInfoFighter} from "@/service/response";
-import { EventPosterImage } from './EventPosterImage';
+import {EventPosterImage} from './EventPosterImage';
 import {TitleWithAction} from "@/components/offers/public/TitleWithAction";
 import {ShareOffer} from "@/components/offers/public/ShareOffer";
 import {OfferState} from "@/components/offers/public/OfferState";
@@ -19,22 +17,17 @@ import {SubmittedFightersSection} from "@/components/offers/public/SubmittedFigh
 import OfferExtendedDetailsInfo from "@/components/offers/public/OfferExtendedDetailsInfo";
 import OpponentDetailsSection from "@/components/offers/public/OpponentDetailsSection";
 import {PromotionTailoringProcess} from "@/components/offers/public/PromotionTailoringProcess";
+import {useFocusEffect, useLocalSearchParams, useRouter} from "expo-router";
 
-
-type RouteParams = {
-    offerId?: string;
-};
 
 export const PromotionOfferDetailsScreen = () => {
-    const route = useRoute();
-    const routeFromExternal =
-        useRoute<RouteProp<Record<string, RouteParams>, 'PromotionOfferDetails'>>();
 
     const insets = useSafeAreaInsets();
+    const router = useRouter();
     const [fighters, setFighters] = useState<ShortInfoFighter[]>([]);
     const [offer, setOffer] = useState<PublicOfferInfo | null>(null);
     const [previousInfo, setPreviousInfo] = useState<any>(null);
-    const {offerId} = route.params as RouteParams;
+    const {id} = useLocalSearchParams<{ id: string }>();
     const [benefits, setBenefits] = useState<Benefit | null>(null);
     const [submittedInformation, setSubmittedInformation] = useState<any | null>(
         null,
@@ -43,11 +36,14 @@ export const PromotionOfferDetailsScreen = () => {
 
     useFocusEffect(
         React.useCallback(() => {
+            console.log(id);
             setContentLoading(true);
-            if (offerId) {
-                loadingContent(offerId);
+            if (id) {
+                loadingContent(id);
+            } else {
+                router.back();
             }
-        }, [offerId]),
+        }, [id]),
     );
 
     const loadingContent = async (offerIdentifier: string) => {
@@ -68,15 +64,8 @@ export const PromotionOfferDetailsScreen = () => {
         }
     };
 
-    useEffect(() => {
-        if (routeFromExternal.params?.offerId) {
-            setContentLoading(true);
-            loadingContent(routeFromExternal.params.offerId);
-        }
-    }, [route.params, routeFromExternal.params.offerId]);
-
     if (contentLoading) {
-        return <ContentLoader />;
+        return <ContentLoader/>;
     }
     return (
         <ScrollView
@@ -87,23 +76,23 @@ export const PromotionOfferDetailsScreen = () => {
                 styles.container,
                 {paddingBottom: insets.bottom},
             ]}>
-            <EventPosterImage eventImageLink={offer?.eventImageLink} />
+            <EventPosterImage eventImageLink={offer?.eventImageLink}/>
             <View style={styles.eventDetailsContainer}>
-                <TitleWithAction title={offer?.eventName || 'Event Name'} />
-                <ShareOffer offer={offer} typeOffer={'Public'} />
-                <OfferState offer={offer} fightersLength={fighters.length} />
-                <FeatureOffer offer={offer} />
+                <TitleWithAction title={offer?.eventName || 'Event Name'}/>
+                <ShareOffer offer={offer} typeOffer={'Public'}/>
+                <OfferState offer={offer} fightersLength={fighters.length}/>
+                <FeatureOffer offer={offer}/>
                 <ManageOfferButton
                     offerId={offer?.offerId}
                     closedReason={offer?.closedReason}
                     type="Public"
                 />
-                <LocationAndDateEvent offer={offer} />
+                <LocationAndDateEvent offer={offer}/>
                 {offer?.eventDescription && (
-                    <EventDescription eventDescription={offer.eventDescription} />
+                    <EventDescription eventDescription={offer.eventDescription}/>
                 )}
-                <OfferExtendedDetailsInfo offer={offer} benefits={benefits} />
-                <OpponentDetailsSection offer={offer} />
+                <OfferExtendedDetailsInfo offer={offer} benefits={benefits}/>
+                <OpponentDetailsSection offer={offer}/>
                 {fighters &&
                 offer &&
                 submittedInformation &&
@@ -115,7 +104,7 @@ export const PromotionOfferDetailsScreen = () => {
                         previousInfo={previousInfo}
                     />
                 ) : (
-                    <SubmittedFightersSection offer={offer} fighters={fighters} />
+                    <SubmittedFightersSection offer={offer} fighters={fighters}/>
                 )}
             </View>
         </ScrollView>
