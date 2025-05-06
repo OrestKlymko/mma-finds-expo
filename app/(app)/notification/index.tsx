@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import BellIcon from '@/assets/bell.svg';
 import DeleteIcon from '@/assets/delete.svg';
 import {useAuth} from "@/context/AuthContext";
-import {useFocusEffect} from "expo-router";
+import {useFocusEffect, useRouter} from "expo-router";
 import GoBackButton from "@/components/GoBackButton";
 import colors from "@/styles/colors";
 
@@ -44,6 +44,8 @@ const groupNotificationsByDate = (notifications: NotificationItem[]) => {
 const NotificationsScreen = () => {
     const {role} = useAuth();
     const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+    const router = useRouter();
+
     const [grouped, setGrouped] = useState({
         today: [] as NotificationItem[],
         last7Days: [] as NotificationItem[],
@@ -90,45 +92,22 @@ const NotificationsScreen = () => {
         const type = notif.data?.type;
         switch (type) {
             case 'EXCLUSIVE_OFFER':
-                if (role === 'MANAGER') {
-                    navigation.navigate('ManagerExclusiveOfferDetailsScreen', {
-                        offerId: notif.data.offerId,
-                        fighterId: notif.data.fighterId || undefined,
-                    });
-                } else {
-                    navigation.navigate('PromotionExclusiveOfferDetail', {
-                        offerId: notif.data.offerId,
-                    });
-                }
+                router.push({
+                    pathname: `/offer/exclusive/single/${notif.data.offerId}`,
+                    params: {fighterId: notif.data.fighterId}
+                });
                 break;
             case 'PUBLIC_OFFER':
-                navigation.navigate(
-                    role === 'MANAGER'
-                        ? 'ManagerPublicOfferDetailsScreen'
-                        : 'PromotionOfferDetailsScreen',
-                    {
-                        offerId: notif.data.offerId,
-                    },
-                );
+                router.push(`/offer/public/${notif.data.offerId}`);
                 break;
             case 'MULTI_FIGHT_OFFER':
-                if (role === 'MANAGER') {
-                    navigation.navigate('ManagerMultiFightOfferDetailsScreen', {
-                        offerId: notif.data.offerId,
-                        fighterId: notif.data.fighterId || undefined,
-                    });
-                } else {
-                    navigation.navigate('PromotionMultiFightOfferDetails', {
-                        offerId: notif.data.offerId,
-                    });
-                }
+                router.push({
+                    pathname: `/offer/exclusive/multi/${notif.data.offerId}`,
+                    params: {fighterId: notif.data.fighterId}
+                });
                 break;
             case 'VERIFICATION':
-                navigation.navigate(
-                    role === 'MANAGER'
-                        ? 'VerificationManagerScreen'
-                        : 'VerificationPromotionScreen',
-                );
+                router.push('/profile/settings/account/account-info/verification');
                 break;
             default:
                 break;
@@ -143,11 +122,11 @@ const NotificationsScreen = () => {
     };
 
     // Рендер елемента сповіщення (front row)
-    const renderNotificationItem = ({item}: {item: NotificationItem}) => (
+    const renderNotificationItem = ({item}: { item: NotificationItem }) => (
         <Pressable
             style={styles.notificationContainer}
             onPress={() => handleNotificationPress(item)}>
-            <BellIcon width={24} height={24} />
+            <BellIcon width={24} height={24}/>
             <View style={styles.notificationContent}>
                 <Text style={styles.notificationTitle}>{item.title}</Text>
                 <Text style={styles.notificationDescription}>{item.body}</Text>
@@ -156,12 +135,12 @@ const NotificationsScreen = () => {
     );
 
     // Рендер прихованого елемента для свайпу
-    const renderHiddenItem = ({item}: {item: NotificationItem}) => (
+    const renderHiddenItem = ({item}: { item: NotificationItem }) => (
         <View style={styles.hiddenContainer}>
             <TouchableOpacity
                 style={styles.hiddenButton}
                 onPress={() => deleteNotification(item.data.id)}>
-                <DeleteIcon width={20} height={20} />
+                <DeleteIcon width={20} height={20}/>
                 <Text style={styles.hiddenButtonText}>Delete</Text>
             </TouchableOpacity>
         </View>
@@ -185,7 +164,7 @@ const NotificationsScreen = () => {
 
     return (
         <View style={{flex: 1, backgroundColor: colors.background}}>
-            <GoBackButton />
+            <GoBackButton/>
             <SafeAreaView style={styles.safeArea}>
                 <Text style={styles.headerTitle}>Notifications</Text>
                 {/* Якщо потрібно, можна додати модальне вікно для вибору фільтра */}
