@@ -11,7 +11,7 @@ import {FighterInfoResponse} from '@/service/response';
 import {FighterDescription} from "@/components/fighter/FighterDescription";
 import {FighterCharacters} from "@/components/fighter/FighterCharacters";
 import {FighterAndManagerClickHeader} from "@/components/fighter/FighterAndManagerClickHeader";
-import {FighterManagerButtons} from "@/components/fighter/FighterManagerButtons";
+import {FighterManagerButtonsWithSelect} from "@/components/fighter/FighterManagerButtonsWithSelect";
 import {useLocalSearchParams} from "expo-router";
 
 const PromotionFighterDetailsWithSelectFighterScreen = () => {
@@ -53,7 +53,7 @@ const PromotionFighterDetailsWithSelectFighterScreen = () => {
                     {paddingBottom: insets.bottom},
                 ]}>
                 <FighterAndManagerClickHeader fighter={fighter} />
-                <FighterManagerButtons
+                <FighterManagerButtonsWithSelect
                     fighter={fighter}
                     offerId={offerId}
                     fighterId={fighterId}

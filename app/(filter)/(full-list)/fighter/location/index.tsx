@@ -104,7 +104,7 @@ const FullListScreen = () => {
             <GoBackButton />
             <View style={[styles.container, {paddingBottom: insets.bottom}]}>
                 <View style={styles.headerContainer}>
-                    <Text style={styles.title}>Fighter Location</Text>
+                    <Text style={styles.title}>Location</Text>
                     <TouchableOpacity onPress={clearAll} style={styles.clearButton}>
                         <Text style={styles.clearText}>Clear All</Text>
                     </TouchableOpacity>

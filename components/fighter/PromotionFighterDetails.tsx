@@ -9,7 +9,7 @@ import {getFullInfoAboutFighter} from '@/service/service';
 import ContentLoader from '@/components/ContentLoader';
 import {FighterInfoResponse} from '@/service/response';
 import {FighterHeaderAndManagerInfo} from "@/components/fighter/FighterHeaderAndManagerInfo";
-import {FighterManageButton} from "@/components/fighter/FighterManageButton";
+import {FighterManageButtonWithSendExclusiveOffer} from "@/components/fighter/FighterManageButtonWithSendExclusiveOffer";
 import {FighterLookingState} from "@/components/fighter/FighterLookingState";
 import {FighterCharacters} from "@/components/fighter/FighterCharacters";
 import {FighterDescription} from "@/components/fighter/FighterDescription";
@@ -48,7 +48,7 @@ const PromotionFighterDetails = () => {
                     {paddingBottom: insets.bottom},
                 ]}>
                 <FighterHeaderAndManagerInfo fighter={fighter} />
-                <FighterManageButton fighterId={fighterId} fighter={fighter} />
+                <FighterManageButtonWithSendExclusiveOffer fighterId={fighterId} fighter={fighter} />
                 <FighterLookingState
                     lookingForOpponent={fighter?.lookingForOpponent ?? true}
                 />

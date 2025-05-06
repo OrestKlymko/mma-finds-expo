@@ -82,3 +82,17 @@ export type MessageItem ={
     fileName?: string;
     timestamp?: any;
 }
+
+export type Conversation = {
+    id: string;
+    conversationId: string;
+    participants: string[];
+    lastMessage: string;
+    lastTimestamp: any; // Firestore Timestamp
+    unreadCount?: number;
+    // При необхідності можна додати додаткові поля, наприклад, archived або isBlocked
+    archived?: boolean;
+    isBlocked?: boolean;
+    avatar: string;
+    sender: string;
+};

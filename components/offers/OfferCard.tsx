@@ -35,11 +35,11 @@ export const OfferCard: React.FC<OfferCardProps> = ({
     const router = useRouter();
 
     const handleOfferDetail = useCallback(() => {
-        if (onClick) {
-            onClick();
-        } else {
+        // if (onClick) {
+        //     onClick();
+        // } else {
             router.push(`/offer/public/${item.offerId}`)
-        }
+        // }
     }, [item.offerId, role]);
 
     return (

@@ -9,7 +9,7 @@ type FighterManageButtonProps = {
     fighter?: FighterInfoResponse | null;
 };
 
-export const FighterManageButton = ({
+export const FighterManageButtonWithSendExclusiveOffer = ({
                                         fighterId,
                                         fighter,
                                     }: FighterManageButtonProps) => {

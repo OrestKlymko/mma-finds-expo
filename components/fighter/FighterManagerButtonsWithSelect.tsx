@@ -12,7 +12,7 @@ type FighterManagerButtonsProps = {
     eligibleToSelect?: boolean;
 };
 
-export const FighterManagerButtons = ({
+export const FighterManagerButtonsWithSelect = ({
                                           fighter,
                                           offerId,
                                           fighterId,

@@ -1,11 +1,9 @@
-import {Text, View} from "react-native";
+import {useAuth} from "@/context/AuthContext";
+import PromotionAllFighterMainList from "@/components/fighter/PromotionAllFighterList";
 
 export default function Search() {
-    return <>
-        <View>
-            <Text>
-                Search
-            </Text>
-        </View>
-    </>
+    const {role} = useAuth();
+    if (role === 'PROMOTION') {
+        return <PromotionAllFighterMainList/>
+    }
 }
