@@ -96,3 +96,23 @@ export type Conversation = {
     avatar: string;
     sender: string;
 };
+
+export type PublicOffer = {
+    country: string;
+    promotionName: string;
+    eventId: string;
+    currency: string;
+    eventDate: string;
+    eventName: string;
+    gender: string;
+    eventImageLink: string;
+    isFightTitled: boolean;
+    offerId: string;
+    purse: string;
+    purseCondition: string;
+    weightClass: string;
+    closedReason: string;
+    isOfferFeatured: boolean;
+    verifiedState: string;
+    promotion: string;
+};
