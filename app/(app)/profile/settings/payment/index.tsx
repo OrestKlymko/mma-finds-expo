@@ -14,7 +14,6 @@ import GoBackButton from "@/components/GoBackButton";
 import {useStripe} from "@stripe/stripe-react-native";
 
 
-
 const PaymentMethodsScreen = () => {
     const insets = useSafeAreaInsets();
     const [paymentMethods, setPaymentMethods] = useState<CardInfoResponse[]>([]);
@@ -85,7 +84,7 @@ const PaymentMethodsScreen = () => {
                 merchantDisplayName: 'MMA Finds',
                 customerId: customerId,
                 style: 'automatic',
-                returnURL: 'mmafinds://stripe-redirect',
+                returnURL: 'com.mmafinds.app://stripe-redirect',
                 applePay: {
                     merchantCountryCode: 'SK',
                 },
@@ -113,7 +112,6 @@ const PaymentMethodsScreen = () => {
             }
 
 
-
             Alert.alert('Success', 'Payment method added successfully');
             setDefaultPaymentMethod();
             loadPaymentMethods();
@@ -126,12 +124,12 @@ const PaymentMethodsScreen = () => {
      * Відображення компоненту
      */
     return (
-        <View style={{ flex: 1 ,backgroundColor:colors.background}}>
+        <View style={{flex: 1, backgroundColor: colors.background}}>
             <GoBackButton/>
             <View
                 style={[
                     styles.container,
-                    { paddingBottom: insets.bottom},
+                    {paddingBottom: insets.bottom},
                 ]}>
                 <Text style={styles.title}>Payment Methods</Text>
                 {paymentMethods.length > 0 && (
@@ -173,7 +171,7 @@ const PaymentMethodsScreen = () => {
                         )}
                     />
                 ) : (
-                    <ActivityIndicator size="large" color={colors.primaryGreen} />
+                    <ActivityIndicator size="large" color={colors.primaryGreen}/>
                 )}
 
                 <TouchableOpacity
