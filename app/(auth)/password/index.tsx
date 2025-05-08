@@ -26,7 +26,6 @@ const PasswordRecoveryScreen = () => {
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
     const [confirmEmail, setConfirmEmail] = useState('');
-
     const [emailsMatch, setEmailsMatch] = useState<boolean | null>(null);
 
     const validateEmails = (currentEmail: string, currentConfirm: string) => {
@@ -42,7 +41,7 @@ const PasswordRecoveryScreen = () => {
             setLoading(true);
             requestOnForgotPassword(email)
                 .then(() => {
-                    router.navigate('/(auth)/successEmailForgotScreen', {email});
+                    router.push({pathname:'/(auth)/password/success-email-forgot',params:{email}});
                 })
                 .catch(() => {
                     Alert.alert('Check your email or try signing up');
@@ -56,77 +55,79 @@ const PasswordRecoveryScreen = () => {
     };
 
     return (
-        <ScrollView
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={[
-                styles.container,
-                {paddingBottom: insets.bottom},
-            ]}>
-            <GoBackButton />
+        <View style={{flex: 1, backgroundColor: colors.background}}><GoBackButton/>
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={[
+                    styles.container,
+                    {paddingBottom: insets.bottom},
+                ]}>
 
-            <Text style={styles.title}>Password Recovery</Text>
-            <Text style={styles.subtitle}>
-                Enter your email to recover your password.
-            </Text>
 
-            <View style={styles.inputContainer}>
-                <FloatingLabelInput
-                    label="Email"
-                    value={email}
-                    onChangeText={text => {
-                        setEmail(text);
-                        validateEmails(text, confirmEmail);
-                    }}
-                />
-            </View>
+                <Text style={styles.title}>Password Recovery</Text>
+                <Text style={styles.subtitle}>
+                    Enter your email to recover your password.
+                </Text>
 
-            <View style={styles.inputContainer}>
-                <View style={styles.confirmEmailRow}>
+                <View style={styles.inputContainer}>
                     <FloatingLabelInput
-                        label="Confirm Email"
-                        value={confirmEmail}
+                        label="Email"
+                        value={email}
                         onChangeText={text => {
-                            setConfirmEmail(text);
-                            validateEmails(email, text);
+                            setEmail(text);
+                            validateEmails(text, confirmEmail);
                         }}
                     />
-                    {emailsMatch !== null && (
-                        <View
-                            style={[
-                                styles.validationIcon,
-                                {
-                                    backgroundColor: emailsMatch
-                                        ? colors.primaryGreen
-                                        : colors.error,
-                                },
-                            ]}>
-                            <Ionicons
-                                name={emailsMatch ? 'checkmark' : 'close'}
-                                size={16}
-                                color={"white"}
-                            />
+                </View>
 
-                        </View>
+                <View style={styles.inputContainer}>
+                    <View style={styles.confirmEmailRow}>
+                        <FloatingLabelInput
+                            label="Confirm Email"
+                            value={confirmEmail}
+                            onChangeText={text => {
+                                setConfirmEmail(text);
+                                validateEmails(email, text);
+                            }}
+                        />
+                        {emailsMatch !== null && (
+                            <View
+                                style={[
+                                    styles.validationIcon,
+                                    {
+                                        backgroundColor: emailsMatch
+                                            ? colors.primaryGreen
+                                            : colors.error,
+                                    },
+                                ]}>
+                                <Ionicons
+                                    name={emailsMatch ? 'checkmark' : 'close'}
+                                    size={16}
+                                    color={"white"}
+                                />
+
+                            </View>
+                        )}
+                    </View>
+                    {emailsMatch === false && (
+                        <Text style={styles.errorText}>Your email does not match.</Text>
                     )}
                 </View>
-                {emailsMatch === false && (
-                    <Text style={styles.errorText}>Your email does not match.</Text>
-                )}
-            </View>
 
-            <TouchableOpacity
-                style={styles.recoverButton}
-                disabled={loading}
-                onPress={onRecoverPassword}>
-                {loading ? (
-                    <ActivityIndicator size="small" color={colors.white} />
-                ) : (
-                    <Text style={styles.recoverButtonText}>Recover Password</Text>
-                )}
-            </TouchableOpacity>
-            <FooterSignUp />
-        </ScrollView>
+                <TouchableOpacity
+                    style={styles.recoverButton}
+                    disabled={loading}
+                    onPress={onRecoverPassword}>
+                    {loading ? (
+                        <ActivityIndicator size="small" color={colors.white}/>
+                    ) : (
+                        <Text style={styles.recoverButtonText}>Recover Password</Text>
+                    )}
+                </TouchableOpacity>
+                <FooterSignUp/>
+            </ScrollView>
+        </View>
     );
 };
 
@@ -187,6 +188,9 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         alignItems: 'center',
         marginTop: 20,
+        height: 56,
+        justifyContent: 'center',
+        alignContent: 'center',
     },
     recoverButtonText: {
         fontSize: 16,

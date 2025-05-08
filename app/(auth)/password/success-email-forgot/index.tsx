@@ -8,22 +8,15 @@ import {
     Alert,
     ActivityIndicator,
 } from 'react-native';
-import colors from '../../styles/colors';
-import {useRoute} from '@react-navigation/native';
+import colors from '@/styles/colors';
 import {requestOnForgotPassword} from "@/service/service";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FooterSignUp from "@/components/FooterSingUp";
-
-
-interface EmailProps {
-    email: string;
-}
+import {useLocalSearchParams} from "expo-router";
 
 const SuccessEmailForgotScreen: React.FC = () => {
-    const route = useRoute();
-    const {email} = route.params as EmailProps;
     const [loading, setLoading] = useState(false);
-
+    const {email} = useLocalSearchParams<{email: string}>();
     const handleMailSend = async () => {
         try {
             await Linking.openURL('mailto:');
