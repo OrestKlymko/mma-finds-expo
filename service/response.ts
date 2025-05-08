@@ -322,6 +322,10 @@ export type PublicOfferInfo = {
   opponentAmateurDraws?: string | null | undefined;
 };
 
+export type PublicOfferShortInfo = {
+  offerId: string;//TODO: fix the response
+}
+
 export type SubmittedInformationOffer = {
   statusResponded: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'NEGOTIATING';
   fightPurse: string;
