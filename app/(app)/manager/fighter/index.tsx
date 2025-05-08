@@ -15,10 +15,6 @@ const FighterList = ({fighters, handleChooseFighter}: FighterListProps) => {
     const {role} = useAuth();
     const router = useRouter();
 
-    if (fighters?.length === 0) {
-        return <Text>No fighters</Text>
-    }
-
     return (
         <FlatList
             style={styles.list}
