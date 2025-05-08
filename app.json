@@ -5,9 +5,10 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/main-logo/logo.png",
-    "scheme": "mmafinds",
+    "scheme": "com.mmafinds.app",
+    "owner": "orestklymko",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "bundleIdentifier": "com.mmafinds.app",
       "usesAppleSignIn": true,
@@ -47,15 +48,17 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.googleusercontent.apps.712660973446-q1o7h9v7nk36d2bdict84nfn8o6ackcg"
-        }
-      ]
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "googleWebClientId": "712660973446-9t222hmquqadadee9a3d31dqrhka89s5.apps.googleusercontent.com",
+      "router": {},
+      "eas": {
+        "projectId": "330888a6-9e8b-416d-988a-51794fb23e33"
+      }
     }
   }
 }

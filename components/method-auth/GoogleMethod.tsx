@@ -8,7 +8,6 @@ import {LoginResponse} from "@/service/response";
 import {createFormDataForManager, createFormDataForPromotion} from "@/service/create-entity/formDataService";
 import {createManager, createPromotion} from "@/service/service";
 import {useRouter} from "expo-router";
-import {GoogleSignin, isSuccessResponse} from "@react-native-google-signin/google-signin";
 
 type GoogleMethodProps = {
     data: SignUpDataManager | SignUpDataPromotion | undefined;
@@ -24,36 +23,36 @@ export const GoogleMethod = ({data, handleSuccessAuth, role}: GoogleMethodProps)
 
     const signInWithGoogle = async () => {
         setLoadingGoogle(true);
-        await GoogleSignin.hasPlayServices();
-        const response = await GoogleSignin.signIn();
-        if (isSuccessResponse(response)) {
-            const {user} = response.data;
-            if (!user.email) {
-                Alert.alert('Google Sign-In failed', 'No email returned');
-                return;
-            }
-            try {
-                if (role === 'PROMOTION') {
-                    const formData = await createFormDataForPromotion(data as SignUpDataPromotion, user.email, 'oauth');
-                    const res = await createPromotion(formData);
-                    handleSuccessAuth(res);
-                    router.push('/(app)/(tabs)');
-                } else if (role === 'MANAGER') {
-                    const formData = await createFormDataForManager(data as SignUpDataManager, user.email, 'oauth');
-                    const res = await createManager(formData);
-                    handleSuccessAuth(res);
-                    router.push('/manager/fighter/create');
-                }
-            } catch (err: any) {
-                if (err?.response?.status === 409) {
-                    Alert.alert('This email is already registered.');
-                } else {
-                    Alert.alert('Failed to create a profile.');
-                }
-            } finally {
-                setLoadingGoogle(false);
-            }
-        }
+        // await GoogleSignin.hasPlayServices();
+        // const response = await GoogleSignin.signIn();
+        // if (isSuccessResponse(response)) {
+        //     const {user} = response.data;
+        //     if (!user.email) {
+        //         Alert.alert('Google Sign-In failed', 'No email returned');
+        //         return;
+        //     }
+        //     try {
+        //         if (role === 'PROMOTION') {
+        //             const formData = await createFormDataForPromotion(data as SignUpDataPromotion, user.email, 'oauth');
+        //             const res = await createPromotion(formData);
+        //             handleSuccessAuth(res);
+        //             router.push('/(app)/(tabs)');
+        //         } else if (role === 'MANAGER') {
+        //             const formData = await createFormDataForManager(data as SignUpDataManager, user.email, 'oauth');
+        //             const res = await createManager(formData);
+        //             handleSuccessAuth(res);
+        //             router.push('/manager/fighter/create');
+        //         }
+        //     } catch (err: any) {
+        //         if (err?.response?.status === 409) {
+        //             Alert.alert('This email is already registered.');
+        //         } else {
+        //             Alert.alert('Failed to create a profile.');
+        //         }
+        //     } finally {
+        //         setLoadingGoogle(false);
+        //     }
+        // }
     };
 
     return (

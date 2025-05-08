@@ -8,21 +8,15 @@ import {ExclusiveOfferFilterProvider} from "@/context/ExclusiveOfferFilterContex
 import {SubmittedFilterFighterProvider} from "@/context/SubmittedFilterFighterContext";
 import {FilterFighterProvider} from "@/context/FilterFighterContext";
 import {NotificationProvider} from "@/context/NotificationContext";
-import {useEffect} from "react";
-import {GoogleSignin} from "@react-native-google-signin/google-signin";
 import {CountryModalProvider} from "react-native-country-picker-modal";
+import {ClerkProvider} from "@clerk/clerk-expo";
+import {tokenCache} from "@clerk/clerk-expo/token-cache";
 
 
 export default function RootLayout() {
-
-    useEffect(() => {
-        GoogleSignin.configure({
-            iosClientId: '712660973446-q1o7h9v7nk36d2bdict84nfn8o6ackcg.apps.googleusercontent.com',
-            webClientId: '712660973446-9t222hmquqadadee9a3d31dqrhka89s5.apps.googleusercontent.com',
-        })
-    });
     return (
         <ReduxProvider store={store}>
+            <ClerkProvider tokenCache={tokenCache}>
             <CountryModalProvider>
             <AuthProvider>
                 <NotificationProvider>
@@ -38,6 +32,7 @@ export default function RootLayout() {
                 </NotificationProvider>
             </AuthProvider>
             </CountryModalProvider>
+            </ClerkProvider>
         </ReduxProvider>
     );
 }

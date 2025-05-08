@@ -6,17 +6,21 @@ import colors from "@/styles/colors";
 import GoBackButton from "@/components/GoBackButton";
 import {useAuth} from "@/context/AuthContext";
 import {useRouter} from "expo-router";
+import {useAuth as useAuthGoogle} from "@clerk/clerk-expo";
 
 const AccountScreen = () => {
     const insets = useSafeAreaInsets();
     const {setToken, setRole, setMethodAuth} = useAuth();
     const router = useRouter();
     const [isSignOutVisible, setSignOutVisible] = useState(false);
+    const {signOut} = useAuthGoogle();
 
-    const handleSignOut = () => {
+    const handleSignOut = async () => {
         setRole(null);
         setToken(null);
         setMethodAuth(null);
+        await signOut();
+
         setSignOutVisible(false);
         router.push('/login');
     };
@@ -26,7 +30,7 @@ const AccountScreen = () => {
 
     return (
         <View style={{flex: 1, backgroundColor: colors.white}}>
-            <GoBackButton />
+            <GoBackButton/>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -46,21 +50,21 @@ const AccountScreen = () => {
                         style={styles.item}
                         onPress={() => router.push('/(app)/profile/settings/account/account-info/account-details')}>
                         <Text style={styles.itemText}>Account Info</Text>
-                        <Icon name="chevron-right" size={20} color={colors.gray} />
+                        <Icon name="chevron-right" size={20} color={colors.gray}/>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         style={styles.item}
                         onPress={() => router.push('/profile/settings/payment')}>
                         <Text style={styles.itemText}>Payment Methods</Text>
-                        <Icon name="chevron-right" size={20} color={colors.gray} />
+                        <Icon name="chevron-right" size={20} color={colors.gray}/>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         style={styles.item}
                         onPress={() => router.push('/(app)/profile/settings/account/account-management')}>
                         <Text style={styles.itemText}>Account Management</Text>
-                        <Icon name="chevron-right" size={20} color={colors.gray} />
+                        <Icon name="chevron-right" size={20} color={colors.gray}/>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.itemLast} onPress={openSignOutSheet}>

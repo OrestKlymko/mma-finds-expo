@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, Alert, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import GoogleIcon from '@/assets/icons/google.png';
@@ -6,9 +6,7 @@ import FacebookIcon from '@/assets/icons/facebook.png';
 import AppleIcon from '@/assets/icons/apple.png';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as AppleAuthentication from 'expo-apple-authentication';
 import * as WebBrowser from 'expo-web-browser';
-import {useAuth} from "@/context/AuthContext";
 import {LoginRequest} from "@/service/request";
 import {login} from "@/service/service";
 import colors from "@/styles/colors";
@@ -18,12 +16,23 @@ import {useRouter} from "expo-router";
 import FooterSingUp from "@/components/FooterSingUp";
 import {RoleSelector} from "@/components/RoleSelector";
 import GoBackButton from "@/components/GoBackButton";
-import {GoogleSignin, isSuccessResponse} from "@react-native-google-signin/google-signin";
+import {useAuth} from "@/context/AuthContext";
+import useAppleAuth from "@/hooks/useAppleAuth";
+import useGoogleAuth from "@/hooks/useGoogleAuth";
+
+export const useWarmUpBrowser = () => {
+    useEffect(() => {
+        void WebBrowser.warmUpAsync()
+        return () => {
+            void WebBrowser.coolDownAsync()
+        }
+    }, [])
+}
 WebBrowser.maybeCompleteAuthSession();
-import {jwtDecode} from 'jwt-decode';
 
 type AuthMethod = 'standard' | 'google' | 'apple' | null;
 const LoginScreen = () => {
+    useWarmUpBrowser()
     const insets = useSafeAreaInsets();
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [email, setEmail] = useState<string>('');
@@ -32,59 +41,26 @@ const LoginScreen = () => {
     const [authLoading, setAuthLoading] = useState<AuthMethod>(null);
     const [selectedRole, setSelectedRole] = useState<'MANAGER' | 'PROMOTION'>('MANAGER');
     const router = useRouter();
-
-
     const handleSignIn = async () => {
         setAuthLoading('standard');
         const token = await AsyncStorage.getItem('deviceToken');
         handleLoginToBackend(email, password, 'standard', token);
     };
 
-    const handleAppleSignIn = async () => {
-        setAuthLoading('apple');
-        try {
-            const credential = await AppleAuthentication.signInAsync({
-                requestedScopes: [
-                    AppleAuthentication.AppleAuthenticationScope.EMAIL,
-                    AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-                ],
-            });
+    const {signInApple, loadingApple} = useAppleAuth(
+        (email, fcm) => handleLoginToBackend(email, null, 'oauth', fcm),
+        (error) => Alert.alert('Apple Sign-In Error', error)
+    );
 
-            if(!credential.identityToken) {
-                Alert.alert('Apple Sign-In', 'Failed to sign in');
-                setAuthLoading(null);
-                return;
-            }
-            const email = credential.email || jwtDecode(credential.identityToken)?.email;
-            const fcm = await AsyncStorage.getItem('deviceToken');
-
+    const {signIn, loading} = useGoogleAuth(
+        async (email, fcm) => {
             handleLoginToBackend(email, null, 'oauth', fcm);
-        } catch (err: any) {
-            if (err.code !== 'ERR_CANCELED') {
-                Alert.alert('Apple Sign-In', 'Failed to sign in');
-                console.warn(err);
-            }
+        },
+        (error) => {
+            Alert.alert('Google Sign-In', error);
             setAuthLoading(null);
         }
-    };
-
-    const handleGoogleSignIn = async () => {
-        setAuthLoading('google');
-        try {
-            await GoogleSignin.hasPlayServices();
-            const response = await GoogleSignin.signIn();
-            const token = await AsyncStorage.getItem('deviceToken');
-            if (isSuccessResponse(response)) {
-                const {user} = response.data;
-                handleLoginToBackend(user?.email, null, 'oauth', token);
-            }
-        } catch (e) {
-            Alert.alert('Error', 'Failed to sign in');
-            console.error(e);
-            setAuthLoading(null);
-        }
-    };
-
+    );
 
     const handleLoginToBackend = (
         email: string,
@@ -206,12 +182,12 @@ const LoginScreen = () => {
                 {/* Кнопка входу через Google */}
                 <SocialButton
                     text="Sign in with Google"
-                    onPress={handleGoogleSignIn}
+                    onPress={signIn}
                     iconSource={GoogleIcon}
                     backgroundColor="#FFFFFF"
                     textColor="#000"
-                    disabled={authLoading !== null && authLoading !== 'google'}
-                    isLoading={authLoading === 'google'}
+                    disabled={loading}
+                    isLoading={loading}
                 />
 
                 <SocialButton
@@ -224,8 +200,10 @@ const LoginScreen = () => {
 
                 {Platform.OS === 'ios' && (
                     <SocialButton
+                        isLoading={loadingApple}
+                        disabled={loadingApple}
                         text="Sign in with Apple"
-                        onPress={handleAppleSignIn}
+                        onPress={signInApple}
                         iconSource={AppleIcon}
                         backgroundColor="#FFFFFF"
                         textColor="#000"

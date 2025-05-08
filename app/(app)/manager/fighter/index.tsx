@@ -16,7 +16,7 @@ const FighterList = ({fighters, handleChooseFighter}: FighterListProps) => {
     const router = useRouter();
 
     if (fighters?.length === 0) {
-        return <Text>No fighters selected</Text>
+        return <Text>No fighters</Text>
     }
 
     return (

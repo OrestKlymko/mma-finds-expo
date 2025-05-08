@@ -52,7 +52,7 @@ export const PromotionProfile = () => {
                     {
                         label: 'Sub-Accounts',
                         icon: 'account-multiple-outline',
-                        pathToScreen: 'SubAccounts',
+                        pathToScreen: '/profile/sub-accounts',
                     },
                     {
                         label: 'Task Center',

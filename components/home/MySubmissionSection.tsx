@@ -20,7 +20,10 @@ export const MySubmissionSection = ({
                 <Text style={styles.sectionTitle}>My Submissions</Text>
 
                 <TouchableOpacity
-                    onPress={() => router.push("/(app)/manager/submissions")}> {/*TODO: edit path for navigation.navigate('ManagerManageMySubmissions')*/}
+                    onPress={() => {
+                        router.push("/(app)/manager/submissions")
+                        //TODO: edit path for navigation.navigate('ManagerManageMySubmissions')
+                    }}>
                     <Text style={styles.seeAll}>See All</Text>
                 </TouchableOpacity>
             </View>

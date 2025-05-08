@@ -33,19 +33,24 @@ export function ImageSelectorComponent({
         }
 
         try {
-            const image = await ImageCropPicker.openPicker({
-                width: 300,
-                height: 300,
-                cropping: true,
-                cropperCircleOverlay: !isPoster,
+            // 2. Launch the system picker, allow editing
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,                  // cropping UI
+                aspect: isPoster ? [4,3] : [1,1],     // poster = 4:3, avatar = 1:1
+                quality: 0.8,
             });
-            setPhoto({
-                uri: image.path,
-                type: image.mime,
-                name: image.filename || `image_${Date.now()}.jpg`,
-            });
+
+            if (!result.canceled && result.assets.length > 0) {
+                const asset = result.assets[0];    // <-- pull the first asset
+                setPhoto({
+                    uri: asset.uri,                  // ✅ correct
+                    type: asset.mimeType ?? 'image/jpeg',
+                    name: asset.fileName ?? `photo_${Date.now()}.jpg`,
+                });
+            }
         } catch (e) {
-            console.warn(e);
+            console.warn('ImagePicker error:', e);
         }
     };
 
