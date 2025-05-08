@@ -1,5 +1,5 @@
 import {Benefit, DocumentType, USER_ROLE} from './response';
-import {PurseValuesMulti} from '@store/createMultiContractOfferSlice';
+import {PurseValuesMulti} from '@/store/createMultiContractOfferSlice';
 
 export type TaskStatus = 'TODO' | 'COMPLETED';
 export type FighterStatusResponse =

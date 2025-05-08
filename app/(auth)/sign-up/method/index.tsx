@@ -7,7 +7,7 @@ import {SignUpDataManager, SignUpDataPromotion} from "@/models/model";
 import {LoginResponse} from "@/service/response";
 import {changeNotificationState} from "@/service/service";
 import colors from "@/styles/colors";
-import { TraditionalMethod } from '@/components/method-auth/TraditionalMethod';
+import {TraditionalMethod} from '@/components/method-auth/TraditionalMethod';
 import {Divider} from "@/components/method-auth/Divider";
 import {GoogleMethod} from "@/components/method-auth/GoogleMethod";
 import {FacebookMethod} from "@/components/method-auth/FacebookMethod";
@@ -54,7 +54,7 @@ export default function Index() {
                 <Divider/>
                 <GoogleMethod data={data} handleSuccessAuth={handleSuccessAuth} role={role}/>
                 <FacebookMethod data={data} handleSuccessAuth={handleSuccessAuth}/>
-                <AppleMethod data={data} handleSuccessAuth={handleSuccessAuth}/>
+                <AppleMethod data={data} handleSuccessAuth={handleSuccessAuth} role={role}/>
             </View>
         </View>
     );

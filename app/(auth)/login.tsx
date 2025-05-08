@@ -6,8 +6,8 @@ import FacebookIcon from '@/assets/icons/facebook.png';
 import AppleIcon from '@/assets/icons/apple.png';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Google from 'expo-auth-session/providers/google';
-import * as AuthSession from 'expo-auth-session';
+import * as AppleAuthentication from 'expo-apple-authentication';
+import * as WebBrowser from 'expo-web-browser';
 import {useAuth} from "@/context/AuthContext";
 import {LoginRequest} from "@/service/request";
 import {login} from "@/service/service";
@@ -18,6 +18,9 @@ import {useRouter} from "expo-router";
 import FooterSingUp from "@/components/FooterSingUp";
 import {RoleSelector} from "@/components/RoleSelector";
 import GoBackButton from "@/components/GoBackButton";
+import {GoogleSignin, isSuccessResponse} from "@react-native-google-signin/google-signin";
+WebBrowser.maybeCompleteAuthSession();
+import {jwtDecode} from 'jwt-decode';
 
 type AuthMethod = 'standard' | 'google' | 'apple' | null;
 const LoginScreen = () => {
@@ -28,15 +31,6 @@ const LoginScreen = () => {
     const {setToken, setMethodAuth, setRole, setEntityId} = useAuth();
     const [authLoading, setAuthLoading] = useState<AuthMethod>(null);
     const [selectedRole, setSelectedRole] = useState<'MANAGER' | 'PROMOTION'>('MANAGER');
-    const redirectUri = AuthSession.makeRedirectUri({
-        scheme: 'mmafinds'
-    })
-    const [request, response, promptAsync] = Google.useAuthRequest({
-        androidClientId: 'твій_android_client_id',
-        iosClientId: '712660973446-q1o7h9v7nk36d2bdict84nfn8o6ackcg.apps.googleusercontent.com',
-        webClientId: '712660973446-9t222hmquqadadee9a3d31dqrhka89s5.apps.googleusercontent.com',
-        redirectUri
-    });
     const router = useRouter();
 
 
@@ -46,38 +40,44 @@ const LoginScreen = () => {
         handleLoginToBackend(email, password, 'standard', token);
     };
 
-    useEffect(() => {
-        if (response?.type === 'success') {
-            const {authentication} = response;
-            const accessToken = authentication?.accessToken;
+    const handleAppleSignIn = async () => {
+        setAuthLoading('apple');
+        try {
+            const credential = await AppleAuthentication.signInAsync({
+                requestedScopes: [
+                    AppleAuthentication.AppleAuthenticationScope.EMAIL,
+                    AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                ],
+            });
 
-            if (accessToken) {
-                fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                    headers: {Authorization: `Bearer ${accessToken}`},
-                })
-                    .then(res => res.json())
-                    .then(async userInfo => {
-                        const email = userInfo?.email;
-                        const token = await AsyncStorage.getItem('deviceToken');
-                        if (email) {
-                            handleLoginToBackend(email, null, 'google', token);
-                        } else {
-                            Alert.alert('Error', 'Failed to get email from Google');
-                        }
-                    })
-                    .catch(err => {
-                        console.error('Failed to fetch user info', err);
-                        Alert.alert('Error', 'Failed to fetch user info');
-                    })
-                    .finally(() => setAuthLoading(null));
+            if(!credential.identityToken) {
+                Alert.alert('Apple Sign-In', 'Failed to sign in');
+                setAuthLoading(null);
+                return;
             }
+            const email = credential.email || jwtDecode(credential.identityToken)?.email;
+            const fcm = await AsyncStorage.getItem('deviceToken');
+
+            handleLoginToBackend(email, null, 'apple', fcm);
+        } catch (err: any) {
+            if (err.code !== 'ERR_CANCELED') {
+                Alert.alert('Apple Sign-In', 'Failed to sign in');
+                console.warn(err);
+            }
+            setAuthLoading(null);
         }
-    }, [response]);
+    };
 
     const handleGoogleSignIn = async () => {
         setAuthLoading('google');
         try {
-            await promptAsync();
+            await GoogleSignin.hasPlayServices();
+            const response = await GoogleSignin.signIn();
+            const token = await AsyncStorage.getItem('deviceToken');
+            if (isSuccessResponse(response)) {
+                const {user} = response.data;
+                handleLoginToBackend(user?.email, null, 'google', token);
+            }
         } catch (e) {
             Alert.alert('Error', 'Failed to sign in');
             console.error(e);
@@ -125,11 +125,6 @@ const LoginScreen = () => {
             }).finally(() => {
             setAuthLoading(null)
         });
-    };
-
-    const onAppleButtonPress = async () => {
-        Alert.alert('Coming Soon!', 'This feature is coming soon.');
-        return;
     };
 
     const handleFacebookSignIn = async () => {
@@ -229,7 +224,7 @@ const LoginScreen = () => {
                 {Platform.OS === 'ios' && (
                     <SocialButton
                         text="Sign in with Apple"
-                        onPress={onAppleButtonPress}
+                        onPress={handleAppleSignIn}
                         iconSource={AppleIcon}
                         backgroundColor="#FFFFFF"
                         textColor="#000"

@@ -16,16 +16,22 @@ import {initPaymentSheet, presentPaymentSheet,} from '@stripe/stripe-react-nativ
 import {PayCreditRequest} from '@/service/request';
 import {useLocalSearchParams, useRouter} from "expo-router";
 
-const manager = [
-    {id: 1, label: 1, price: '9,99'},
-    {id: 5, label: 5, price: '39,99'},
-    {id: 10, label: 10, price: '69,99'},
+type CreditOption = {
+    id: number;
+    label: string;
+    price: string;
+}
+
+const manager:CreditOption[] = [
+    {id: 1, label: '1', price: '9,99'},
+    {id: 5, label: '5', price: '39,99'},
+    {id: 10, label: '10', price: '69,99'},
 ];
 
-const promotion = [
-    {id: 1, label: 1, price: '99,99'},
-    {id: 5, label: 5, price: '399,99'},
-    {id: 10, label: 10, price: '699,99'},
+const promotion:CreditOption[] = [
+    {id: 1, label: '1', price: '99,99'},
+    {id: 5, label: '5', price: '399,99'},
+    {id: 10, label: '10', price: '699,99'},
 ];
 
 const ChooseCreditOptionScreen = () => {
@@ -35,7 +41,7 @@ const ChooseCreditOptionScreen = () => {
     const insets = useSafeAreaInsets();
     const [featuringCredit, setFeaturingCredit] = useState(0);
     const [loading, setLoading] = useState(false);
-    const [creditOptions, setCreditOptions] = useState<any>();
+    const [creditOptions, setCreditOptions] = useState<CreditOption[]>();
     const {offerId, fighterId} = useLocalSearchParams<{
         offerId?: string;
         fighterId?: string;
@@ -60,9 +66,13 @@ const ChooseCreditOptionScreen = () => {
 
     const handlePayNow = async () => {
         if (selectedOption !== null) {
-            const selectedCredit = creditOptions.find(
+            const selectedCredit = creditOptions?.find(
                 option => option.id === selectedOption,
             );
+            if(!selectedCredit) {
+                Alert.alert('Error', 'Credit option not found');
+                return;
+            }
 
             const data: PayCreditRequest = {
                 credit: selectedCredit?.label,
@@ -163,7 +173,7 @@ const ChooseCreditOptionScreen = () => {
                                         selectedOption === option.id && styles.selectedText,
                                     ]}>
                                     {option.label}{' '}
-                                    {option.label === 1 ? 'Feature Credit' : 'Feature Credits'}
+                                    {option.label === '1' ? 'Feature Credit' : 'Feature Credits'}
                                 </Text>
                                 <Text
                                     style={[
