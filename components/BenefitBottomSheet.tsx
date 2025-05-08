@@ -15,7 +15,7 @@ import Modal from 'react-native-modal';
 import colors from '@/styles/colors';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import FloatingLabelInput from '@/components/FloatingLabelInput';
-import {CountryPicker} from 'react-native-country-picker-modal/lib/CountryPicker';
+import CountryPicker from 'react-native-country-picker-modal';
 import {Country, CurrencyCode} from 'react-native-country-picker-modal';
 import {BenefitsSelection} from "@/service/response";
 

@@ -138,6 +138,7 @@ const ExclusiveOfferDueDateScreen = () => {
                     isVisible={isDatePickerVisible}
                     minimumDate={new Date()}
                     mode="date"
+                    pickerContainerStyleIOS={{alignSelf:'center'}}
                     onConfirm={handleConfirmDate}
                     onCancel={() => setDatePickerVisible(false)}
                 />

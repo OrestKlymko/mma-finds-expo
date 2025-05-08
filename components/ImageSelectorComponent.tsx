@@ -4,6 +4,7 @@ import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import colors from "@/styles/colors";
 import {ImageSelectorComponentProps} from "@/models/model";
+import ImageCropPicker from 'react-native-image-crop-picker';
 
 
 export function ImageSelectorComponent({
@@ -32,23 +33,19 @@ export function ImageSelectorComponent({
         }
 
         try {
-            const result = await ImagePicker.launchImageLibraryAsync({
-                allowsEditing: true,
-                aspect: isPoster ? [4, 3] : [1, 1],
-                quality: 0.8,
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            const image = await ImageCropPicker.openPicker({
+                width: 300,
+                height: 300,
+                cropping: true,
+                cropperCircleOverlay: !isPoster,
             });
-
-            if (!result.canceled) {
-                const asset = result.assets[0];
-                setPhoto({
-                    uri: asset.uri,
-                    type: asset.type ?? 'image/jpeg',
-                    name: asset.fileName ?? `image_${Date.now()}.jpg`,
-                });
-            }
-        } catch (error) {
-            console.warn('Error selecting image:', error);
+            setPhoto({
+                uri: image.path,
+                type: image.mime,
+                name: image.filename || `image_${Date.now()}.jpg`,
+            });
+        } catch (e) {
+            console.warn(e);
         }
     };
 

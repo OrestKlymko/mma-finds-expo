@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {ActivityIndicator, Alert, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import GoogleIcon from '@/assets/icons/google.png';
@@ -58,7 +58,7 @@ const LoginScreen = () => {
             const email = credential.email || jwtDecode(credential.identityToken)?.email;
             const fcm = await AsyncStorage.getItem('deviceToken');
 
-            handleLoginToBackend(email, null, 'apple', fcm);
+            handleLoginToBackend(email, null, 'oauth', fcm);
         } catch (err: any) {
             if (err.code !== 'ERR_CANCELED') {
                 Alert.alert('Apple Sign-In', 'Failed to sign in');
@@ -76,7 +76,7 @@ const LoginScreen = () => {
             const token = await AsyncStorage.getItem('deviceToken');
             if (isSuccessResponse(response)) {
                 const {user} = response.data;
-                handleLoginToBackend(user?.email, null, 'google', token);
+                handleLoginToBackend(user?.email, null, 'oauth', token);
             }
         } catch (e) {
             Alert.alert('Error', 'Failed to sign in');
@@ -126,6 +126,7 @@ const LoginScreen = () => {
             setAuthLoading(null)
         });
     };
+
 
     const handleFacebookSignIn = async () => {
         Alert.alert('Coming Soon!', 'This feature is coming soon.');

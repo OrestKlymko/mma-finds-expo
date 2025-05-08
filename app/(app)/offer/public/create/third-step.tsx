@@ -177,6 +177,7 @@ const PromotionSetDueDatePublicOffer = () => {
                     mode="date"
                     display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                     locale="en-GB"
+                    pickerContainerStyleIOS={{alignSelf:'center'}}
                     minimumDate={new Date()}
                     onConfirm={handleConfirmDate}
                     onCancel={() => setDatePickerVisible(false)}

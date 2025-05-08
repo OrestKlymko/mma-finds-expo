@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Modal, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle,} from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
-import WheelPicker from 'react-native-wheel-picker-expo';
+import WheelPickerExpo from 'react-native-wheel-picker-expo';
 import colors from '@/styles/colors';
 
 type FightLength = {
@@ -81,28 +81,24 @@ const FightLengthPicker: React.FC<Props> = ({
                         </View>
 
                         <View style={styles.pickerContainer}>
-                            <WheelPicker
-                                selectedIndex={roundsOptions.indexOf(selectedRounds.toString())}
-                                options={roundsOptions}
-                                onChange={(index) =>
-                                    setSelectedRounds(parseInt(roundsOptions[index], 10))
-                                }
+                            <WheelPickerExpo
                                 height={180}
                                 width={100}
-                                backgroundColor="#fff"
-                                selectedTextColor={colors.primaryGreen}
+                                initialSelectedIndex={roundsOptions.indexOf(selectedRounds.toString())}
+                                items={roundsOptions.map(o => ({ label: o, value: o }))}
+                                onChange={({ item }) =>
+                                    setSelectedRounds(parseInt(item.value, 10))
+                                }
                             />
 
-                            <WheelPicker
-                                selectedIndex={minutesOptions.indexOf(selectedMinutes.toString())}
-                                options={minutesOptions}
-                                onChange={(index) =>
-                                    setSelectedMinutes(parseInt(minutesOptions[index], 10))
-                                }
+                            <WheelPickerExpo
                                 height={180}
                                 width={100}
-                                backgroundColor="#fff"
-                                selectedTextColor={colors.primaryGreen}
+                                initialSelectedIndex={minutesOptions.indexOf(selectedMinutes.toString())}
+                                items={minutesOptions.map(o => ({ label: o, value: o }))}
+                                onChange={({ item }) =>
+                                    setSelectedMinutes(parseInt(item.value, 10))
+                                }
                             />
                         </View>
 
@@ -154,7 +150,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalContainer: {
-        width: '85%',
+        width: '70%',
         backgroundColor: colors.white,
         borderRadius: 15,
         paddingVertical: 20,

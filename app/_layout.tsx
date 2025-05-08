@@ -10,6 +10,7 @@ import {FilterFighterProvider} from "@/context/FilterFighterContext";
 import {NotificationProvider} from "@/context/NotificationContext";
 import {useEffect} from "react";
 import {GoogleSignin} from "@react-native-google-signin/google-signin";
+import {CountryModalProvider} from "react-native-country-picker-modal";
 
 
 export default function RootLayout() {
@@ -22,6 +23,7 @@ export default function RootLayout() {
     });
     return (
         <ReduxProvider store={store}>
+            <CountryModalProvider>
             <AuthProvider>
                 <NotificationProvider>
                     <FilterProvider>
@@ -35,6 +37,7 @@ export default function RootLayout() {
                     </FilterProvider>
                 </NotificationProvider>
             </AuthProvider>
+            </CountryModalProvider>
         </ReduxProvider>
     );
 }

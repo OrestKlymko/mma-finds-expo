@@ -4,6 +4,8 @@ import {PublicOfferInfo, ShortInfoFighter} from '@/service/response';
 import {SubmittedInformationPublicOffer} from "@/models/tailoring-model";
 import {useRouter} from "expo-router";
 import {SubmittedFighterList} from "@/components/offers/public/SubmittedFighterList";
+import colors from "@/styles/colors";
+import {FeatureFighterBottomSheet} from "@/components/submissions/FeaturedFighterBottomSheet";
 
 
 interface OfferDetailFooterProps {
@@ -43,10 +45,10 @@ export const ManagerSubmittedFighterList = ({
                 style={styles.submitButton}
                 onPress={() => {
                     if (!offer) return;
-                    router.navigate('SubmitFighterOfferScreen', {
-                        offer,
-                        submittedFighters: fighters,
-                    });
+                    // router.navigate('SubmitFighterOfferScreen', {
+                    //     offer,
+                    //     submittedFighters: fighters,
+                    // }); TODO REWORK
                 }}>
                 <Text style={styles.submitText}>Submit Fighter</Text>
             </TouchableOpacity>

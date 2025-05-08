@@ -46,12 +46,12 @@ export const AppleMethod = (
             }
             try {
                 if (role === 'PROMOTION') {
-                    const formData = await createFormDataForPromotion(data as SignUpDataPromotion, email, 'google');
+                    const formData = await createFormDataForPromotion(data as SignUpDataPromotion, email, 'oauth');
                     const res = await createPromotion(formData);
                     handleSuccessAuth(res);
                     router.push('/(app)/(tabs)');
                 } else if (role === 'MANAGER') {
-                    const formData = await createFormDataForManager(data as SignUpDataManager, email, 'google');
+                    const formData = await createFormDataForManager(data as SignUpDataManager, email, 'oauth');
                     const res = await createManager(formData);
                     handleSuccessAuth(res);
                     router.push('/manager/fighter/create');

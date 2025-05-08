@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import {CountryPicker} from 'react-native-country-picker-modal/lib/CountryPicker';
+import CountryPicker from 'react-native-country-picker-modal';
 
 import React, {useEffect, useState} from 'react';
 import {getExampleNumber, parsePhoneNumberFromString} from 'libphonenumber-js';

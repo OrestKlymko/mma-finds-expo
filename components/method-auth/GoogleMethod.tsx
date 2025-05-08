@@ -34,12 +34,12 @@ export const GoogleMethod = ({data, handleSuccessAuth, role}: GoogleMethodProps)
             }
             try {
                 if (role === 'PROMOTION') {
-                    const formData = await createFormDataForPromotion(data as SignUpDataPromotion, user.email, 'google');
+                    const formData = await createFormDataForPromotion(data as SignUpDataPromotion, user.email, 'oauth');
                     const res = await createPromotion(formData);
                     handleSuccessAuth(res);
                     router.push('/(app)/(tabs)');
                 } else if (role === 'MANAGER') {
-                    const formData = await createFormDataForManager(data as SignUpDataManager, user.email, 'google');
+                    const formData = await createFormDataForManager(data as SignUpDataManager, user.email, 'oauth');
                     const res = await createManager(formData);
                     handleSuccessAuth(res);
                     router.push('/manager/fighter/create');

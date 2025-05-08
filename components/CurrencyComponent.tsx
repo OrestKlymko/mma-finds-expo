@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {CountryPicker} from 'react-native-country-picker-modal/lib/CountryPicker';
+import CountryPicker from 'react-native-country-picker-modal';
 import {Country, CurrencyCode} from 'react-native-country-picker-modal';
 import {getCurrencySymbol} from '@/utils/utils';
 

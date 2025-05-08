@@ -14,7 +14,7 @@ import {
     Alert,
 } from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
-import {CountryPicker} from 'react-native-country-picker-modal/lib/CountryPicker';
+import CountryPicker from 'react-native-country-picker-modal';
 import {Country, CurrencyCode} from 'react-native-country-picker-modal';
 import colors from '@/styles/colors';
 

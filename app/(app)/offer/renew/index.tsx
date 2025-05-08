@@ -117,6 +117,7 @@ const RenewDueDateScreen = () => {
                     display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                     locale="en-GB"
                     minimumDate={new Date()}
+                    pickerContainerStyleIOS={{alignSelf:'center'}}
                     onConfirm={handleConfirmDate}
                     onCancel={() => setDatePickerVisible(false)}
                 />

@@ -70,6 +70,7 @@ export const DateOfBirth = ({
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 locale="en-GB"
                 maximumDate={new Date()}
+                pickerContainerStyleIOS={{alignSelf:'center'}}
             />
         </>
     );

@@ -76,6 +76,7 @@ export const PromotionTailoringRequiredDocuments = ({
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}
                 mode="date"
+                pickerContainerStyleIOS={{alignSelf:'center'}}
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 locale="en-GB"
                 minimumDate={new Date()}
