@@ -8,7 +8,7 @@ import {ChatOfferComponent} from "@/components/offers/ChatOfferComponent";
 import colors from "@/styles/colors";
 import {ManagerSubmittedFighterList} from "@/components/submissions/ManagerSubmittedFighterList";
 import {ManagerTailoringStatus} from "@/components/submissions/ManagerTailoringStatus";
-
+import {DocumentTailoring} from "@/components/DocumentTailoring";
 
 
 type ManagerTailoringContentProps = {
@@ -32,6 +32,7 @@ export const ManagerTailoringContent = ({
                                             selectedTab,
                                         }: ManagerTailoringContentProps) => {
     const router = useRouter();
+    console.log(selectedTab);
     switch (selectedTab) {
         case 'Preselected Fighter':
             return (
@@ -42,10 +43,9 @@ export const ManagerTailoringContent = ({
                         )}
                         scrollEnabled={false}
                         onSelectFighter={item => {
-                            router.push('/promotionfighterdetailofferscreen')
+                            // router.push('/')
                         }}
                     />
-                    {/*    TODO: FIX PATH*/}
                     {submittedInformation?.statusResponded !== 'REJECTED' && (
                         <ChatOfferComponent
                             avatar={
@@ -65,6 +65,7 @@ export const ManagerTailoringContent = ({
                         />
                     )}
                     <ManagerTailoringStatus
+                        offer={offer}
                         typeOffer={'Public'}
                         submittedInformation={submittedInformation}
                         previousInfo={previousInfo}
@@ -81,7 +82,7 @@ export const ManagerTailoringContent = ({
                         )}
                         scrollEnabled={false}
                         onSelectFighter={item => {
-                            router.push('/promotionfighterdetailofferscreen')
+                            router.push(`/manager/fighter/${item.id}/offer/select`)
                         }}
                     />
                     <ChatOfferComponent
@@ -103,20 +104,24 @@ export const ManagerTailoringContent = ({
                         style={styles.ctaButtonCancel}
                         onPress={() => {
                             if (!offer || !offer.offerId || !offer.chooseFighterId) return;
-                            router.navigate('RejectOffer', {
-                                offerId: offer?.offerId,
-                                fighterId: offer?.chooseFighterId,
-                                typeOffer: 'Public',
-                            });
+                            router.push({
+                                pathname: '/offer/reject',
+                                params: {
+                                    offerId: offer?.offerId,
+                                    fighterId: offer?.chooseFighterId,
+                                    typeOffer: 'Public',
+                                }
+                            })
                         }}>
                         <Text style={{color: colors.darkError}}>Cancel Participation</Text>
                     </TouchableOpacity>
                     <ManagerTailoringStatus
+                        offer={offer}
                         typeOffer={'Public'}
                         submittedInformation={submittedInformation}
                         previousInfo={previousInfo}
                     />
-                    <DocumentTailoring kind={'public'} offer={offer} />
+                    <DocumentTailoring kind={'public'} offer={offer}/>
                 </>
             );
         case 'Submitted Fighters':

@@ -30,22 +30,12 @@ const NegotiationScreen = () => {
         previousInformation?: string;
         typeOffer?: string;
     }>();
-
     const fighterId = params.fighterId;
     const offerId = params.offerId;
     const typeOffer = params.typeOffer;
-
-    let offer: PublicOfferInfo | ExclusiveOfferInfo | undefined;
-    let submittedInformation: SubmittedInformationOffer | undefined;
-    let previousInformation: SubmittedInformationOffer | undefined;
-
-    try {
-        if (params.offer) offer = JSON.parse(params.offer);
-        if (params.submittedInformation) submittedInformation = JSON.parse(params.submittedInformation);
-        if (params.previousInformation) previousInformation = JSON.parse(params.previousInformation);
-    } catch (e) {
-        console.warn("Failed to parse JSON from params", e);
-    }
+    const offer = params.offer ? JSON.parse(params.offer) as PublicOfferInfo | ExclusiveOfferInfo : undefined;
+    const submittedInformation = params.submittedInformation ? JSON.parse(params.submittedInformation) as SubmittedInformationOffer : undefined;
+    const previousInformation = params.previousInformation ? JSON.parse(params.previousInformation) as SubmittedInformationOffer : undefined;
 
 
     const [newOffer, setNewOffer] = useState({
@@ -99,6 +89,45 @@ const NegotiationScreen = () => {
                 });
         }
     };
+
+    const renderNegotiateState = () => {
+        if (previousInformation) {
+            return (
+                <>
+                    <PriceRow
+                        title="Offered Purse"
+                        values={[
+                            previousInformation?.fightPurse ?? '',
+                            previousInformation?.winPurse ?? '',
+                            previousInformation?.bonusPurse ?? '',
+                        ]}
+                        currency={getCurrencySymbol(previousInformation?.currency)}
+                    />
+                    <PriceRow
+                        title="Negotiated Purse"
+                        values={[
+                            submittedInformation?.fightPurse ?? '',
+                            submittedInformation?.winPurse ?? '',
+                            submittedInformation?.bonusPurse ?? '',
+                        ]}
+                        currency={getCurrencySymbol(submittedInformation?.currency)}
+                    />
+                </>
+            );
+        } else {
+            return (
+                <PriceRow
+                    title="Offered Purse"
+                    values={[
+                        submittedInformation?.fightPurse ?? '',
+                        submittedInformation?.winPurse ?? '',
+                        submittedInformation?.bonusPurse ?? '',
+                    ]}
+                    currency={getCurrencySymbol(submittedInformation?.currency)}
+                />
+            );
+        }
+    };
     return (
         <TouchableWithoutFeedback
             onPress={() => {
@@ -106,7 +135,7 @@ const NegotiationScreen = () => {
                 Keyboard.dismiss();
             }}>
             <ScrollView style={{flex: 1, backgroundColor: colors.background}}>
-                <GoBackButton />
+                <GoBackButton/>
                 <View style={styles.container}>
                     {offer?.eventImageLink && (
                         <Image
@@ -115,33 +144,11 @@ const NegotiationScreen = () => {
                             resizeMode="cover"
                         />
                     )}
-
                     <Text style={styles.title}>Negotiate the Offer</Text>
                     <Text style={styles.subtitle}>
                         Propose the price you can offer and send it!
                     </Text>
-
-                    {previousInformation&&
-                        <PriceRow
-                            title="Offered Purse"
-                            values={[
-                                previousInformation?.fightPurse ?? '',
-                                previousInformation?.winPurse ?? '',
-                                previousInformation?.bonusPurse ?? '',
-                            ]}
-                            currency={getCurrencySymbol(previousInformation?.currency)}
-                        />
-                    }
-                    <PriceRow
-                        title="Negotiated Purse"
-                        values={[
-                            submittedInformation?.fightPurse ?? '',
-                            submittedInformation?.winPurse ?? '',
-                            submittedInformation?.bonusPurse ?? '',
-                        ]}
-                        currency={getCurrencySymbol(previousInformation?.currency)}
-                    />
-
+                    {renderNegotiateState()}
                     <NewOfferComponent
                         newOffer={newOffer}
                         setNewOffer={setNewOffer}

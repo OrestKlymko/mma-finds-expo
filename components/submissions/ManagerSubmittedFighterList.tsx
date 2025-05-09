@@ -23,7 +23,6 @@ export const ManagerSubmittedFighterList = ({
                                             }: OfferDetailFooterProps) => {
     const router = useRouter();
     const [showFeatureModal, setShowFeatureModal] = useState(false);
-
     const handleOnCloseModalFeature = () => {
         setShowFeatureModal(false);
     };

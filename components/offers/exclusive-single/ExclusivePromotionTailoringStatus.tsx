@@ -144,6 +144,7 @@ export const ExclusivePromotionTailoringStatus = ({
                 submittedInformation={submittedInformation}
                 previousInformation={previousInfo}
                 typeOffer={'Exclusive'}
+                offer={offer}
             />
         );
     }

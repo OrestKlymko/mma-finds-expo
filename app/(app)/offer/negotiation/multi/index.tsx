@@ -76,6 +76,49 @@ const MultiFightOfferNegotiationScreen = () => {
             });
     };
 
+    const renderMultiFightPriceState = (
+        index: number,
+        info: SubmittedInformationOffer,
+    ) => {
+        console.log(previousInformation);
+        if (previousInformation && previousInformation.length > 0) {
+            return (
+                <>
+                    <PriceRow
+                        title="Offered Purse"
+                        values={[
+                            previousInformation?.at(index)?.fightPurse ?? '',
+                            previousInformation?.at(index)?.winPurse ?? '',
+                            previousInformation?.at(index)?.bonusPurse ?? '',
+                        ]}
+                        currency={getCurrencySymbol(offer?.currency)}
+                    />
+
+                    <PriceRow
+                        title="Negotiated Purse"
+                        values={[
+                            info.fightPurse ?? '',
+                            info.winPurse ?? '',
+                            info.bonusPurse ?? '',
+                        ]}
+                        currency={getCurrencySymbol(info.currency)}
+                    />
+                </>
+            );
+        } else {
+            return (
+                <PriceRow
+                    title="Offered Purse"
+                    values={[
+                        info.fightPurse ?? '',
+                        info.winPurse ?? '',
+                        info.bonusPurse ?? '',
+                    ]}
+                    currency={getCurrencySymbol(info.currency)}
+                />
+            );
+        }
+    };
 
     return (
         <TouchableWithoutFeedback
@@ -113,25 +156,7 @@ const MultiFightOfferNegotiationScreen = () => {
                                 <Text style={[styles.titleFight, {marginBottom: 15}]}>
                                     Fight {fightNum}
                                 </Text>
-                                <PriceRow
-                                    title="Offered Purse"
-                                    values={[
-                                        previousInformation?.at(index)?.fightPurse ?? '',
-                                        previousInformation?.at(index)?.winPurse ?? '',
-                                        previousInformation?.at(index)?.bonusPurse ?? '',
-                                    ]}
-                                    currency={getCurrencySymbol(offer?.currency)}
-                                />
-
-                                <PriceRow
-                                    title="Negotiated Purse"
-                                    values={[
-                                        info.fightPurse ?? '',
-                                        info.winPurse ?? '',
-                                        info.bonusPurse ?? '',
-                                    ]}
-                                    currency={getCurrencySymbol(info.currency)}
-                                />
+                                {renderMultiFightPriceState(index, info)}
 
                                 <MultiFightNewOfferComponent
                                     newOffer={slot}

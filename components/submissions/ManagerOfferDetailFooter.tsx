@@ -29,7 +29,7 @@ export const ManagerOfferDetailFooter = ({
             setSelectedTab('Selected Fighter');
         }
     }, [submittedInformation]);
-
+    console.log('submittedInformation', submittedInformation);
     return submittedInformation ? (
         <ManagerTailoringContent
             fighters={fighters}
@@ -41,7 +41,6 @@ export const ManagerOfferDetailFooter = ({
         />
     ) : (
         <>
-            <Text style={styles.eventTitle}>Submitted Fighters</Text>
             <ManagerSubmittedFighterList
                 fighters={fighters}
                 offer={offer}

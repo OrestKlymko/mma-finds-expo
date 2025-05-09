@@ -129,6 +129,7 @@ export const PromotionTailoringStatus = ({
     ) {
         return (
             <NegotiationOfferComponent
+                offer={offer}
                 submittedInformation={submittedInformation}
                 previousInformation={previousInfo}
                 typeOffer={'Public'}

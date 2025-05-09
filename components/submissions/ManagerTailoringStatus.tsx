@@ -4,21 +4,24 @@ import {SubmittedInformationPublicOffer} from "@/models/tailoring-model";
 import NegotiationOfferComponent from "@/components/offers/NegotiationOfferComponent";
 import {getCurrencySymbol} from "@/utils/utils";
 import colors from "@/styles/colors";
+import {ExclusiveOfferInfo, PublicOfferInfo} from "@/service/response";
 
 
 type ManagerTailoringStatusProps = {
-    submittedInformation?: SubmittedInformationPublicOffer | undefined | null;
-    previousInfo?: SubmittedInformationPublicOffer | undefined | null;
-    typeOffer: string;
+    submittedInformation?: SubmittedInformationPublicOffer | undefined | null,
+    previousInfo?: SubmittedInformationPublicOffer | undefined | null,
+    typeOffer: string,
+    offer: PublicOfferInfo |ExclusiveOfferInfo | null | undefined
 };
 
 export const ManagerTailoringStatus = ({
                                            submittedInformation,
                                            previousInfo,
                                            typeOffer,
+                                           offer
                                        }: ManagerTailoringStatusProps) => {
     if (
-        (submittedInformation?.statusResponded === 'PENDING'||submittedInformation?.statusResponded === 'NEGOTIATING' ) &&
+        (submittedInformation?.statusResponded === 'PENDING' || submittedInformation?.statusResponded === 'NEGOTIATING') &&
         submittedInformation?.offered === 'PROMOTION'
     ) {
         return (
@@ -26,6 +29,7 @@ export const ManagerTailoringStatus = ({
                 typeOffer={typeOffer}
                 submittedInformation={submittedInformation}
                 previousInformation={previousInfo}
+                offer={offer}
             />
         );
     }
@@ -36,7 +40,7 @@ export const ManagerTailoringStatus = ({
     ) {
         return (
             <>
-                <Text style={[styles.detailLabel, {marginBottom: 15,marginTop:15}]}>Purse</Text>
+                <Text style={[styles.detailLabel, {marginBottom: 15, marginTop: 15}]}>Purse</Text>
                 <View style={styles.detailsContainer}>
                     {[
                         {label: 'Fight Purse', value: submittedInformation?.fightPurse},

@@ -3,20 +3,22 @@ import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import colors from '@/styles/colors';
 import {confirmExclusiveOffer, confirmPublicOffer} from '@/service/service';
 import {ResponsorOfferRequest} from '@/service/request';
-import {SubmittedInformationOffer} from "@/service/response";
+import {ExclusiveOfferInfo, PublicOfferInfo, SubmittedInformationOffer} from "@/service/response";
 import {useRouter} from "expo-router";
 import {PurseBlock} from "@/components/offers/public/PurseBlock";
 
 interface NegotiationOfferComponentProps {
-    submittedInformation?: SubmittedInformationOffer | undefined | null;
-    previousInformation?: SubmittedInformationOffer | undefined | null;
-    typeOffer: string;
+    submittedInformation?: SubmittedInformationOffer | undefined | null,
+    previousInformation?: SubmittedInformationOffer | undefined | null,
+    typeOffer: string,
+    offer: PublicOfferInfo |ExclusiveOfferInfo | undefined | null,
 }
 
 const NegotiationOfferComponent = ({
                                        submittedInformation,
                                        previousInformation,
                                        typeOffer,
+                                       offer
                                    }: NegotiationOfferComponentProps) => {
     const router = useRouter();
 
@@ -29,7 +31,7 @@ const NegotiationOfferComponent = ({
             offerId: submittedInformation?.offerId,
             fighterId: submittedInformation?.fighterId,
         };
-        if(typeOffer==='Exclusive'){
+        if (typeOffer === 'Exclusive') {
             confirmExclusiveOffer(data).then(
                 () => {
                     router.back();
@@ -38,7 +40,7 @@ const NegotiationOfferComponent = ({
                     Alert.alert('Error', 'Failed to confirm the offer');
                 },
             );
-        }else {
+        } else {
             confirmPublicOffer(data).then(
                 () => {
                     router.back();
@@ -69,6 +71,7 @@ const NegotiationOfferComponent = ({
                 offerId: submittedInformation?.offerId || '',
                 submittedInformation: JSON.stringify(submittedInformation),
                 previousInformation: JSON.stringify(previousInformation),
+                offer: JSON.stringify(offer),
                 typeOffer,
             }
         });

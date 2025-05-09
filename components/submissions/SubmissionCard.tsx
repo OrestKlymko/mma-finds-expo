@@ -37,7 +37,6 @@ export const SubmissionCard = ({
     const navigateToSubmissionDetail = (
         offerSubmissionResponse: OfferSubmissionResponse,
     ) => {
-        console.log(offerSubmissionResponse);
         switch (offerSubmissionResponse.typeOfSubmission) {
             case 'Multi-fight contract':
                 router.push({
@@ -51,11 +50,6 @@ export const SubmissionCard = ({
                         offerId: offerSubmissionResponse.offerId,
                         fighterId: offerSubmissionResponse.fighterId || fighterId,
                     }});
-                router.push({
-                    pathname: `/offer/public/${offerSubmissionResponse.offerId}`, params: {
-                        fighterId: offerSubmissionResponse.fighterId || fighterId,
-                    }
-                });
                 break;
             case 'Exclusive':
                 router.push({
