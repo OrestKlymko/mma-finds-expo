@@ -69,7 +69,7 @@ const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
         value={value}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        multiline={true}
+        multiline={!secureTextEntry}
         onChangeText={handleChange}
         secureTextEntry={secureTextEntry}
         {...props}
