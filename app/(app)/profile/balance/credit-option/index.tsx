@@ -15,6 +15,7 @@ import {
 import {initPaymentSheet, presentPaymentSheet,} from '@stripe/stripe-react-native';
 import {PayCreditRequest} from '@/service/request';
 import {useLocalSearchParams, useRouter} from "expo-router";
+import {payWithStripe} from "@/service/create-entity/stripePayment";
 
 type CreditOption = {
     id: number;
@@ -63,79 +64,110 @@ const ChooseCreditOptionScreen = () => {
     const handleOptionSelect = (id: number) => {
         setSelectedOption(id);
     };
-
     const handlePayNow = async () => {
-        if (selectedOption !== null) {
-            const selectedCredit = creditOptions?.find(
-                option => option.id === selectedOption,
-            );
-            if(!selectedCredit) {
-                Alert.alert('Error', 'Credit option not found');
-                return;
+        if (selectedOption == null) return;
+
+        const selected = creditOptions?.find(o => o.id === selectedOption);
+        if (!selected) {
+            Alert.alert('Error', 'Credit option not found');
+            return;
+        }
+
+        const amount = parseFloat(selected.price.replace(',', '.')); // 9.99 → 9.99
+
+        setLoading(true);
+        try {
+            const paid = await payWithStripe(amount.toString());
+            console.log(paid);
+            if (!paid) return; // юзер передумав
+
+            // успішна оплата → начисляємо кредити/фічеримо
+            await payForCredit({ credit: selected.label, valueToPay: amount.toString() });
+            if (offerId && fighterId) {
+                await featureFighterOnOffer(offerId, fighterId);
+            } else if (offerId) {
+                await featureYourOffer(offerId);
             }
 
-            const data: PayCreditRequest = {
-                credit: selectedCredit?.label,
-                valueToPay: selectedCredit?.price.replace(',', '.'),
-            };
-
-            setLoading(true);
-
-            try {
-                await payForCredit(data);
-                if (offerId && fighterId) {
-                    await featureFighterOnOffer(offerId, fighterId);
-                } else if (offerId) {
-                    await featureYourOffer(offerId);
-                }
-                router.push('/(app)/(tabs)')
-            } catch {
-                const paymentData = {
-                    price: selectedCredit?.price.replace(',', '.'),
-                };
-
-                const {clientSecret} = await createPaymentIntentForCharge(paymentData);
-                // Ініціалізуємо PaymentSheet
-                const {error: initError} = await initPaymentSheet({
-                    paymentIntentClientSecret: clientSecret,
-                    merchantDisplayName: 'MMA Finds',
-                    merchantCountryCode: 'SK',
-                    style: 'automatic',
-                    primaryButtonColor: colors.primaryGreen,
-                    applePay: {merchantCountryCode: 'SK'},
-                    googlePay: {
-                        merchantCountryCode: 'SK',
-                        currencyCode: 'EUR',
-                        testEnv: true, // Видалити у продакшені
-                    },
-                });
-
-                if (initError) {
-                    Alert.alert('Error', 'Failed to initialize payment sheet');
-                    return;
-                }
-
-                // Відкриваємо PaymentSheet
-                const {error: presentError} = await presentPaymentSheet();
-
-                if (presentError) {
-                    Alert.alert('Payment failed', 'Please enter valid payment details');
-                } else {
-                    await setDefaultPaymentMethod().then(async () => {
-                        await payForCredit(data);
-                        if (offerId && fighterId) {
-                            await featureFighterOnOffer(offerId, fighterId);
-                        } else if (offerId) {
-                            await featureYourOffer(offerId);
-                        }
-                        router.push('/(app)/(tabs)')
-                    });
-                }
-            } finally {
-                setLoading(false);
-            }
+            router.push('/(app)/(tabs)');
+        } catch (e: any) {
+            Alert.alert('Payment error', e.message ?? 'Unknown error');
+        } finally {
+            setLoading(false);
         }
     };
+    // const handlePayNow = async () => {
+    //     if (selectedOption !== null) {
+    //         const selectedCredit = creditOptions?.find(
+    //             option => option.id === selectedOption,
+    //         );
+    //         if(!selectedCredit) {
+    //             Alert.alert('Error', 'Credit option not found');
+    //             return;
+    //         }
+    //
+    //         const data: PayCreditRequest = {
+    //             credit: selectedCredit?.label,
+    //             valueToPay: selectedCredit?.price.replace(',', '.'),
+    //         };
+    //
+    //         setLoading(true);
+    //
+    //         try {
+    //             await payForCredit(data);
+    //             if (offerId && fighterId) {
+    //                 await featureFighterOnOffer(offerId, fighterId);
+    //             } else if (offerId) {
+    //                 await featureYourOffer(offerId);
+    //             }
+    //             router.push('/(app)/(tabs)')
+    //         } catch {
+    //             const paymentData = {
+    //                 price: selectedCredit?.price.replace(',', '.'),
+    //             };
+    //
+    //             const {clientSecret} = await createPaymentIntentForCharge(paymentData);
+    //             // Ініціалізуємо PaymentSheet
+    //             const {error: initError} = await initPaymentSheet({
+    //                 paymentIntentClientSecret: clientSecret,
+    //                 merchantDisplayName: 'MMA Finds',
+    //                 merchantCountryCode: 'SK',
+    //                 style: 'automatic',
+    //                 primaryButtonColor: colors.primaryGreen,
+    //                 applePay: {merchantCountryCode: 'SK'},
+    //                 googlePay: {
+    //                     merchantCountryCode: 'SK',
+    //                     currencyCode: 'EUR',
+    //                     testEnv: true, // Видалити у продакшені
+    //                 },
+    //             });
+    //
+    //             if (initError) {
+    //                 Alert.alert('Error', 'Failed to initialize payment sheet');
+    //                 return;
+    //             }
+    //
+    //             // Відкриваємо PaymentSheet
+    //             const {error: presentError} = await presentPaymentSheet();
+    //
+    //             if (presentError) {
+    //                 Alert.alert('Payment failed', 'Please enter valid payment details');
+    //             } else {
+    //                 await setDefaultPaymentMethod().then(async () => {
+    //                     await payForCredit(data);
+    //                     if (offerId && fighterId) {
+    //                         await featureFighterOnOffer(offerId, fighterId);
+    //                     } else if (offerId) {
+    //                         await featureYourOffer(offerId);
+    //                     }
+    //                     router.push('/(app)/(tabs)')
+    //                 });
+    //             }
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     }
+    // };
 
     return (
         <View style={{flex: 1, backgroundColor: colors.white}}>

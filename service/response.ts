@@ -200,6 +200,10 @@ export type InvitationLinkResponse = {
   link: string;
 };
 
+export type StripePaymentResponse = {
+  paid: boolean;
+}
+
 export type DecodeTokenInvitationResponse = {
   organization: string;
   role: string;

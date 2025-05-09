@@ -11,10 +11,13 @@ import {NotificationProvider} from "@/context/NotificationContext";
 import {CountryModalProvider} from "react-native-country-picker-modal";
 import {ClerkProvider} from "@clerk/clerk-expo";
 import {tokenCache} from "@clerk/clerk-expo/token-cache";
+import {StripeProvider} from "@stripe/stripe-react-native";
 
 
 export default function RootLayout() {
     return (
+        <StripeProvider publishableKey="pk_test_51PDR6jRxes7eHgo9gthYYUPzuYs4hRSkNh90LUWIFKFDahVlq7xfrPvxE4qPA8NQl46UwYefTor8AzYot2XdJSky00GA1iREea"
+                        merchantIdentifier="merchant.com.youApp">
         <ReduxProvider store={store}>
             <ClerkProvider tokenCache={tokenCache}>
             <CountryModalProvider>
@@ -34,5 +37,6 @@ export default function RootLayout() {
             </CountryModalProvider>
             </ClerkProvider>
         </ReduxProvider>
+        </StripeProvider>
     );
 }

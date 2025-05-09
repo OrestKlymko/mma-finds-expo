@@ -33,6 +33,12 @@ export type CreatePaymentIntentRequest = {
   price: string;
 };
 
+
+export type CreatePaymentIntentStripeRequest = {
+    amount: string;
+    currency: string;
+};
+
 export type InvitationMemberRequest = {
   email: string;
   role: string;
@@ -47,6 +53,14 @@ export type PayCreditRequest = {
   credit: string;
   valueToPay: string;
 };
+
+export type PayForCreditRequestStripe = {
+  amount: string;
+  currency: string;
+};
+export type DefaultMethodRequest = {
+  clientSecret: string;
+}
 
 export type CancelEventRequest = {
   id: string;
