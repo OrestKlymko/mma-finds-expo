@@ -1,36 +1,28 @@
-import React, {useState} from 'react';
-import {Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import React from 'react';
+import {
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    ScrollView,
+    View,
+} from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import colors from "@/styles/colors";
-import GoBackButton from "@/components/GoBackButton";
-import {useAuth} from "@/context/AuthContext";
+import GoBackButton from '@/components/GoBackButton';
+import colors from '@/styles/colors';
+import {useAuth} from '@/context/AuthContext';
+import {VerificationButton} from '@/components/VerificationButton';
 import {useRouter} from "expo-router";
-import {useAuth as useAuthGoogle} from "@clerk/clerk-expo";
 
-const AccountScreen = () => {
-    const insets = useSafeAreaInsets();
-    const {setToken, setRole, setMethodAuth} = useAuth();
+const AccountInfoScreen = () => {
     const router = useRouter();
-    const [isSignOutVisible, setSignOutVisible] = useState(false);
-    const {signOut} = useAuthGoogle();
-
-    const handleSignOut = async () => {
-        setRole(null);
-        setToken(null);
-        setMethodAuth(null);
-        await signOut();
-
-        setSignOutVisible(false);
-        router.push('/login');
-    };
-
-    const openSignOutSheet = () => setSignOutVisible(true);
-    const closeSignOutSheet = () => setSignOutVisible(false);
+    const insets = useSafeAreaInsets();
+    const {methodAuth} = useAuth();
 
     return (
         <View style={{flex: 1, backgroundColor: colors.white}}>
             <GoBackButton/>
+
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -39,7 +31,8 @@ const AccountScreen = () => {
                     {paddingBottom: insets.bottom},
                 ]}>
                 {/* Header */}
-                <Text style={styles.headerTitle}>Account</Text>
+
+                <Text style={styles.headerTitle}>Account Info</Text>
 
                 {/* Account Sections */}
                 <ScrollView
@@ -48,73 +41,26 @@ const AccountScreen = () => {
                     contentContainerStyle={styles.content}>
                     <TouchableOpacity
                         style={styles.item}
-                        onPress={() => router.push('/(app)/profile/settings/account/account-info/account-details')}>
-                        <Text style={styles.itemText}>Account Info</Text>
+                        onPress={() => router.push('/profile/settings/account/account-info/verification')}>
+                        <Text style={styles.itemText}>Change Account Details</Text>
                         <Icon name="chevron-right" size={20} color={colors.gray}/>
                     </TouchableOpacity>
 
-                    <TouchableOpacity
-                        style={styles.item}
-                        onPress={() => router.push('/profile/settings/payment')}>
-                        <Text style={styles.itemText}>Payment Methods</Text>
-                        <Icon name="chevron-right" size={20} color={colors.gray}/>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.item}
-                        onPress={() => router.push('/(app)/profile/settings/account/account-management')}>
-                        <Text style={styles.itemText}>Account Management</Text>
-                        <Icon name="chevron-right" size={20} color={colors.gray}/>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.itemLast} onPress={openSignOutSheet}>
-                        <Text style={styles.signOutText}>Sign Out</Text>
-                    </TouchableOpacity>
+                    {methodAuth === 'standard' && (
+                        <TouchableOpacity
+                            style={styles.item}
+                            onPress={() => router.push('/profile/settings/account/account-info/change-password')}>
+                            <Text style={styles.itemText}>Change Password</Text>
+                            <Icon name="chevron-right" size={20} color={colors.gray}/>
+                        </TouchableOpacity>
+                    )}
+                    <VerificationButton/>
                 </ScrollView>
-
-                {/* Bottom Sheet for Sign Out Confirmation */}
-                <Modal
-                    visible={isSignOutVisible}
-                    animationType="fade"
-                    transparent
-                    onRequestClose={closeSignOutSheet}>
-                    <View style={styles.modalOverlay}>
-                        <View style={styles.bottomSheet}>
-                            <Icon
-                                name="logout"
-                                size={50}
-                                color={colors.primaryBlack}
-                                style={styles.modalIcon}
-                            />
-                            <Text style={styles.modalTitle}>
-                                Are you sure you want to sign out?
-                            </Text>
-                            <Text style={styles.modalDescription}>
-                                You will be signed out of your account and{'\n'}
-                                will need to sign in again to access {'\n'}
-                                your personalized profile.
-                            </Text>
-
-                            <TouchableOpacity
-                                style={styles.staySignedInButton}
-                                onPress={closeSignOutSheet}>
-                                <Text style={styles.staySignedInText}>Stay Signed In</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                style={styles.signOutButton}
-                                onPress={handleSignOut}>
-                                <Text style={styles.signOutButtonText}>Sign Out</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal>
             </ScrollView>
         </View>
     );
 };
 
-export default AccountScreen;
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
@@ -122,6 +68,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 38,
     },
 
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingTop: 10,
+        paddingBottom: 20,
+        backgroundColor: colors.white,
+    },
     headerTitle: {
         fontSize: 25,
         fontWeight: '500',
@@ -131,9 +85,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 20,
     },
-
     content: {},
-
     item: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -150,90 +102,18 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
         paddingHorizontal: 10,
     },
-
     itemText: {
         fontSize: 16,
         fontFamily: 'Roboto',
         fontWeight: '400',
         color: colors.primaryBlack,
     },
-
     signOutText: {
         fontSize: 16,
         fontWeight: '400',
         fontFamily: 'Roboto',
         color: '#980909',
     },
-
-    /** MODAL **/
-    modalOverlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        justifyContent: 'flex-end',
-    },
-
-    bottomSheet: {
-        backgroundColor: colors.white,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        paddingVertical: 40,
-        paddingHorizontal: 40,
-        padding: 24,
-        alignItems: 'center',
-    },
-
-    modalIcon: {
-        marginBottom: 20,
-    },
-
-    modalTitle: {
-        fontSize: 25,
-        fontWeight: '500',
-        fontFamily: 'Roboto',
-        color: colors.primaryBlack,
-        textAlign: 'center',
-        marginBottom: 16,
-    },
-
-    modalDescription: {
-        fontSize: 16.5,
-        fontWeight: '400',
-        fontFamily: 'Roboto',
-        lineHeight: 19.3,
-        color: colors.gray,
-        textAlign: 'center',
-        marginBottom: 40,
-    },
-
-    staySignedInButton: {
-        backgroundColor: colors.primaryGreen,
-        borderRadius: 8,
-        width: '100%',
-        paddingVertical: 12,
-        alignItems: 'center',
-        marginBottom: 8,
-    },
-
-    staySignedInText: {
-        color: colors.white,
-        fontFamily: 'Roboto',
-        fontSize: 16,
-        paddingVertical: 8,
-
-        fontWeight: '500',
-    },
-
-    signOutButton: {
-        backgroundColor: 'transparent',
-        width: '100%',
-        paddingVertical: 12,
-        alignItems: 'center',
-    },
-
-    signOutButtonText: {
-        color: '#980909',
-        fontFamily: 'Roboto',
-        fontSize: 16,
-        fontWeight: '400',
-    },
 });
+
+export default AccountInfoScreen;
