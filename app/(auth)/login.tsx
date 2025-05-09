@@ -14,11 +14,11 @@ import SocialButton from "@/components/method-auth/SocialButton";
 import FloatingLabelInput from "@/components/FloatingLabelInput";
 import {useRouter} from "expo-router";
 import FooterSingUp from "@/components/FooterSingUp";
-import {RoleSelector} from "@/components/RoleSelector";
 import GoBackButton from "@/components/GoBackButton";
 import {useAuth} from "@/context/AuthContext";
 import useAppleAuth from "@/hooks/useAppleAuth";
 import useGoogleAuth from "@/hooks/useGoogleAuth";
+import RolePicker from "@/components/RolePicker";
 
 export const useWarmUpBrowser = () => {
     useEffect(() => {
@@ -39,7 +39,7 @@ const LoginScreen = () => {
     const [password, setPassword] = useState('');
     const {setToken, setMethodAuth, setRole, setEntityId} = useAuth();
     const [authLoading, setAuthLoading] = useState<AuthMethod>(null);
-    const [selectedRole, setSelectedRole] = useState<'MANAGER' | 'PROMOTION'>('MANAGER');
+    const [selectedRole, setSelectedRole] = useState<'MANAGER' | 'PROMOTION' | 'PROMOTION_EMPLOYEE'>('MANAGER');
     const router = useRouter();
     const handleSignIn = async () => {
         setAuthLoading('standard');
@@ -68,12 +68,17 @@ const LoginScreen = () => {
         method: string,
         token: string | null,
     ) => {
+        if (!selectedRole) {
+            Alert.alert('Error', 'Please select a role');
+            setAuthLoading(null);
+            return;
+        }
         const loginRequest: LoginRequest = {
             email: email,
             password: password,
             method: method,
             fcmToken: token,
-            userRole: selectedRole!,
+            userRole: selectedRole,
         };
         login(loginRequest)
             .then(async res => {
@@ -154,11 +159,11 @@ const LoginScreen = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <RoleSelector onSelect={setSelectedRole} selected={selectedRole}/>
-
+                {/*<RoleSelector onSelect={setSelectedRole} selected={selectedRole}/>*/}
+                <RolePicker value={selectedRole} onChange={setSelectedRole}/>
                 <TouchableOpacity
                     style={styles.forgotPassword}
-                    onPress={() => router.push({pathname:'/(auth)/password'})}>
+                    onPress={() => router.push({pathname: '/(auth)/password'})}>
                     <Text style={styles.forgotPasswordText}>Forgot password?</Text>
                 </TouchableOpacity>
 

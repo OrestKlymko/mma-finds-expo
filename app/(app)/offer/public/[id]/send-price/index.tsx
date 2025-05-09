@@ -26,9 +26,9 @@ import {useLocalSearchParams, useRouter} from "expo-router";
 const PromotionTailoringPriceAndDocumentScreen = () => {
     const insets = useSafeAreaInsets();
     const [fighter, setFighter] = useState<FighterInfoResponse | null>(null);
-    const {fighterId, offerId, currency} = useLocalSearchParams<{
+    const {fighterId, id, currency} = useLocalSearchParams<{
         fighterId: string;
-        offerId: string;
+        id: string;
         currency: CurrencyCode;
     }>();
     const router = useRouter();
@@ -103,7 +103,7 @@ const PromotionTailoringPriceAndDocumentScreen = () => {
             win: purseValues.win,
             fight: purseValues.fight,
             bonus: purseValues.bonus,
-            offerId,
+            offerId:id,
             currency: currencyChoosen,
             newDocument: newDocument.map(doc => ({
                 name: doc.documentName,

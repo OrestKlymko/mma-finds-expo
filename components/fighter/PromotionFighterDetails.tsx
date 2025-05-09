@@ -18,11 +18,11 @@ const PromotionFighterDetails = () => {
     const route = useRoute();
     const insets = useSafeAreaInsets();
     const [fighter, setFighter] = useState<FighterInfoResponse | null>(null);
-    const {fighterId} = route.params as {fighterId: string};
+    const {id} = route.params as {id: string};
     const [contentLoading, setContentLoading] = useState(false);
     useEffect(() => {
         setContentLoading(true);
-        getFullInfoAboutFighter(fighterId)
+        getFullInfoAboutFighter(id)
             .then(res => {
                 setFighter(res);
             })
@@ -48,7 +48,7 @@ const PromotionFighterDetails = () => {
                     {paddingBottom: insets.bottom},
                 ]}>
                 <FighterHeaderAndManagerInfo fighter={fighter} />
-                <FighterManageButtonWithSendExclusiveOffer fighterId={fighterId} fighter={fighter} />
+                <FighterManageButtonWithSendExclusiveOffer fighterId={id} fighter={fighter} />
                 <FighterLookingState
                     lookingForOpponent={fighter?.lookingForOpponent ?? true}
                 />

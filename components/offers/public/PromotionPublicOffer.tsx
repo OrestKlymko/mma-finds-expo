@@ -36,7 +36,6 @@ export const PromotionOfferDetailsScreen = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            console.log(id);
             setContentLoading(true);
             if (id) {
                 loadingContent(id);

@@ -3,7 +3,7 @@ import {PromotionMultiFightOffer} from "@/components/offers/public/PromotionMult
 
 export default function Index() {
     const {role} = useAuth();
-    if (role === 'PROMOTION') {
+    if (role === 'PROMOTION'||role==='PROMOTION_EMPLOYEE'){
         return <PromotionMultiFightOffer/>
     }
 }

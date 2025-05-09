@@ -6,7 +6,6 @@ import {
     Platform,
     KeyboardAvoidingView,
 } from 'react-native';
-import {useRoute, useFocusEffect} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {PublicOfferInfo, ShortInfoFighter} from '@/service/response';
 import { SubmittedInformationPublicOffer } from '@/models/tailoring-model';
@@ -24,10 +23,11 @@ import OpponentDetailsSection from "@/components/offers/public/OpponentDetailsSe
 import colors from "@/styles/colors";
 import {ManagerSubmittedFighterList} from "@/components/submissions/ManagerSubmittedFighterList";
 import {ManagerOfferDetailFooter} from "@/components/submissions/ManagerOfferDetailFooter";
+import {useFocusEffect, useLocalSearchParams} from "expo-router";
 
 
 export const ManagerSubmissionDetailScreen = () => {
-    const route = useRoute();
+
     const insets = useSafeAreaInsets();
     const [fighters, setFighters] = useState<ShortInfoFighter[]>([]);
     const [offer, setOffer] = useState<PublicOfferInfo | null>(null);
@@ -38,10 +38,11 @@ export const ManagerSubmissionDetailScreen = () => {
         useState<SubmittedInformationPublicOffer>();
     const [contentLoading, setContentLoading] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
-    const {offerId, fighterId} = route.params as {
+    const {offerId,fighterId} = useLocalSearchParams<{
         offerId: string;
         fighterId: string;
-    };
+    }>();
+
 
     useFocusEffect(
         React.useCallback(() => {
@@ -101,7 +102,6 @@ export const ManagerSubmissionDetailScreen = () => {
             },
         );
     };
-
     if (contentLoading) {
         return <ContentLoader />;
     }

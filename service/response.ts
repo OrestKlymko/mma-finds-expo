@@ -1,6 +1,6 @@
 import {TaskStatus} from './request';
 
-export type USER_ROLE = 'MANAGER' | 'PROMOTION';
+export type USER_ROLE = 'MANAGER' | 'PROMOTION' | 'PROMOTION_EMPLOYEE';
 export type VerificationState = 'PENDING' | 'APPROVED' | 'REJECTED' | 'NONE';
 export type StatusResponse =
   | 'ACCEPTED'
@@ -127,6 +127,7 @@ export type UserInfoResponse = {
   isVerified: boolean;
   promotionId: string | null;
   managerId: string | null;
+  promotionEmployeeId: string | null;
 };
 
 export type PromotionInformationResponse = {

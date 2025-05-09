@@ -258,6 +258,14 @@ export const getShortInfoPromotion = async (): Promise<UserInfoResponse> => {
   return axiosResponse.data;
 };
 
+export const getShortInfoPromotionEmployee = async (): Promise<UserInfoResponse> => {
+  const axiosResponse = await api.get(
+      `${API_BASE_URL}/promotion-employee/short-info`,
+      {},
+  );
+  return axiosResponse.data;
+};
+
 export const getShortInfoPromotionForCard = async (): Promise<
   PromotionResponse[]
 > => {

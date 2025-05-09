@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {useRoute} from '@react-navigation/native';
 
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import GoBackButton from '@/components/GoBackButton';
@@ -15,11 +14,10 @@ import {FighterManagerButtonsWithSelect} from "@/components/fighter/FighterManag
 import {useLocalSearchParams} from "expo-router";
 
 const PromotionFighterDetailsWithSelectFighterScreen = () => {
-    const route = useRoute();
     const insets = useSafeAreaInsets();
     const [fighter, setFighter] = useState<FighterInfoResponse | null>(null);
     const params = useLocalSearchParams();
-    const {fighterId} = params as {fighterId: string};
+    const {id} = params as {id: string};
     const {offerId} = params as {offerId: string};
     const {currency} = params as {currency: string};
     const {eligibleToSelect} = params as {eligibleToSelect: string};
@@ -27,8 +25,8 @@ const PromotionFighterDetailsWithSelectFighterScreen = () => {
     const [contentLoading, setContentLoading] = useState(false);
     useEffect(() => {
         setContentLoading(true);
-        if (fighterId) {
-            getFullInfoAboutFighter(fighterId)
+        if (id) {
+            getFullInfoAboutFighter(id)
                 .then(res => {
                     setFighter(res);
                 })
@@ -36,7 +34,7 @@ const PromotionFighterDetailsWithSelectFighterScreen = () => {
                     setContentLoading(false);
                 });
         }
-    }, [fighterId]);
+    }, [id]);
 
     if (contentLoading) {
         return <ContentLoader />;
@@ -56,7 +54,7 @@ const PromotionFighterDetailsWithSelectFighterScreen = () => {
                 <FighterManagerButtonsWithSelect
                     fighter={fighter}
                     offerId={offerId}
-                    fighterId={fighterId}
+                    fighterId={id}
                     currency={currency}
                     eligibleToSelect={eligibleToSelect==='true'}
                 />

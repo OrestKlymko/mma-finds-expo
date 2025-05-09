@@ -14,18 +14,18 @@ import {useLocalSearchParams} from "expo-router";
 const PromotionFighterDetailOfferScreen = () => {
     const insets = useSafeAreaInsets();
     const [fighter, setFighter] = useState<FighterInfoResponse | null>(null);
-    const {fighterId} = useLocalSearchParams<{fighterId: string}>();
+    const {id} = useLocalSearchParams<{id: string}>();
     const [contentLoading, setContentLoading] = useState(false);
     useEffect(() => {
         setContentLoading(true);
-        getFullInfoAboutFighter(fighterId)
+        getFullInfoAboutFighter(id)
             .then(res => {
                 setFighter(res);
             })
             .finally(() => {
                 setContentLoading(false);
             });
-    }, [fighterId]);
+    }, [id]);
 
     if (contentLoading) {
         return <ContentLoader />;

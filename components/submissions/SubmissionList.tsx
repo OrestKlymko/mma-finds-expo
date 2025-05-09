@@ -4,6 +4,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import {OfferSubmissionResponse} from "@/service/request";
+import {SubmissionCard} from "@/components/submissions/SubmissionCard";
 
 
 // import {SubmissionCard} from "./SubmissionCard.tsx";
@@ -31,8 +32,7 @@ export function SubmissionList({
             showsVerticalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item,index}) => {
-                // return <SubmissionCard item={item} horizontal={horizontal} fighterId={fighterId} />;
-                return <Text>SubmissionCard placeholder</Text>
+                return <SubmissionCard item={item} horizontal={horizontal} fighterId={fighterId} />;
             }}
         />
     );

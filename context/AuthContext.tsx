@@ -12,11 +12,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 type AuthContextType = {
   token: string | null | undefined;
   methodAuth: string | null | undefined;
-  role: 'MANAGER' | 'PROMOTION' | null | undefined;
+  role: 'MANAGER' | 'PROMOTION' |"PROMOTION_EMPLOYEE"| null | undefined;
   entityId: string | null | undefined;
   setToken: (token: string | null | undefined) => void;
   setMethodAuth: (methodAuth: string | null | undefined) => void;
-  setRole: (role: 'MANAGER' | 'PROMOTION' | null | undefined) => void;
+  setRole: (role: 'MANAGER' | 'PROMOTION' |'PROMOTION_EMPLOYEE'| null | undefined) => void;
   setEntityId: (entityId: string | null | undefined) => void;
   clearAuthData: () => void;
   isLoading: boolean;
@@ -32,7 +32,7 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
     null,
   );
   const [role, setRoleState] = useState<
-    'MANAGER' | 'PROMOTION' | null | undefined
+    'MANAGER' | 'PROMOTION' |'PROMOTION_EMPLOYEE' | null | undefined
   >(null);
   const [entityId, setEntityIdState] = useState<string | null | undefined>(
     null,
@@ -91,7 +91,7 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
 
   // Окремий сеттер для role
   const setRole = async (
-    newRole: 'MANAGER' | 'PROMOTION' | null | undefined,
+    newRole: 'MANAGER' | 'PROMOTION' |'PROMOTION_EMPLOYEE'| null | undefined,
   ) => {
     try {
       setRoleState(newRole);

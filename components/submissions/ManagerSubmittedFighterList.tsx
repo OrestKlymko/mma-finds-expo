@@ -45,10 +45,12 @@ export const ManagerSubmittedFighterList = ({
                 style={styles.submitButton}
                 onPress={() => {
                     if (!offer) return;
-                    // router.navigate('SubmitFighterOfferScreen', {
-                    //     offer,
-                    //     submittedFighters: fighters,
-                    // }); TODO REWORK
+                    router.push({
+                        pathname: '/manager/submissions/submit', params: {
+                            offer: JSON.stringify(offer),
+                            submittedFighters: JSON.stringify(fighters),
+                        }
+                    })
                 }}>
                 <Text style={styles.submitText}>Submit Fighter</Text>
             </TouchableOpacity>

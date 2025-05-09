@@ -1,5 +1,5 @@
-import { OfferSubmissionResponse } from '@/service/request';
-import { useRouter } from 'expo-router';
+import {OfferSubmissionResponse} from '@/service/request';
+import {useRouter} from 'expo-router';
 import {
     Dimensions,
     StyleSheet,
@@ -37,37 +37,40 @@ export const SubmissionCard = ({
     const navigateToSubmissionDetail = (
         offerSubmissionResponse: OfferSubmissionResponse,
     ) => {
+        console.log(offerSubmissionResponse);
         switch (offerSubmissionResponse.typeOfSubmission) {
             case 'Multi-fight contract':
-                // TODO: FIX NAVIGATION TO SCREENS
-                router.push('/(app)/profile/manager/offer');
-                // navigation.navigate('ManagerMultiFightOfferDetailsScreen', {
-                //     offerId: offerSubmissionResponse.offerId,
-                //     fighterId: offerSubmissionResponse.fighterId,
-                // });
+                router.push({
+                    pathname: `/offer/exclusive/multi/${offerSubmissionResponse.offerId}`, params: {
+                        fighterId: offerSubmissionResponse.fighterId,
+                    }
+                });
                 break;
             case 'Public':
-                router.push('/(app)/profile/manager/offer');
-                // navigation.navigate('ManagerSubmissionDetailScreen', {
-                //     offerId: offerSubmissionResponse.offerId,
-                //     fighterId: offerSubmissionResponse.fighterId || fighterId,
-                // });
+                router.push({pathname:'/manager/submissions/manager-submissions-detail',params: {
+                        offerId: offerSubmissionResponse.offerId,
+                        fighterId: offerSubmissionResponse.fighterId || fighterId,
+                    }});
+                router.push({
+                    pathname: `/offer/public/${offerSubmissionResponse.offerId}`, params: {
+                        fighterId: offerSubmissionResponse.fighterId || fighterId,
+                    }
+                });
                 break;
             case 'Exclusive':
-                router.push('/(app)/profile/manager/offer');
-                // navigation.navigate('ManagerExclusiveOfferDetailsScreen', {
-                //     offerId: offerSubmissionResponse.offerId,
-                //     fighterId: offerSubmissionResponse.fighterId,
-                // });
+                router.push({
+                    pathname: `/offer/exclusive/single/${offerSubmissionResponse.offerId}`, params: {
+                        fighterId: offerSubmissionResponse.fighterId,
+                    }
+                });
                 break;
         }
     };
 
     const screenWidth = Dimensions.get('window').width;
     const CARD_WIDTH = screenWidth - 30 * 2; // 38 зліва та 38 справа
-    const setWidth = React.useMemo(() => {
-        return horizontal ? {width: CARD_WIDTH, marginRight: 13} : {};
-    }, [CARD_WIDTH, horizontal]);
+    const setWidth = horizontal ? {width: CARD_WIDTH, marginRight: 13} : {};
+
     return (
         <TouchableOpacity
             onPress={() => navigateToSubmissionDetail(item)}

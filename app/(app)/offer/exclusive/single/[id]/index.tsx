@@ -3,7 +3,7 @@ import {PromotionSingleOffer} from "@/components/offers/exclusive-single/Promoti
 
 export default function Index() {
     const {role} = useAuth();
-    if (role === 'PROMOTION') {
+    if (role === 'PROMOTION'||role==='PROMOTION_EMPLOYEE'){
         return <PromotionSingleOffer/>
     }
 }

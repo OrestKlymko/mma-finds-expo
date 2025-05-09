@@ -4,6 +4,7 @@ import React from 'react';
 import {featureYourOffer} from '@/service/service';
 import {PublicOfferInfo} from '@/service/response';
 import {useRouter} from "expo-router";
+import {useAuth} from "@/context/AuthContext";
 
 type Props = {
   offer: PublicOfferInfo | null | undefined;
@@ -12,6 +13,7 @@ type Props = {
 export const FeatureOffer = ({offer}: Props) => {
   const [featureOfferLoading, setFeatureOfferLoading] = React.useState(false);
   const router =useRouter();
+  const {role} = useAuth();
   const handleFeatureOffer = () => {
     setFeatureOfferLoading(true);
     if (!offer?.offerId) {
@@ -25,6 +27,12 @@ export const FeatureOffer = ({offer}: Props) => {
       })
       .catch(error => {
         if (error.response.status === 406) {
+          if(role==='PROMOTION_EMPLOYEE'){
+            Alert.alert(
+              'Not Enough Credits',
+              'Please contact your manager to add credits to your account.',
+            );
+          }
           router.push({
             pathname:'/profile/balance/credit-option',
             params: {

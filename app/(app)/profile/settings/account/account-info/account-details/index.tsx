@@ -7,7 +7,7 @@ export default function InfoIndex() {
 
     useEffect(() => {
         if (role === 'MANAGER') router.replace('/profile/settings/account/account-info/account-details/manager');
-        if (role === 'PROMOTION') router.replace('/profile/settings/account/account-info/account-details/promotion');
+        if (role === 'PROMOTION'||role==='PROMOTION_EMPLOYEE') router.replace('/profile/settings/account/account-info/account-details/promotion');
     }, [role]);
 
     return null;

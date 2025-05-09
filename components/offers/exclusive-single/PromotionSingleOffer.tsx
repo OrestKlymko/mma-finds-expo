@@ -42,9 +42,7 @@ export const PromotionSingleOffer = () => {
     const [previousInfo, setPreviousInfo] = useState<
         SubmittedInformationOffer | undefined
     >();
-    useEffect(() => {
-        console.log('offerId', offerId);
-    }, [offerId]);
+
     useFocusEffect(
         React.useCallback(() => {
             setContentLoading(true);

@@ -14,7 +14,7 @@ import {ManagerOfferDetailScreen} from "@/components/offers/public/ManagerPublic
 
 export default function PublicOfferDetails() {
     const {role} = useAuth();
-    if (role === 'PROMOTION') {
+    if (role === 'PROMOTION'||role==='PROMOTION_EMPLOYEE') {
         return <PromotionPublicOffer/>
     } else {
         return <ManagerOfferDetailScreen />

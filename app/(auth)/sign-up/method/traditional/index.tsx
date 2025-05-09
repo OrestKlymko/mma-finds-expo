@@ -84,7 +84,6 @@ export default function Index() {
                 'standard',
             );
             formData.append('password', password);
-            console.log(formData);
             createPromotion(formData)
                 .then(res => {
                     setToken(res.token);
