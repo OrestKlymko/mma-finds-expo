@@ -100,8 +100,7 @@ const HomeScreen = () => {
                     description="Use the feature option to enhance the visibility of your fight offers!"
                     buttonText="Feature Your Offer"
                     onPress={() => {
-                        //TODO: PUSH CORRECT
-                        router.push('/profile/offer-documents');
+                        router.push('/profile/featured-offers');
                     }}
                 />
 

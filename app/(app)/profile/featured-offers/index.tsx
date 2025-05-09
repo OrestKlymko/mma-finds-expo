@@ -40,7 +40,7 @@ const FeaturedOffersListScreen = () => {
                         <View style={styles.referralContainer}>
                             <TouchableOpacity
                                 style={styles.featuredButton}
-                                onPress={() => router.push('/(app)/offer/public')}>
+                                onPress={() => router.push('/(app)/(tabs)/feed')}>
                                 <Text style={{color: colors.primaryBlack, fontWeight: '500'}}>
                                     Feature Your Offers
                                 </Text>
