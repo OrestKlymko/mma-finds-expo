@@ -37,13 +37,13 @@ export const SubmissionCard = ({
     const navigateToSubmissionDetail = (
         offerSubmissionResponse: OfferSubmissionResponse,
     ) => {
+        console.log(offerSubmissionResponse);
         switch (offerSubmissionResponse.typeOfSubmission) {
             case 'Multi-fight contract':
-                router.push({
-                    pathname: `/offer/exclusive/multi/${offerSubmissionResponse.offerId}`, params: {
-                        fighterId: offerSubmissionResponse.fighterId,
-                    }
-                });
+                router.push({pathname:'/manager/submissions/manager-submissions-detail/multi',params: {
+                        offerId: offerSubmissionResponse.offerId,
+                        fighterId: offerSubmissionResponse.fighterId || fighterId,
+                    }});
                 break;
             case 'Public':
                 router.push({pathname:'/manager/submissions/manager-submissions-detail',params: {
@@ -52,11 +52,10 @@ export const SubmissionCard = ({
                     }});
                 break;
             case 'Exclusive':
-                router.push({
-                    pathname: `/offer/exclusive/single/${offerSubmissionResponse.offerId}`, params: {
-                        fighterId: offerSubmissionResponse.fighterId,
-                    }
-                });
+                router.push({pathname:'/manager/submissions/manager-submissions-detail/single',params: {
+                        offerId: offerSubmissionResponse.offerId,
+                        fighterId: offerSubmissionResponse.fighterId || fighterId,
+                    }});
                 break;
         }
     };

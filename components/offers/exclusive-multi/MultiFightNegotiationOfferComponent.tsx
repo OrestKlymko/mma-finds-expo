@@ -6,7 +6,7 @@ import {acceptMultiFightOffer} from '@/service/service';
 import {PurseBlock} from "@/components/offers/public/PurseBlock";
 import {useRouter} from "expo-router";
 
-interface MultiFightNegotiationOfferComponent {
+interface MultiFightNegotiationOfferComponentProps {
     submittedInformation?: SubmittedInformationOffer[];
     previousInformation?: SubmittedInformationOffer[];
     offer: MultiContractFullInfo | null | undefined
@@ -16,7 +16,7 @@ const MultiFightNegotiationOfferComponent = ({
                                                  offer,
                                                  submittedInformation,
                                                  previousInformation,
-                                             }: MultiFightNegotiationOfferComponent) => {
+                                             }: MultiFightNegotiationOfferComponentProps) => {
     const router = useRouter();
     const handleConfirmOffer = () => {
         if (

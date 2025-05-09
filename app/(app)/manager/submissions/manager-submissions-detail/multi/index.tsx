@@ -1,52 +1,64 @@
 import React, {useState} from 'react';
-import {KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View} from 'react-native';
+import {
+    View,
+    StyleSheet,
+    ScrollView,
+    Platform,
+    KeyboardAvoidingView,
+} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {getMultiFightOfferById} from '@/service/service';
 import colors from '@/styles/colors';
 import ContentLoader from '@/components/ContentLoader';
-import {MultiContractFullInfo, ShortInfoFighter, SubmittedInformationOffer,} from '@/service/response';
+import {
+    MultiContractFullInfo,
+    ShortInfoFighter,
+    SubmittedInformationOffer,
+} from '@/service/response';
+import {useFocusEffect, useLocalSearchParams} from "expo-router";
 import {EventPosterImage} from "@/components/offers/public/EventPosterImage";
 import {TitleWithAction} from "@/components/offers/public/TitleWithAction";
-import {ShareOffer} from "@/components/offers/public/ShareOffer";
 import {MainOfferDetails} from "@/components/offers/exclusive-multi/MainOfferDetails";
-import {
-    MultiFightPromotionTailoringProcess
-} from "@/components/offers/exclusive-multi/MultiFightPromotionTailoringProcess";
-import {useFocusEffect, useLocalSearchParams} from "expo-router";
+import {MultiFightOfferManagerTailoringCandidates} from "@/components/offers/MultiFightOfferManagerTailoringCandidates";
 
-export const PromotionMultiFightOffer = () => {
+
+export const ManagerMultiFightOfferDetailsScreen = () => {
     const insets = useSafeAreaInsets();
 
     const [offer, setOffer] = useState<MultiContractFullInfo | null>(null);
     const [fighter, setFighter] = useState<ShortInfoFighter | null>(null);
+    const [contentLoader, setContentLoader] = useState(false);
     const [submissionInformations, setSubmissionInformations] = useState<
         SubmittedInformationOffer[]
     >([]);
     const [previousSubmission, setPreviousSubmission] = useState<
         SubmittedInformationOffer[]
     >([]);
-    const [contentLoader, setContentLoader] = useState(false);
-
-    const {id} =useLocalSearchParams<{id: string}>();
+    const {offerId}=useLocalSearchParams<{offerId:string}>();
 
     useFocusEffect(
         React.useCallback(() => {
-            if (!id) return;
-            setContentLoader(true);
-            getMultiFightOfferById(id)
-                .then(res => {
-                    setOffer(res.offer);
-                    setFighter(res.fighter);
-                    setSubmissionInformations(res.submittedInformation);
-                    setPreviousSubmission(res.previousOfferPrice);
-                })
-                .finally(() => setContentLoader(false));
-        }, [id]),
+            if (!offerId) return;
+            getMultiFightOffer();
+        }, [offerId]),
     );
+
+    const getMultiFightOffer = () => {
+        setContentLoader(true);
+        getMultiFightOfferById(offerId)
+            .then(res => {
+                setOffer(res.offer);
+                setFighter(res.fighter);
+                setSubmissionInformations(res.submittedInformation);
+                setPreviousSubmission(res.previousOfferPrice);
+            })
+            .finally(() => setContentLoader(false));
+    };
 
     if (contentLoader) {
         return <ContentLoader />;
     }
+
     return (
         <KeyboardAvoidingView
             style={{flex: 1, backgroundColor: colors.background}}
@@ -60,22 +72,17 @@ export const PromotionMultiFightOffer = () => {
                     {paddingBottom: insets.bottom},
                 ]}>
                 <EventPosterImage eventImageLink={offer?.promotionAvatar} />
-
                 <View style={styles.eventDetailsContainer}>
                     <TitleWithAction title={'Multi-Fight Offer'} />
-                    <ShareOffer offer={offer} typeOffer={'Multi-fight contract'} fighter={fighter}/>
                     <MainOfferDetails offer={offer} />
-
-                    {fighter &&
-                        offer &&
-                        submissionInformations && (
-                            <MultiFightPromotionTailoringProcess
-                                fighter={fighter}
-                                offer={offer}
-                                submittedInformation={submissionInformations}
-                                previousInfo={previousSubmission}
-                            />
-                        )}
+                    {fighter && offer && submissionInformations && (
+                        <MultiFightOfferManagerTailoringCandidates
+                            fighter={fighter}
+                            offer={offer}
+                            submittedInformation={submissionInformations}
+                            previousInfo={previousSubmission}
+                        />
+                    )}
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>
@@ -92,6 +99,22 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         padding: 24,
-        marginTop: -50
+        marginTop: -50,
+    },
+
+    headerRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 30,
+        marginTop: 20,
+        zIndex: 10,
+    },
+    eventTitle: {
+        fontSize: 25,
+        fontWeight: '500',
+        color: colors.primaryGreen,
     },
 });
+
+export default ManagerMultiFightOfferDetailsScreen;

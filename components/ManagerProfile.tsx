@@ -47,7 +47,7 @@ const ManagerProfile = () => {
                         pathToScreen: '/profile/balance',
                     },
                     {label: 'My Fighters', icon: 'account-group', pathToScreen: '/profile/my-fighters'},
-                    {label: 'All Promotions', icon: 'office-building', pathToScreen: '/profile/all-promotions'},
+                    {label: 'All Promotions', icon: 'office-building', pathToScreen: '/promotion'},
                     {
                         label: 'Invite & Earn',
                         icon: 'account-plus',

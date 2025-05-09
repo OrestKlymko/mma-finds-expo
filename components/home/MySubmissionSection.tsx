@@ -21,14 +21,13 @@ export const MySubmissionSection = ({
 
                 <TouchableOpacity
                     onPress={() => {
-                        router.push("/(app)/manager/submissions")
-                        //TODO: edit path for navigation.navigate('ManagerManageMySubmissions')
+                        router.push("/(app)/(tabs)/feed")
                     }}>
                     <Text style={styles.seeAll}>See All</Text>
                 </TouchableOpacity>
             </View>
 
-            <SubmissionList horizontal filteredSubmission={submissions} />
+            <SubmissionList horizontal filteredSubmission={submissions}/>
         </View>
     );
 };

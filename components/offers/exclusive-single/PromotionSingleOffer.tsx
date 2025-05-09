@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, Text, View,} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
@@ -33,7 +33,7 @@ export const PromotionSingleOffer = () => {
         {} as ShortInfoFighter,
     );
     const [offer, setOffer] = useState<ExclusiveOfferInfo | null>(null);
-    const {offerId} = useLocalSearchParams<{ offerId: string }>()
+    const {id} = useLocalSearchParams<{ id: string }>()
     const [benefits, setBenefits] = useState<Benefit | null>(null);
     const [contentLoading, setContentLoading] = useState(false);
     const [submittedInformation, setSubmittedInformation] = useState<
@@ -46,7 +46,8 @@ export const PromotionSingleOffer = () => {
     useFocusEffect(
         React.useCallback(() => {
             setContentLoading(true);
-            getExclusiveOfferInfoById(offerId)
+            console.log(id);
+            getExclusiveOfferInfoById(id)
                 .then(res => {
                     setOffer(res.offer);
                     setFighters(res.fighter);
@@ -60,14 +61,14 @@ export const PromotionSingleOffer = () => {
                 setContentLoading(true);
                 chooseAnotherFighter();
             }
-        }, [fighterId, offerId]),
+        }, [fighterId, id]),
     );
 
     const chooseAnotherFighter = () => {
         if (!fighterId) {
             return;
         }
-        chooseFighterForExclusiveOffer(fighterId, offerId)
+        chooseFighterForExclusiveOffer(fighterId, id)
             .then(() => {
                 dispatch(setFighterId(''));
                 router.back();
