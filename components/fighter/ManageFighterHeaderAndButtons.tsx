@@ -1,7 +1,7 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {FighterInfoResponse} from "@/service/response";
-import { useRouter } from 'expo-router';
+import {useLocalSearchParams, useRouter} from 'expo-router';
 import {Image} from "expo-image";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import colors from "@/styles/colors";
@@ -15,15 +15,13 @@ export const ManageFighterHeaderAndButtons = ({
                                                   fighter,
                                               }: ManageFighterHeaderAndButtonsProps) => {
    const router= useRouter();
-
+    const {id} = useLocalSearchParams<{id: string}>();
     const onEdit = () => {
         if (!fighter) {
             console.error('Fighter data is not available');
             return;
         }
-        // navigation.navigate('EditFightersProfileScreen', {
-        //     fighterId: fighter.fighterId,
-        // });
+        router.push(`/(app)/manager/fighter/${id}/edit`)
     };
 
     return (

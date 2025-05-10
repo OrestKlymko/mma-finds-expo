@@ -39,11 +39,12 @@ import {FoundationStyleDropdown} from "@/components/fighter/FoundationStyleDropd
 import { SportTypeMultiSelectDropdown } from '@/components/fighter/SportTypeMultiSelectDropdown';
 import { TapologyLinkInput } from '@/components/fighter/TapologyLinkInput';
 import SocialMediaModal from "@/components/SocialMediaModal";
+import {useLocalSearchParams} from "expo-router";
 
 
 
 const EditFightersProfileScreen = () => {
-    const {fighterId} = useRoute().params as {fighterId: string};
+    const {id} = useLocalSearchParams<{id: string}>();
     const [fighter, setFighter] = useState<FighterFullProfile | null>(null);
     const [minWeight, setMinWeight] = useState('');
     const [maxWeight, setMaxWeight] = useState('');
@@ -140,8 +141,8 @@ const EditFightersProfileScreen = () => {
 
     // --- 2) Load the fighter to update
     useEffect(() => {
-        if (fighterId) {
-            getUpdateFighter(fighterId)
+        if (id) {
+            getUpdateFighter(id)
                 .then(data => {
                     setFighter(data);
                 })
@@ -149,7 +150,7 @@ const EditFightersProfileScreen = () => {
                     Alert.alert('Error', 'Failed to load fighter data.');
                 });
         }
-    }, [fighterId]);
+    }, [id]);
 
     // --- 3) Once the fighter is loaded, populate states
     useEffect(() => {

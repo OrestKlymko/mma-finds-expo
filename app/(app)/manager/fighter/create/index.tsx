@@ -116,6 +116,18 @@ const CreateFightersProfileScreen = () => {
     // Submit
     const onSignUpPress = () => {
         setHasSubmitted(true);
+        console.log("profileImage", profileImage)
+        console.log("nameSurname", nameSurname)
+        console.log("gender", gender)
+        console.log("dateOfBirth", dateOfBirth)
+        console.log("weightClass", weightClass)
+        console.log("nationality", nationality)
+        console.log("continent", continent)
+        console.log("country", country)
+        console.log("proDraw", proDraw)
+        console.log("proLoss", proLoss)
+        console.log("proWins", proWins)
+        console.log("foundationStyle", foundationStyle)
 
         if (
             !profileImage ||
@@ -213,11 +225,14 @@ const CreateFightersProfileScreen = () => {
         formData.append('maxWeight', maxWeight);
         formData.append('fighterEmail', emailFighter);
 
+        console.log(formData);
+
         createFighter(formData)
             .then(() => {
                 router.push('/fighter');
             })
-            .catch(() => {
+            .catch((e) => {
+                console.log(e.message);
                 Alert.alert('Failed to create fighter profile');
             })
             .finally(() => {
@@ -420,9 +435,10 @@ const CreateFightersProfileScreen = () => {
                         value={minWeight}
                         onChangeText={setMinWeight}
                         keyboardType="numeric"
+                        isRequired={true}
+                        hasSubmitted={hasSubmitted}
                         containerStyle={[
-                            styles.recordInput,
-                            hasSubmitted && minWeight === '' && {borderColor: colors.error},
+                            styles.recordInput
                         ]}
                     />
                     <FloatingLabelInput
@@ -430,9 +446,10 @@ const CreateFightersProfileScreen = () => {
                         value={maxWeight}
                         onChangeText={setMaxWeight}
                         keyboardType="numeric"
+                        isRequired={true}
+                        hasSubmitted={hasSubmitted}
                         containerStyle={[
-                            styles.recordInput,
-                            hasSubmitted && maxWeight === '' && {borderColor: colors.error},
+                            styles.recordInput
                         ]}
                     />
                 </View>
