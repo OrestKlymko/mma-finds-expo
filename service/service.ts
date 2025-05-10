@@ -69,8 +69,11 @@ import {
   VerificationStatusResponse,
   WeightClassResponse,
 } from './response';
+import {Platform} from "react-native";
 
-export const API_BASE_URL = 'http://localhost:8080/api';
+export const API_BASE_URL = Platform.OS === 'android'
+    ? 'http://10.0.2.2:8080/api'
+    : 'http://localhost:8080/api';
 
 // export const API_BASE_URL = 'https://api.mmafinds.com/api';
 
@@ -133,6 +136,7 @@ export const changeProfile = async (
 
 export const createManager = async (data: FormData): Promise<LoginResponse> => {
     const axiosResponse = await api.post(`${API_BASE_URL}/manager`, data);
+    console.log("createManager", data)
     return axiosResponse.data;
 };
 
@@ -143,6 +147,7 @@ export const createManagerSecond = async (
         `${API_BASE_URL}/manager/secondary`,
         data,
     );
+    console.log("createManagerSecondary", data)
     return axiosResponse.data;
 };
 
@@ -917,6 +922,7 @@ export const updateFighter = async (fighterId: string, data: FormData) => {
         `${API_BASE_URL}/fighter/${fighterId}`,
         data,
     );
+
     return axiosResponse.data;
 };
 
