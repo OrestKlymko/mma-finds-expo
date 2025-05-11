@@ -78,7 +78,6 @@ const ChooseCreditOptionScreen = () => {
         setLoading(true);
         try {
             const paid = await payWithStripe(amount.toString());
-            console.log(paid);
             if (!paid) return; // юзер передумав
 
             // успішна оплата → начисляємо кредити/фічеримо

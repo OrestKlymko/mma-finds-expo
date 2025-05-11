@@ -9,7 +9,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {createPublicOffer, getShortInfoPromotion,} from '@/service/service';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store/store';
-import {resetOffer} from '@/store/createPublicOfferSlice';
+import {resetPublicOffer} from '@/store/createPublicOfferSlice';
 import {UpdateOfferRequest} from '@/service/request';
 import {formatDate, mapBenefitsToCreateBenefit} from "@/utils/utils";
 import {useRouter} from "expo-router";
@@ -113,7 +113,7 @@ const PromotionSetDueDatePublicOffer = () => {
 
         createPublicOffer(dataToSend)
             .then(_ => {
-                dispatch(resetOffer());
+                dispatch(resetPublicOffer());
                 getShortInfoPromotion()
                     .then(res => {
                         if (!res.isVerified) {

@@ -9,20 +9,15 @@ import {EventPosterImage} from "@/components/offers/public/EventPosterImage";
 import {TitleWithAction} from "@/components/offers/public/TitleWithAction";
 import {ShareOffer} from "@/components/offers/public/ShareOffer";
 import {MainOfferDetails} from "@/components/offers/exclusive-multi/MainOfferDetails";
-import {
-    MultiFightPromotionTailoringProcess
-} from "@/components/offers/exclusive-multi/MultiFightPromotionTailoringProcess";
 import {useFocusEffect, useLocalSearchParams} from "expo-router";
+import {MultiFightPurseGrid} from "@/components/offers/exclusive-multi/MultiFightPurseGrid";
+import ExclusiveMyFighterList from "@/components/offers/ExclusiveMyFighterList";
 
-export const PromotionMultiFightOffer = () => {
+export const ManagerMultiFightOffer = () => {
     const insets = useSafeAreaInsets();
-
     const [offer, setOffer] = useState<MultiContractFullInfo | null>(null);
     const [fighter, setFighter] = useState<ShortInfoFighter | null>(null);
     const [submissionInformations, setSubmissionInformations] = useState<
-        SubmittedInformationOffer[]
-    >([]);
-    const [previousSubmission, setPreviousSubmission] = useState<
         SubmittedInformationOffer[]
     >([]);
     const [contentLoader, setContentLoader] = useState(false);
@@ -35,10 +30,10 @@ export const PromotionMultiFightOffer = () => {
             setContentLoader(true);
             getMultiFightOfferById(id)
                 .then(res => {
+                    console.log(res);
                     setOffer(res.offer);
                     setFighter(res.fighter);
                     setSubmissionInformations(res.submittedInformation);
-                    setPreviousSubmission(res.previousOfferPrice);
                 })
                 .finally(() => setContentLoader(false));
         }, [id]),
@@ -47,8 +42,8 @@ export const PromotionMultiFightOffer = () => {
     if (contentLoader) {
         return <ContentLoader/>;
     }
-// offer: 5e437aa0-ecd8-4579-a043-cef21fb387ad
-//     fighter :f4ac2e48-03cc-4b76-919c-83b493109f03
+
+
     return (
         <KeyboardAvoidingView
             style={{flex: 1, backgroundColor: colors.background}}
@@ -65,16 +60,9 @@ export const PromotionMultiFightOffer = () => {
 
                 <View style={styles.eventDetailsContainer}>
                     <TitleWithAction title={'Multi-Fight Offer'}/>
-                    <ShareOffer offer={offer} typeOffer={'Multi-fight contract'} fighter={fighter}/>
                     <MainOfferDetails offer={offer}/>
-
-                    {offer&&submissionInformations&&<MultiFightPromotionTailoringProcess
-                        fighter={fighter}
-                        offer={offer}
-                        submittedInformation={submissionInformations}
-                        previousInfo={previousSubmission}
-                    />}
-
+                    <MultiFightPurseGrid submittedInformation={submissionInformations}/>
+                    <ExclusiveMyFighterList offerType={'Multi-Fight Offer'} fighter={fighter} offerId={offer?.offerId}/>
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>

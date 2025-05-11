@@ -291,8 +291,30 @@ export const getInformationPromotionById = async (
     return axiosResponse.data;
 };
 
+export const confirmFighterParticipationMultiFight = async (
+    offerId: string,
+    fighterId: string,
+): Promise<void> => {
+    const axiosResponse = await api.post(
+        `${API_BASE_URL}/multi-fight-offers/submit-fighter/${offerId}/${fighterId}`,
+        null,
+    );
+    return axiosResponse.data;
+}
+
+export const confirmFighterParticipationExclusive = async (
+    offerId: string,
+    fighterId: string,
+): Promise<void> => {
+    const axiosResponse = await api.post(
+        `${API_BASE_URL}/exclusive/submit-fighter/${offerId}/${fighterId}`,
+        null,
+    );
+    return axiosResponse.data;
+}
+
 export const getFighterByManager = async (): Promise<
-    CardInfoFighterResponse[]
+    ShortInfoFighter[]
 > => {
     const axiosResponse = await api.get(`${API_BASE_URL}/fighter`);
     return axiosResponse.data;

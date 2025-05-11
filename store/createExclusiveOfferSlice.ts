@@ -199,7 +199,7 @@ const createExclusiveOfferSlice = createSlice({
     setOpponentContinent: (state, action: PayloadAction<string>) => {
       state.opponentContinent = action.payload;
     },
-    resetOffer: () => {
+    resetExclusiveOffer: () => {
       return initialState;
     },
   },
@@ -233,7 +233,7 @@ export const {
   setOpponentGender,
   setOpponentAge,
   setOpponentNationality,
-  resetOffer,
+  resetExclusiveOffer,
 } = createExclusiveOfferSlice.actions;
 
 export default createExclusiveOfferSlice.reducer;

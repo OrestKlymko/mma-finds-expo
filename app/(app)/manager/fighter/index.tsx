@@ -9,9 +9,12 @@ import FighterCard from "@/components/FighterCard";
 interface FighterListProps {
     fighters?: ShortInfoFighter[];
     handleChooseFighter: (item: any) => void;
+    scrollEnabled?: boolean;
 }
 
-const FighterList = ({fighters, handleChooseFighter}: FighterListProps) => {
+const FighterList = ({fighters, handleChooseFighter,
+                     scrollEnabled = true
+                     }: FighterListProps) => {
     const {role} = useAuth();
     const router = useRouter();
 
@@ -19,6 +22,7 @@ const FighterList = ({fighters, handleChooseFighter}: FighterListProps) => {
         <FlatList
             style={styles.list}
             data={fighters}
+            scrollEnabled={scrollEnabled}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id}

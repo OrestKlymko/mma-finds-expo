@@ -13,12 +13,14 @@ import {CountryModalProvider} from "react-native-country-picker-modal";
 import {ClerkProvider} from "@clerk/clerk-expo";
 import {tokenCache} from "@clerk/clerk-expo/token-cache";
 import {StripeProvider} from "@stripe/stripe-react-native";
-import {useBranchDeepLinking} from "@/service/branchIoService";
+import {useBranchDeepLinking, useReferralParams} from "@/service/branchIoService";
+import {usePushNotifications} from "@/hooks/usePushNotifications";
 
 
 export default function RootLayout() {
     useBranchDeepLinking();
-
+    useReferralParams();
+    usePushNotifications();
     return (
         <StripeProvider
             publishableKey="pk_test_51PDR6jRxes7eHgo9gthYYUPzuYs4hRSkNh90LUWIFKFDahVlq7xfrPvxE4qPA8NQl46UwYefTor8AzYot2XdJSky00GA1iREea"

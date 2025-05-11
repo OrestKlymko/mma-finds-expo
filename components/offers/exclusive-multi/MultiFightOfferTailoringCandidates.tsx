@@ -10,7 +10,7 @@ import {ChooseAnotherFighterButton} from "@/components/offers/exclusive-multi/Ch
 
 
 type ExclusiveOfferTailoringCandidates = {
-    fighter: ShortInfoFighter;
+    fighter?: ShortInfoFighter | null;
     offer: MultiContractFullInfo;
     docs: Document[];
     submittedInformation?: SubmittedInformationOffer[];
@@ -47,7 +47,14 @@ export const MultiFightOfferTailoringCandidates = ({
                 previousInfo={previousInfo}
             />
         </>
-    ) : (
-        <ChooseAnotherFighterButton type={'Multi-fight'}/>
+    ) : (<>
+        <MultiFightPromotionTailoringStatus
+            offer={offer}
+            docs={docs}
+            submittedInformation={submittedInformation}
+            previousInfo={previousInfo}
+        />
+        <ChooseAnotherFighterButton type={'Multi-Fight'} offerId={offer.offerId}/>
+        </>
     );
 };

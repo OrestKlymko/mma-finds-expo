@@ -105,7 +105,7 @@ const createMultiContractOfferSlice = createSlice({
       state.dueDateDocument = action.payload;
     },
 
-    resetOffer: () => {
+    resetMultiOffer: () => {
       return initialState;
     },
   },
@@ -127,7 +127,7 @@ export const {
   setNewDocument,
   setAddNewDocumentToProfile,
   setDueDateDocument,
-  resetOffer,
+  resetMultiOffer,
 } = createMultiContractOfferSlice.actions;
 
 export default createMultiContractOfferSlice.reducer;

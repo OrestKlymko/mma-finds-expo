@@ -91,7 +91,7 @@ export const MultiFightManagerTailoringStatus: React.FC<
                         Offer was rejected with the reason:
                     </Text>
                     <Text style={styles.detailValue}>{first.rejectionReason}</Text>
-                    <ChooseAnotherFighterButton type={'Multi-fight'}/>
+                    {offer && <ChooseAnotherFighterButton type={'Multi-Fight'} offerId={offer?.offerId}/>}
                 </>
             )}
 

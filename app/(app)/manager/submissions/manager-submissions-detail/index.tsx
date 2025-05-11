@@ -61,7 +61,6 @@ export const ManagerSubmissionDetailScreen = () => {
             setFighters(offerResponse.fighters);
             setSubmittedInformation(offerResponse.submittedInformation);
             setPreviousInfo(offerResponse.previousOfferPrice);
-            console.log(offerResponse);
             const storedFavorites = await AsyncStorage.getItem('favoriteOffers');
             const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
             const isFavorited = favorites.some(

@@ -1,12 +1,12 @@
  import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text} from 'react-native';
 import colors from '@/styles/colors';
 import {MultiContractFullInfo, SubmittedInformationOffer,} from '@/service/response';
-import {getCurrencySymbol} from "@/utils/utils";
 import {PromotionRequiredDocumentsSection} from "@/components/offers/PromotionRequiredDocumentsSection";
 import {useRouter} from "expo-router";
 import MultiFightNegotiationOfferComponent
     from "@/components/offers/exclusive-multi/MultiFightNegotiationOfferComponent";
+ import {MultiFightPurseGrid} from "@/components/offers/exclusive-multi/MultiFightPurseGrid";
 
 type TailoringStatusProps = {
     submittedInformation?: SubmittedInformationOffer[];
@@ -22,66 +22,8 @@ export const MultiFightPromotionTailoringStatus: React.FC<
     if (submittedInformation.length === 0) return null;
 
     const first = submittedInformation[0];
-    const renderPurseGrid = () => (
-        <>
-            <Text style={[styles.detailLabel, {marginBottom: 15}]}>Purse</Text>
-            <View style={styles.detailsContainer}>
-                {[
-                    {label: 'Fight Purse', value: first.fightPurse},
-                    {label: 'Win Bonus', value: first.winPurse},
-                    {label: 'Finish Bonus', value: first.bonusPurse},
-                ].map((d, idx) => (
-                    <View
-                        key={idx}
-                        style={[
-                            styles.detailRow,
-                            idx % 2 === 1 ? styles.zebraLight : styles.zebraDark,
-                        ]}>
-                        <Text style={styles.detailLabel}>{d.label}</Text>
-                        <Text style={styles.detailValue}>
-                            {getCurrencySymbol(first.currency)}
-                            {d.value}
-                        </Text>
-                    </View>
-                ))}
-            </View>
-        </>
-    );
 
-    const renderPurseGridAllFights = () => (
-        <>
-            {submittedInformation.map((offer, idx) => (
-                <View key={offer.fightNumber ?? idx} style={{marginBottom: 20}}>
-                    {/* Заголовок з номером бою */}
-                    <Text style={[styles.detailLabel, {marginBottom: 15}]}>
-                        Fight {offer.fightNumber}
-                    </Text>
 
-                    {/* Сама сітка */}
-                    <View style={styles.detailsContainer}>
-                        {[
-                            {label: 'Fight Purse', value: offer.fightPurse},
-                            {label: 'Win Bonus', value: offer.winPurse},
-                            {label: 'Finish Bonus', value: offer.bonusPurse},
-                        ].map((d, i) => (
-                            <View
-                                key={i}
-                                style={[
-                                    styles.detailRow,
-                                    i % 2 === 1 ? styles.zebraLight : styles.zebraDark,
-                                ]}>
-                                <Text style={styles.detailLabel}>{d.label}</Text>
-                                <Text style={styles.detailValue}>
-                                    {getCurrencySymbol(offer.currency)}
-                                    {d.value}
-                                </Text>
-                            </View>
-                        ))}
-                    </View>
-                </View>
-            ))}
-        </>
-    );
 
     return (
         <>
@@ -90,7 +32,7 @@ export const MultiFightPromotionTailoringStatus: React.FC<
                 (first.statusResponded === 'NEGOTIATING' &&
                     first.offered === 'PROMOTION')) && (
                 <>
-                    {renderPurseGridAllFights()}
+                    <MultiFightPurseGrid submittedInformation={submittedInformation}/>
                     <Text style={styles.detailLabel}>Waiting for confirmation.</Text>
                 </>
             )}
@@ -98,7 +40,7 @@ export const MultiFightPromotionTailoringStatus: React.FC<
             {/* ACCEPTED */}
             {first.statusResponded === 'ACCEPTED' && (
                 <>
-                    {renderPurseGridAllFights()}
+                    <MultiFightPurseGrid submittedInformation={submittedInformation}/>
                     <PromotionRequiredDocumentsSection
                         typeOffer={'Multi-fight contract'}
                         documents={docs}
@@ -112,20 +54,11 @@ export const MultiFightPromotionTailoringStatus: React.FC<
             {/* REJECTED */}
             {first.statusResponded === 'REJECTED' && (
                 <>
-                    {renderPurseGrid()}
+                    <MultiFightPurseGrid submittedInformation={submittedInformation}/>
                     <Text style={[styles.detailLabel, styles.rejectionLabel]}>
                         Offer was rejected with the reason:
                     </Text>
                     <Text style={styles.detailValue}>{first.rejectionReason}</Text>
-                    <TouchableOpacity
-                        style={styles.createProfileButton}
-                        onPress={() => {
-                            router.push({pathname: '/offer/exclusive/create/fighter', params: {type: 'Multi-Fight'}})
-                        }}>
-                        <Text style={styles.createProfileButtonText}>
-                            Choose Another Fighter
-                        </Text>
-                    </TouchableOpacity>
                 </>
             )}
 
@@ -175,12 +108,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 12,
-    },
-    zebraLight: {
-        backgroundColor: colors.white,
-    },
-    zebraDark: {
-        backgroundColor: colors.lightGray,
     },
     rejectionLabel: {
         marginTop: 20,

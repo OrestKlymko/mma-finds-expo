@@ -80,7 +80,7 @@ const MultiFightOfferNegotiationScreen = () => {
         index: number,
         info: SubmittedInformationOffer,
     ) => {
-        console.log(previousInformation);
+
         if (previousInformation && previousInformation.length > 0) {
             return (
                 <>

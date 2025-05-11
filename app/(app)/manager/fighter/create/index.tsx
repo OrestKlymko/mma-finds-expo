@@ -116,19 +116,6 @@ const CreateFightersProfileScreen = () => {
     // Submit
     const onSignUpPress = () => {
         setHasSubmitted(true);
-        console.log("profileImage", profileImage)
-        console.log("nameSurname", nameSurname)
-        console.log("gender", gender)
-        console.log("dateOfBirth", dateOfBirth)
-        console.log("weightClass", weightClass)
-        console.log("nationality", nationality)
-        console.log("continent", continent)
-        console.log("country", country)
-        console.log("proDraw", proDraw)
-        console.log("proLoss", proLoss)
-        console.log("proWins", proWins)
-        console.log("foundationStyle", foundationStyle)
-
         if (
             !profileImage ||
             !nameSurname ||
@@ -224,8 +211,6 @@ const CreateFightersProfileScreen = () => {
         formData.append('minWeight', minWeight);
         formData.append('maxWeight', maxWeight);
         formData.append('fighterEmail', emailFighter);
-
-        console.log(formData);
 
         createFighter(formData)
             .then(() => {

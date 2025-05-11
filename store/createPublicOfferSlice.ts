@@ -165,7 +165,7 @@ const createPublicOfferSlice = createSlice({
     setOpponentContinent: (state, action: PayloadAction<string>) => {
       state.opponentContinent = action.payload;
     },
-    resetOffer: () => {
+    resetPublicOffer: () => {
       return initialState;
     },
   },
@@ -200,7 +200,7 @@ export const {
   setOpponentGender,
   setOpponentAge,
   setOpponentNationality,
-  resetOffer,
+  resetPublicOffer,
 } = createPublicOfferSlice.actions;
 
 export default createPublicOfferSlice.reducer;

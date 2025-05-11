@@ -32,7 +32,6 @@ export const ManagerTailoringContent = ({
                                             selectedTab,
                                         }: ManagerTailoringContentProps) => {
     const router = useRouter();
-    console.log(selectedTab);
     switch (selectedTab) {
         case 'Preselected Fighter':
             return (

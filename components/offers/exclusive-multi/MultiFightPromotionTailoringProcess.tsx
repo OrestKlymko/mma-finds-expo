@@ -5,7 +5,7 @@ import {getAllRequiredDocumentsForMultiFightOffer} from '@/service/service';
 
 
 interface ExclusivePromotionTailoringProcessProps {
-    fighter: ShortInfoFighter;
+    fighter?: ShortInfoFighter | null;
     offer: MultiContractFullInfo;
     submittedInformation?: SubmittedInformationOffer[];
     previousInfo?: SubmittedInformationOffer[];

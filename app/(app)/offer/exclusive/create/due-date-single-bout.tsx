@@ -10,7 +10,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {createExclusiveOffer} from '@/service/service';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store/store';
-import {resetOffer} from '@/store/createExclusiveOfferSlice';
+import {resetExclusiveOffer} from '@/store/createExclusiveOfferSlice';
 import {CreateExclusiveOfferRequest} from '@/service/request';
 import {useRouter} from "expo-router";
 
@@ -116,7 +116,7 @@ const ExclusiveOfferDueDateScreen = () => {
         };
         createExclusiveOffer(dataToSend)
             .then(() => {
-                dispatch(resetOffer());
+                dispatch(resetExclusiveOffer());
                 router.push('/offer/exclusive/create/third-step');
             })
             .catch(() => {

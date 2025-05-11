@@ -47,6 +47,6 @@ export const ExclusiveOfferTailoringCandidates = ({
             />
         </>
     ) : (
-        <ChooseAnotherFighterButton type={'Exclusive'}/>
+        <ChooseAnotherFighterButton type={'Exclusive'} offerId={offer.offerId}/>
     );
 };

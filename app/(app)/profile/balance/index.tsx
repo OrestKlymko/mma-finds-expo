@@ -30,7 +30,6 @@ const BalanceOverviewScreen = () => {
 
     useEffect(() => {
         getCredit().then(res => {
-            console.log(res);
             setFeaturingCredit(res.featuringCredit);
             setReferralCredit(res.referralCredit);
         });

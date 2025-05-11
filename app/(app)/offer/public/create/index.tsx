@@ -17,7 +17,7 @@ import {getEventById} from '@/service/service';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store/store';
 import {
-    resetOffer,
+    resetMultiOffer,
     setBenefits,
     setCurrency,
     setEvent,
@@ -92,7 +92,7 @@ const CreatePublicOfferFirstStepScreen = () => {
             style={{flex: 1, backgroundColor: colors.white}}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <View style={{flex: 1, backgroundColor: colors.white}}>
-                <GoBackButton onPress={() => dispatch(resetOffer())}/>
+                <GoBackButton onPress={() => dispatch(resetMultiOffer())}/>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}

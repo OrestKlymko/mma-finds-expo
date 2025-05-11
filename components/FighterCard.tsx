@@ -44,7 +44,7 @@ const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress}) => {
 
                 <View style={styles.fighterDetails}>
                     <Text style={styles.fighterName}>
-                        {fighter?.formattedName.replace('""', '').trim() || fighter?.name?.trim()}
+                        {fighter?.formattedName?.replace('""', '').trim() || fighter?.name?.trim()}
                     </Text>
                     <View style={{flexDirection: 'row'}}>
                         <Text style={styles.fighterInfo}>Age: </Text>

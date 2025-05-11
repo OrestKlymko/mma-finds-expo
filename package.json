@@ -65,6 +65,7 @@
     "react-native-image-crop-picker": "^0.42.0",
     "react-native-modal": "^14.0.0-rc.1",
     "react-native-modal-datetime-picker": "^18.0.0",
+    "react-native-notifier": "^2.0.0",
     "react-native-picker-select": "^9.3.1",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
@@ -74,7 +75,8 @@
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
     "react-native-wheel-picker-expo": "^0.5.4",
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.2.0",
+    "expo-device": "~7.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

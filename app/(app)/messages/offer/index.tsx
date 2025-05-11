@@ -80,8 +80,7 @@ const OpenChatPublicOfferScreen = () => {
         receiverId: string,
         offerId: string,
     ): Promise<string | null> => {
-        console.log(userId);
-        console.log(offerId);
+
         try {
             const q = query(
                 collection(firestore, 'conversations'),

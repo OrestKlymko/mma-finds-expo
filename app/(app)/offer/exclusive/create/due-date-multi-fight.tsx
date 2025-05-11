@@ -9,7 +9,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {createMultiFightOffer} from '@/service/service';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store/store';
-import {resetOffer} from '@/store/createMultiContractOfferSlice';
+import {resetMultiOffer} from '@/store/createMultiContractOfferSlice';
 import {CreateMultiOfferRequest} from '@/service/request';
 import {useRouter} from "expo-router";
 
@@ -92,7 +92,7 @@ const ExclusiveOfferDueDateScreen = () => {
 
         createMultiFightOffer(dataToSend)
             .then(() => {
-                dispatch(resetOffer());
+                dispatch(resetMultiOffer());
                 router.push('/offer/exclusive/create/third-step');
             })
             .catch(() => {

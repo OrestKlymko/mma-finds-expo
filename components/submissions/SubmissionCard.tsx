@@ -37,7 +37,6 @@ export const SubmissionCard = ({
     const navigateToSubmissionDetail = (
         offerSubmissionResponse: OfferSubmissionResponse,
     ) => {
-        console.log(offerSubmissionResponse);
         switch (offerSubmissionResponse.typeOfSubmission) {
             case 'Multi-fight contract':
                 router.push({pathname:'/manager/submissions/manager-submissions-detail/multi',params: {
