@@ -5,6 +5,8 @@ import * as Clipboard from 'expo-clipboard';
 import {useAuth} from "@/context/AuthContext";
 import {useRouter} from "expo-router";
 import colors from "@/styles/colors";
+import branch, {BranchLinkControlParams, BranchLinkProperties, BranchShareSheetOptions} from "react-native-branch";
+
 
 interface ReferralInputComponentProps {
     blackBackground?: boolean;
@@ -16,60 +18,57 @@ export function ReferralInputComponent({
     const {entityId} = useAuth();
     const router = useRouter();
     const [referralLink, setReferralLink] = useState<string>('');
+
     useEffect(() => {
-        if (!entityId) {
-            router.push('/login')
-            return;
+        if(referralLink===''&&entityId){
+           createReferralLink(entityId);
         }
-        createReferralLink(entityId).then(link => {
-            if (link) {
-                setReferralLink(link);
-            } else {
-                Alert.alert('Error', 'Failed to create referral link');
-            }
-        });
-    }, [entityId]);
-    /** Copy Link **/
-    const handleCopyLink = () => {
+    }, [entityId, referralLink]);
+    const handleCopyLink = async () => {
         Clipboard.setStringAsync(referralLink);
         Alert.alert('Copied', 'Referral link copied to clipboard!');
     };
 
     // Приклад створення реферального лінку для запрошення
     const createReferralLink = async (userId: string) => {
+
         try {
-            // const branchUniversalObject = await branch.createBranchUniversalObject(
-            //     `invite/${userId}`,
-            //     {
-            //         title: 'Join and earn rewards!',
-            //         contentDescription:
-            //             'Sign up using my invite link and get bonus cash rewards.',
-            //         contentMetadata: {
-            //             customMetadata: {
-            //                 userId, // ключ, який передаємо для відстеження
-            //             },
-            //         },
-            //     },
-            // );
+            const branchUniversalObject = await branch.createBranchUniversalObject(
+                `invite/${userId}`,
+                {
+                    title: 'Join and earn rewards!',
+                    contentDescription:
+                        'Sign up using my invite link and get bonus cash rewards.',
+                    contentMetadata: {
+                        customMetadata: {
+                            userId: userId
+                        },
+                    },
+                },
+            );
 
-            // // Додаткові налаштування лінку (якщо потрібно)
-            // const linkProperties: BranchLinkProperties = {
-            //     feature: 'invite',
-            //     channel: 'referral',
-            // };
-            //
-            // // Контрольні параметри можна використати для встановлення fallback URL або deep link URL
-            // const controlParams: BranchLinkControlParams = {
-            //     $fallback_url: 'https://yourapp.com', // Якщо апка не встановлена
-            //     $ios_url: 'yourappscheme://invite',
-            //     $android_url: 'yourappscheme://invite',
-            // };
+            const shareOptions: BranchShareSheetOptions = {
+                messageHeader: 'Join and earn rewards!',
+                messageBody: 'Sign up using my invite link and get bonus cash rewards.',
+                emailSubject: 'Join and earn rewards!',
+                title: 'Join and earn rewards!',
+                text: 'Sign up using my invite link and get bonus cash rewards.',
+            }
+            // Додаткові налаштування лінку (якщо потрібно)
+            const linkProperties: BranchLinkProperties = {
+                feature: 'invite',
+                channel: 'referral',
+            };
 
-            // Генеруємо короткий лінк
-            // const {url} = await branchUniversalObject.generateShortUrl(
-            //     linkProperties,
-            //     controlParams,
-            // );
+            // Контрольні параметри можна використати для встановлення fallback URL або deep link URL
+            const controlParams: BranchLinkControlParams = {
+                $fallback_url: 'https://mmafinds.com', // Якщо апка не встановлена
+                $ios_url: 'com.mmafinds.app://invite',
+                $android_url: 'com.mmafinds.app://invite',
+            };
+            const {url} = await branchUniversalObject.generateShortUrl(linkProperties, controlParams);
+            setReferralLink(url);
+            // await branchUniversalObject.showShareSheet(shareOptions, linkProperties, controlParams);
             // return url;
         } catch (error) {
             console.error('Error generating referral link:', error);

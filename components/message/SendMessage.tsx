@@ -61,6 +61,7 @@ export const SendMessage = ({
     ) => {
         if (!converId || !entityId) return;
 
+        const conversationRef = doc(firestore, 'conversations', converId);
         const messageData: MessageItem = {
             senderId: entityId,
             type,
@@ -70,35 +71,39 @@ export const SendMessage = ({
             timestamp: serverTimestamp(),
         };
 
-        const conversationRef = doc(firestore, 'conversations', converId);
+        try {
+            await runTransaction(firestore, async tx => {
+                const convSnap = await tx.get(conversationRef);
+                if (!convSnap.exists()) throw new Error('Conversation not found');
+                const data = convSnap.data()!;
+                const otherUserId = data.participants.find((id: string) => id !== entityId)!;
+                const currentUnread = data.unreadCounts || {};
 
-        await runTransaction(firestore, async transaction => {
-            const messagesRef = collection(conversationRef, 'messages');
-            const newMessageRef = doc(messagesRef);
-            transaction.set(newMessageRef, messageData);
+                const messagesRef = collection(conversationRef, 'messages');
+                const newMessageRef = doc(messagesRef);
+                tx.set(newMessageRef, messageData);
 
-            const conversationSnap = await transaction.get(conversationRef);
-            const data = conversationSnap.data();
-            if (!data) return;
-
-            const otherUserId = data.participants.find((id: string) => id !== entityId);
-            const currentUnread = data.unreadCounts || {};
-
-            transaction.update(conversationRef, {
-                lastMessage: type === 'file' ? '📎 Attachment' : '🖼 Image',
-                lastTimestamp: serverTimestamp(),
-                unreadCounts: {
-                    ...currentUnread,
-                    [otherUserId]: (currentUnread[otherUserId] || 0) + 1,
-                    [entityId]: 0,
-                },
+                tx.update(conversationRef, {
+                    lastMessage: type === 'file' ? '📎 Attachment' : '🖼 Image',
+                    lastTimestamp: serverTimestamp(),
+                    unreadCounts: {
+                        ...currentUnread,
+                        [otherUserId]: (currentUnread[otherUserId] || 0) + 1,
+                        [entityId]: 0,
+                    },
+                });
             });
-        });
+        } catch (err) {
+            console.error('sendAttachmentMessage error:', err);
+            Alert.alert('Error', 'Failed to send attachment');
+        }
     };
+
 
     const sendMessage = async () => {
         if (!inputText.trim() || !converId || !entityId) return;
 
+        const conversationRef = doc(firestore, 'conversations', converId);
         const messageData = {
             senderId: entityId,
             message: inputText,
@@ -106,22 +111,21 @@ export const SendMessage = ({
             timestamp: serverTimestamp(),
         };
 
-        const conversationRef = doc(firestore, 'conversations', converId);
-
         try {
-            await runTransaction(firestore, async transaction => {
-                const messagesRef = collection(conversationRef, 'messages');
-                const newMessageRef = doc(messagesRef);
-                transaction.set(newMessageRef, messageData);
-
-                const conversationSnap = await transaction.get(conversationRef);
-                const data = conversationSnap.data();
-                if (!data) return;
-
-                const otherUserId = data.participants.find((id: string) => id !== entityId);
+            await runTransaction(firestore, async tx => {
+                // --- ЧИТАННЯ спочатку ---
+                const convSnap = await tx.get(conversationRef);
+                if (!convSnap.exists()) throw new Error('Conversation not found');
+                const data = convSnap.data()!;
+                const otherUserId = data.participants.find((id: string) => id !== entityId)!;
                 const currentUnread = data.unreadCounts || {};
 
-                transaction.update(conversationRef, {
+                // --- ЗАПИСИ далі ---
+                const messagesRef = collection(conversationRef, 'messages');
+                const newMessageRef = doc(messagesRef);
+                tx.set(newMessageRef, messageData);
+
+                tx.update(conversationRef, {
                     lastMessage: inputText,
                     lastTimestamp: serverTimestamp(),
                     isBlocked: false,
@@ -133,6 +137,7 @@ export const SendMessage = ({
                 });
             });
 
+            // Після успішної транзакції
             sendPushNotification(inputText);
             setInputText('');
         } catch (err: any) {
@@ -140,6 +145,7 @@ export const SendMessage = ({
             Alert.alert('Error', err.message);
         }
     };
+
 
     const sendPushNotification = async (body: string) => {
         if (offer) {

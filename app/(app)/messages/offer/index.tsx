@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Animated, FlatList, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, View,} from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
-import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
     addDoc,
@@ -29,17 +28,23 @@ import {SendMessage} from "@/components/message/SendMessage";
 import MessageOption from "@/components/message/MessageOption";
 import {Message} from "@/components/message/Message";
 import {OfferRelatedSection} from "@/components/message/OfferRelatedSection";
+import {useFocusEffect, useLocalSearchParams} from "expo-router";
 
 const OpenChatPublicOfferScreen = () => {
     const {entityId} = useAuth();
-    const route = useRoute();
-    const {receiverUserId, senderName, avatar, offer, typeOffer} = route.params as {
-        receiverUserId: string;
-        senderName: string;
-        avatar: string;
-        offer: any;
-        typeOffer: OfferType;
-    };
+    // const {receiverUserId, senderName, avatar, offer, typeOffer} = route.params as {
+    //     receiverUserId: string;
+    //     senderName: string;
+    //     avatar: string;
+    //     offer: any;
+    //     typeOffer: OfferType;
+    // };
+    const params = useLocalSearchParams();
+    const receiverUserId = params.receiverUserId as string;
+    const senderName = params.senderName as string;
+    const avatar = params.avatar as string;
+    const offer = JSON.parse(params.offer as any) as any;
+    const typeOffer = params.typeOffer as OfferType;
 
     const insets = useSafeAreaInsets();
     const flatListRef = useRef<FlatList>(null);
@@ -75,6 +80,8 @@ const OpenChatPublicOfferScreen = () => {
         receiverId: string,
         offerId: string,
     ): Promise<string | null> => {
+        console.log(userId);
+        console.log(offerId);
         try {
             const q = query(
                 collection(firestore, 'conversations'),

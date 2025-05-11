@@ -1,4 +1,4 @@
-import React from 'react';
+ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import colors from '@/styles/colors';
 import {MultiContractFullInfo, SubmittedInformationOffer,} from '@/service/response';
@@ -114,7 +114,7 @@ export const MultiFightPromotionTailoringStatus: React.FC<
                 <>
                     {renderPurseGrid()}
                     <Text style={[styles.detailLabel, styles.rejectionLabel]}>
-                        Offer was rejected by manager with the reason:
+                        Offer was rejected with the reason:
                     </Text>
                     <Text style={styles.detailValue}>{first.rejectionReason}</Text>
                     <TouchableOpacity

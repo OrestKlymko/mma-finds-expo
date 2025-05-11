@@ -75,7 +75,7 @@ const PromotionMyOfferList = () => {
     }
     return (
         <View style={{flex: 1, backgroundColor: colors.white}}>
-            <GoBackButton specificScreen={'/(app)/(tabs)'} />
+            <GoBackButton/>
             <View style={[styles.container, {marginBottom: insets.bottom + 200}]}>
                 <Text style={styles.title}>My Offers</Text>
                 <Text style={styles.subtitle}>

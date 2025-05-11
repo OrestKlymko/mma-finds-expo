@@ -1,7 +1,7 @@
 import React from 'react';
 import {Share, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
-// import branch, {BranchLinkControlParams, BranchLinkProperties,} from 'react-native-branch';
+import branch, {BranchLinkProperties,} from 'react-native-branch';
 
 import colors from '@/styles/colors';
 import {ExclusiveOfferInfo, MultiContractFullInfo, PublicOfferInfo, ShortInfoFighter,} from '@/service/response';
@@ -36,8 +36,8 @@ export const ShareOffer: React.FC<Props> = ({offer, typeOffer, fighter}) => {
   };
 
   const formatOpponentDetails = (o: PublicOfferInfo | ExclusiveOfferInfo) => {
-    if (o.opponentName && o.opponentTapologyLink) {
-      return `\nOpponent: ${o.opponentName}\nTapology: ${o.opponentTapologyLink}`;
+    if (o.opponentName) {
+      return `\nOpponent: ${o.opponentName}\n`;
     }
     const rule = o.mmaRules === 'PROFESSIONAL' ? 'Professional' : 'Amateur';
     return `\nOpponent: ${o.opponentName} (${rule} ${
@@ -63,29 +63,30 @@ export const ShareOffer: React.FC<Props> = ({offer, typeOffer, fighter}) => {
     identifier: string,
     control: any,
   ) => {
-    // const linkProps: BranchLinkProperties = {feature: 'share', channel: 'app'};
-    // const buo = await branch.createBranchUniversalObject(identifier, {
-    //   ...(control.og
-    //     ? {
-    //         title: control.og.$og_title,
-    //         contentDescription: control.og.$og_description,
-    //         contentImageUrl: control.og.$og_image_url,
-    //       }
-    //     : {}),
-    //   contentMetadata: {customMetadata: {offerId: control.offerId}},
-    // });
-    // const {url} = await buo.generateShortUrl(linkProps, control.params);
-    // return url;
+    const linkProps: BranchLinkProperties = {feature: 'share', channel: 'app'};
+    const buo = await branch.createBranchUniversalObject(identifier, {
+      ...(control.og
+        ? {
+            title: control.og.$og_title,
+            contentDescription: control.og.$og_description,
+            contentImageUrl: control.og.$og_image_url,
+          }
+        : {}),
+      contentMetadata: {customMetadata: {offerId: control.offerId}},
+    });
+
+    const {url} = await buo.generateShortUrl(linkProps, control.params);
+    return url;
   };
 
   const sharePublicOffer = async (o: PublicOfferInfo) => {
     const control: any = {
       offerId: o.offerId,
       params: {
-        $fallback_url: `https://wet-times-kneel.loca.lt/api/share-offer/public/${o.offerId}`,
-        $desktop_url: `https://wet-times-kneel.loca.lt/api/share-offer/public/${o.offerId}`,
-        $ios_url: `mmafinds://public-offer/${o.offerId}`,
-        $android_url: `mmafinds://public-offer/${o.offerId}`,
+        $fallback_url: `https://api.mmafinds.com/api/share-offer/public/${o.offerId}`,
+        $desktop_url: `https://api.mmafinds.com/api/share-offer/public/${o.offerId}`,
+        $ios_url: `com.mmafinds.app://offer/public/${o.offerId}`,
+        $android_url: `com.mmafinds.app://offer/public/${o.offerId}`,
       },
     };
 
@@ -108,10 +109,10 @@ export const ShareOffer: React.FC<Props> = ({offer, typeOffer, fighter}) => {
     const control = {
       offerId: o.offerId,
       params: {
-        $fallback_url: `https://wet-times-kneel.loca.lt/api/share-offer/exclusive/${o.offerId}`,
-        $desktop_url: `https://wet-times-kneel.loca.lt/api/share-offer/exclusive/${o.offerId}`,
-        $ios_url: `mmafinds://exclusive-offer/${o.offerId}`,
-        $android_url: `mmafinds://exclusive-offer/${o.offerId}`,
+        $fallback_url: `https://api.mmafinds.com/api/share-offer/exclusive/${o.offerId}`,
+        $desktop_url: `https://api.mmafinds.com/api/share-offer/exclusive/${o.offerId}`,
+        $ios_url: `com.mmafinds.app://offer/exclusive/single/${o.offerId}`,
+        $android_url: `com.mmafinds.app://offer/exclusive/single/${o.offerId}`,
       },
       og: {
         $og_title: `Fight Offer: ${o.eventName}`,
@@ -140,10 +141,10 @@ export const ShareOffer: React.FC<Props> = ({offer, typeOffer, fighter}) => {
     const control = {
       offerId: o.offerId,
       params: {
-        $fallback_url: `https://wet-times-kneel.loca.lt/api/share-offer/multi-fight-contract/${o.offerId}`,
-        $desktop_url: `https://wet-times-kneel.loca.lt/api/share-offer/multi-fight-contract/${o.offerId}`,
-        $ios_url: `mmafinds://multi-fight-contract/${o.offerId}`,
-        $android_url: `mmafinds://multi-fight-contract/${o.offerId}`,
+        $fallback_url: `https://api.mmafinds.com/api/share-offer/multi-fight-contract/${o.offerId}`,
+        $desktop_url: `https://api.mmafinds.com/api/share-offer/multi-fight-contract/${o.offerId}`,
+        $ios_url: `com.mmafinds.app://offer/exclusive/multi/${o.offerId}`,
+        $android_url: `com.mmafinds.app://offer/exclusive/multi/${o.offerId}`,
       },
       og: null,
     };

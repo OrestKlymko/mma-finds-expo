@@ -3,12 +3,13 @@ import {getFirestore} from 'firebase/firestore';
 import {getStorage} from 'firebase/storage';
 
 const firebaseConfig = {
-    apiKey: '...',
-    authDomain: '...',
-    projectId: '...',
-    storageBucket: '...',
-    messagingSenderId: '...',
-    appId: '...',
+    apiKey: "AIzaSyDR7C6zk_dPdyxWCDafaGylXuDK6JkvuWs",
+    authDomain: "mma-finds-2f78f.firebaseapp.com",
+    projectId: "mma-finds-2f78f",
+    storageBucket: "mma-finds-2f78f.firebasestorage.app",
+    messagingSenderId: "792502548091",
+    appId: "1:792502548091:web:40c00fe8e64720a55e54de",
+    measurementId: "G-LWF7PDGNMG"
 };
 
 export const app = initializeApp(firebaseConfig);

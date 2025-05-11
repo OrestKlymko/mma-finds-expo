@@ -26,7 +26,7 @@ export const ChatOfferComponent = ({
             onPress={() => {
                 router.push({
                     pathname: '/messages/offer', params: {
-                        offer: offer,
+                        offer: JSON.stringify(offer),
                         receiverUserId: receiverUserId,
                         senderName: senderName,
                         avatar: avatar ?? '',

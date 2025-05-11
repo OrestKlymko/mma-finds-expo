@@ -88,7 +88,7 @@ export const MultiFightManagerTailoringStatus: React.FC<
                 <>
                     {renderPurseGridAllFights()}
                     <Text style={[styles.detailLabel, styles.rejectionLabel]}>
-                        Offer was rejected by promotion with the reason:
+                        Offer was rejected with the reason:
                     </Text>
                     <Text style={styles.detailValue}>{first.rejectionReason}</Text>
                     <ChooseAnotherFighterButton type={'Multi-fight'}/>

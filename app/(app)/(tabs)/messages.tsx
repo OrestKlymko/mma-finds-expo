@@ -122,8 +122,10 @@ export default function Messages() {
                 const promises = snapshot.docs.map(async docSnap => {
                     const data = docSnap.data();
                     const otherUserId = data.participants.find((id: string) => id !== entityId);
-                    const res = await getMessageInfo(otherUserId, role as any);
-
+                    const res = await getMessageInfo(
+                        otherUserId,
+                        role === 'MANAGER' ? 'PROMOTION' : 'MANAGER',
+                    );
                     results.push({
                         id: docSnap.id,
                         conversationId: data.conversationId,

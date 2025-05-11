@@ -196,6 +196,15 @@ export type CreatePaymentIntentResponse = {
   clientSecret: string;
 };
 
+export type ShortLinkResponse = {
+    shortLink: string;
+}
+
+export type ShortLinkRequest = {
+  path: string;
+  entityId: string;
+};
+
 export type InvitationLinkResponse = {
   link: string;
 };

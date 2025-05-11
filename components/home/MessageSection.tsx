@@ -58,14 +58,7 @@ export const MessageSection = () => {
                     });
 
                     await Promise.all(promises);
-
-                    const uniqueConversations = convList.reduce((acc, curr) => {
-                        const exists = acc.find(c => c.conversationId === curr.conversationId);
-                        if (!exists) acc.push(curr);
-                        return acc;
-                    }, [] as Conversation[]);
-
-                    setConversations(uniqueConversations);
+                    setConversations(convList);
                 } catch (error) {
                     console.error('Error fetching conversations:', error);
                     Alert.alert('Error', 'Unable to fetch conversations');

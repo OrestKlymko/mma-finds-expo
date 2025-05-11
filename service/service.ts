@@ -15,7 +15,7 @@ import {
   InvitationMemberRequest,
   LoginRequest,
   OfferSubmissionResponse,
-  PayCreditRequest, PayForCreditRequest, PayForCreditRequestStripe,
+  PayCreditRequest, PayForCreditRequestStripe,
   PublicOfferToSelectedFighterRequest,
   RecoveryPasswordRequest,
   ResponseExclusiveOfferRequest,
@@ -24,50 +24,50 @@ import {
   UpdateOfferRequest,
 } from './request';
 import {
-  Benefit,
-  CardInfoFighterResponse,
-  CardInfoResponse,
-  CountryResponse,
-  CreatePaymentIntentResponse,
-  CreditRemainingResponse,
-  DecodeTokenFromEmailResponse,
-  DecodeTokenInvitationResponse,
-  DocumentRequiredResponse,
-  EditPublicOfferResponse,
-  EmployeeInfo,
-  EmployeeTaskResponse,
-  EventCreationResponse,
-  EventDetailsResponse,
-  EventTaskResponse,
-  FeatureResponse,
-  FighterFullProfile,
-  FighterInfoResponse,
-  FilterPublicOfferManagerResponse,
-  FilterPublicOfferPromotionResponse,
-  FoundationStyleResponse,
-  FullInfoAboutExclusiveOffer,
-  FullInfoAboutPublicOffer,
-  InvitationLinkResponse,
-  LoginResponse,
-  ManagerInfo,
-  ManagerInformationResponse,
-  MessageInfoResponse,
-  MultiContractResponse,
-  MultiContractShortInfo,
-  NationalityResponse,
-  PaymentSetupIntentResponse,
-  PromotionInformationResponse,
-  PromotionNameResponse,
-  PromotionResponse,
-  PublicOfferInfo,
-  ShortInfoFighter,
-  SportTypeResponse, StripePaymentResponse,
-  SubAccountResponse,
-  TicketResponse,
-  USER_ROLE,
-  UserInfoResponse,
-  VerificationStatusResponse,
-  WeightClassResponse,
+    Benefit,
+    CardInfoFighterResponse,
+    CardInfoResponse,
+    CountryResponse,
+    CreatePaymentIntentResponse,
+    CreditRemainingResponse,
+    DecodeTokenFromEmailResponse,
+    DecodeTokenInvitationResponse,
+    DocumentRequiredResponse,
+    EditPublicOfferResponse,
+    EmployeeInfo,
+    EmployeeTaskResponse,
+    EventCreationResponse,
+    EventDetailsResponse,
+    EventTaskResponse,
+    FeatureResponse,
+    FighterFullProfile,
+    FighterInfoResponse,
+    FilterPublicOfferManagerResponse,
+    FilterPublicOfferPromotionResponse,
+    FoundationStyleResponse,
+    FullInfoAboutExclusiveOffer,
+    FullInfoAboutPublicOffer,
+    InvitationLinkResponse,
+    LoginResponse,
+    ManagerInfo,
+    ManagerInformationResponse,
+    MessageInfoResponse,
+    MultiContractResponse,
+    MultiContractShortInfo,
+    NationalityResponse,
+    PaymentSetupIntentResponse,
+    PromotionInformationResponse,
+    PromotionNameResponse,
+    PromotionResponse,
+    PublicOfferInfo,
+    ShortInfoFighter, ShortLinkRequest, ShortLinkResponse,
+    SportTypeResponse, StripePaymentResponse,
+    SubAccountResponse,
+    TicketResponse,
+    USER_ROLE,
+    UserInfoResponse,
+    VerificationStatusResponse,
+    WeightClassResponse,
 } from './response';
 
 export const API_BASE_URL = 'http://localhost:8080/api';
@@ -306,6 +306,25 @@ export const getFighterByManagerId = async (
     );
     return axiosResponse.data;
 };
+
+export const generateLinkForShareOffer = async (
+    data:ShortLinkRequest
+): Promise<ShortLinkResponse> => {
+    const axiosResponse = await api.post(
+        `${API_BASE_URL}/short-link/generate`,
+        data,
+    );
+    return axiosResponse.data;
+}
+
+export const getShortLink = async (
+    code:string
+):Promise<string> => {
+    const axiosResponse = await api.get(
+        `${API_BASE_URL}/short-link/get/${code}`,
+    );
+    return axiosResponse.data;
+}
 
 export const createPaymentIntentForCharge = async (
     data: CreatePaymentIntentRequest,
