@@ -44,9 +44,10 @@ const FilterFullListPromotionScreen = () => {
         }));
     };
 
-    const filteredPromotions = fighters.filter(p =>
-        p.toLowerCase().includes(search.toLowerCase()),
+    const filteredPromotions = (fighters ?? []).filter(p =>
+        p.toLowerCase().includes(search.toLowerCase())
     );
+
 
     if (contentLoading) {
         return <ContentLoader />;

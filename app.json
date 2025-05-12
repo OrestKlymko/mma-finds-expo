@@ -22,7 +22,8 @@
       "infoPlist": {
         "CFBundleDisplayName": "MMA Finds",
         "CFBundleName": "MMA Finds",
-        "NSUserActivityTypes": []
+        "NSUserActivityTypes": [],
+        "NSUserNotificationsUsageDescription": "We use notifications to keep you informed."
       },
       "associatedDomains": [
         "applinks:mmafinds.com"
@@ -49,28 +50,6 @@
         }
       ]
     },
-    "plugins": [
-      "./app.plugin.js",
-      "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/main-logo/splash.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
-        }
-      ],
-      "expo-secure-store",
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "usesCleartextTraffic": true
-          }
-        }
-      ]
-    ],
     "experiments": {
       "typedRoutes": true
     },

@@ -25,17 +25,6 @@ export interface Filter  {
     offerType: string[];
 }
 
-export interface Filter  {
-    eventPlace: string[];
-    promotion: string[];
-    rules: string[];
-    weightClass: string[];
-    eventName: string[];
-    activeTab: 'Public' | 'Exclusive';
-    fighterName: string[];
-    offerType: string[];
-}
-
 export interface SubmittedFilterFighter{
     locations: string[],
     foundationStyle: string[],

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {FlatList, Modal, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
-import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
+import {FontAwesome as Icon} from '@expo/vector-icons';
 
 import FloatingLabelInput from "./FloatingLabelInput";
 import colors from "@/styles/colors";
@@ -9,13 +9,6 @@ interface SocialMediaModalProps {
     socialList?: { network: string; link: string }[];
     setSocialList: (list: { network: string; link: string }[]) => void;
 }
-
-const ICONS_MAP: Record<string, keyof typeof Icon.glyphMap> = {
-    Facebook: 'facebook',
-    Instagram: 'instagram',
-    Twitter: 'twitter',
-    Snapchat: 'snapchat',
-};
 
 const SOCIAL_MEDIA_OPTIONS = [
     {
@@ -122,8 +115,8 @@ const SocialMediaModal: React.FC<SocialMediaModalProps> = ({
                     setErrorMessage(null);
                 }}>
                 <Icon
-                    name={ICONS_MAP[item.icon]}
-                    size={28}
+                    name={item.icon}
+                    size={20}
                     color={item.color}
                     style={styles.socialIcon}
                 />
@@ -139,24 +132,33 @@ const SocialMediaModal: React.FC<SocialMediaModalProps> = ({
                     style={styles.socialMediaField}
                     onPress={() => setSocialMediaModalVisible(true)}>
                     <Text style={styles.socialMediaPlaceholder}>Social Media</Text>
-                    <Icon name="chevron-right" size={24} color={colors.primaryBlack}/>
+                    <Icon name="chevron-right" size={11} color={colors.primaryBlack}/>
                 </TouchableOpacity>
 
-                {socialList?.map((item, idx) => (
-                    <View key={idx} style={styles.socialItemCard}>
+                {socialList?.map((item, idx) => {
+
+                    const platform = SOCIAL_MEDIA_OPTIONS.find(
+                        opt => opt.name === item.network
+                    );
+
+                    // Якщо на всяк випадок не знайде — падаємо на дефолт
+                    const iconName = platform?.icon ?? 'question-circle';
+                    const iconColor = platform?.color ?? colors.gray;
+
+                    return  <View key={idx} style={styles.socialItemCard}>
                         <View style={styles.socialItemInfo}>
                             <Icon
-                                name={ICONS_MAP[item.network.toLowerCase()]}
+                                name={iconName}
                                 size={24}
-                                color={colors.primaryGreen}
+                                color={iconColor}
                             />
                             <Text style={styles.socialItemLink}>{item.link.slice(0, 28) + '...'}</Text>
                         </View>
                         <TouchableOpacity onPress={() => handleRemoveSocial(idx)}>
-                            <Icon name="close-circle" size={24} color={colors.error} style={styles.iconDelete}/>
+                            <Icon name="close" size={20} color={colors.error} style={styles.iconDelete}/>
                         </TouchableOpacity>
                     </View>
-                ))}
+                })}
             </View>
             <Modal
                 visible={visible}
@@ -368,6 +370,6 @@ const styles = StyleSheet.create({
     iconDelete: {
         position: 'absolute',
         right: 0,
-        bottom: -13,
+        bottom: -10,
     }
 });

@@ -2,14 +2,13 @@ import {Alert, FlatList, StyleSheet, Text, TouchableOpacity, View,} from 'react-
 
 import React, {useCallback} from 'react';
 import colors from '@/styles/colors';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useAuth} from '@/context/AuthContext';
 import {collection, getFirestore, onSnapshot, orderBy, query, where} from 'firebase/firestore';
 import {app} from '@/firebase/firebase'; // важливо: firebase має бути ініціалізований окремо
 import {getMessageInfo} from '@/service/service';
 import {Image} from "expo-image";
 import {Conversation} from "@/models/model";
-import {useRouter} from "expo-router";
+import {useFocusEffect, useRouter} from "expo-router";
 
 export const MessageSection = () => {
     const [conversations, setConversations] = React.useState<Conversation[]>([]);
@@ -30,6 +29,7 @@ export const MessageSection = () => {
 
             const unsubscribe = onSnapshot(q, async (querySnapshot) => {
                 try {
+                    console.log(entityId);
                     const convList: Conversation[] = [];
                     const promises = querySnapshot.docs.map(async (docSnap) => {
                         const data = docSnap.data();
