@@ -11,6 +11,7 @@ export const countDaysForAcceptance = (date: string | null | undefined) => {
 };
 
 export const formatDate = (date: Date | null) => {
+  console.log(date);
   if (!date) return '';
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 };
@@ -35,10 +36,12 @@ export const formatDateFromLocalDate = (date: string | undefined) => {
 };
 
 export const formatDateForBackend = (date: string): string => {
-  const [day, month, year] = date.split(/[.\-\/]/);
-  const parsedDate = new Date(`${year}-${month}-${day}`);
-  return parsedDate.toISOString().split('T')[0];
+  const [day, month, year] = date.split(/[.\-/]/);
+  const dd = day.padStart(2, '0');
+  const mm = month.padStart(2, '0');
+  return `${year}-${mm}-${dd}`;
 };
+
 
 export const formatTime = (
   startTime: string,

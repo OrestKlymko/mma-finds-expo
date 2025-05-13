@@ -252,3 +252,9 @@ export interface ChangeNotificationStatusRequest {
   enableNotification: boolean;
   role: string;
 }
+
+export type PaySuccessFeeRequest = {
+  offerId:string;
+  fighterId:string;
+  feePayment:string;
+}

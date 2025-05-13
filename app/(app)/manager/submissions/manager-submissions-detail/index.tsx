@@ -23,6 +23,7 @@ import OpponentDetailsSection from "@/components/offers/public/OpponentDetailsSe
 import colors from "@/styles/colors";
 import {ManagerOfferDetailFooter} from "@/components/submissions/ManagerOfferDetailFooter";
 import {useLocalSearchParams} from "expo-router";
+import {SuccessFeePaymentSection} from "@/components/offers/SuccessFeePaymentSection";
 
 
 export const ManagerSubmissionDetailScreen = () => {
@@ -107,13 +108,17 @@ export const ManagerSubmissionDetailScreen = () => {
                     <EventDescription eventDescription={offer?.eventDescription}/>
                     <OfferExtendedDetailsInfo offer={offer} benefits={benefits}/>
                     <OpponentDetailsSection offer={offer}/>
-                    <ManagerOfferDetailFooter
-                        submittedInformation={submittedInformation}
-                        previousInfo={previousInfo}
-                        fighters={fighters}
-                        offer={offer}
-                        onRefreshFighterList={loadData}
-                    />
+
+                    {(submittedInformation && !submittedInformation.feePayment) ?
+                        <SuccessFeePaymentSection offerId={offerId} submittedInformation={submittedInformation}/> : (
+                            <ManagerOfferDetailFooter
+                                submittedInformation={submittedInformation}
+                                previousInfo={previousInfo}
+                                fighters={fighters}
+                                offer={offer}
+                                onRefreshFighterList={loadData}
+                            />
+                        )}
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>

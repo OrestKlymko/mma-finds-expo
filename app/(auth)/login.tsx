@@ -39,7 +39,7 @@ const LoginScreen = () => {
     const [password, setPassword] = useState('');
     const {setToken, setMethodAuth, setRole, setEntityId} = useAuth();
     const [authLoading, setAuthLoading] = useState<AuthMethod>(null);
-    const [selectedRole, setSelectedRole] = useState<'MANAGER' | 'PROMOTION' | 'PROMOTION_EMPLOYEE'>('PROMOTION_EMPLOYEE');
+    const [selectedRole, setSelectedRole] = useState<'MANAGER' | 'PROMOTION' | 'PROMOTION_EMPLOYEE'>('MANAGER');
     const router = useRouter();
     const handleSignIn = async () => {
         setAuthLoading('standard');

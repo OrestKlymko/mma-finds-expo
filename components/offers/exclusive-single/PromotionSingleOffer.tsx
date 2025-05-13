@@ -46,7 +46,6 @@ export const PromotionSingleOffer = () => {
     useFocusEffect(
         React.useCallback(() => {
             setContentLoading(true);
-            console.log(id);
             getExclusiveOfferInfoById(id)
                 .then(res => {
                     setOffer(res.offer);

@@ -30,7 +30,6 @@ export const ManagerMultiFightOffer = () => {
             setContentLoader(true);
             getMultiFightOfferById(id)
                 .then(res => {
-                    console.log(res);
                     setOffer(res.offer);
                     setFighter(res.fighter);
                     setSubmissionInformations(res.submittedInformation);

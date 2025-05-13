@@ -190,6 +190,7 @@ export type ShortInfoFighter = {
   managerAvatar?: string;
   contractStatus?: StatusResponse;
   rejectedReason?: string;
+  feePayment: string;
 };
 
 export type CreatePaymentIntentResponse = {
@@ -472,6 +473,7 @@ export type FighterInfoResponse = {
   lookingForOpponent: boolean;
   fighterId: string;
   managerId: string;
+  verificationState:VerificationState
 };
 
 export type ManagerInfo = {

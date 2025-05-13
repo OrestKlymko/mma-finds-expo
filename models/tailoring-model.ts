@@ -16,6 +16,7 @@ export type SubmittedInformationPublicOffer = {
     fighterId: string;
     rejectionReason?: string | null;
     fightNumber?: number | null | undefined;
+    feePayment: string | null;
 };
 
 export enum StatusResponse {

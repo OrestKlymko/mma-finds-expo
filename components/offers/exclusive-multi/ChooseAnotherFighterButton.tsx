@@ -20,7 +20,6 @@ export const ChooseAnotherFighterButton = (
     const {fighterId: multiContractFighterId} = useSelector((state: RootState) => state.createMultiContractOffer);
     const router = useRouter();
     useEffect(() => {
-        console.log(type);
         if (type === 'Exclusive' && exclusiveFighterId) {
             confirmFighterParticipationExclusive(offerId, exclusiveFighterId).then(() => {
                 router.back();

@@ -199,9 +199,9 @@ const styles = StyleSheet.create({
     searchContainerCommon: {
         flexDirection: 'row',
         gap: 10,
+        marginBottom: 10,
     },
     searchBar: {
-        marginBottom: 20,
         marginTop: 30,
     },
     noOffersText: {

@@ -223,7 +223,10 @@ const FilterPublicOfferScreen = () => {
 
                 <TouchableOpacity
                     style={styles.showResultsButton}
-                    onPress={() => router.back()}>
+                    onPress={() => {
+                        console.log('Selected filters:', selectedFilters);
+                        router.push('/search')
+                    }}>
                     <Text style={styles.showResultsText}>Show Results</Text>
                 </TouchableOpacity>
             </View>

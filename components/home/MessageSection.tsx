@@ -29,7 +29,6 @@ export const MessageSection = () => {
 
             const unsubscribe = onSnapshot(q, async (querySnapshot) => {
                 try {
-                    console.log(entityId);
                     const convList: Conversation[] = [];
                     const promises = querySnapshot.docs.map(async (docSnap) => {
                         const data = docSnap.data();

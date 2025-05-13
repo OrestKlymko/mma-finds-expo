@@ -21,7 +21,6 @@ type Props = {
 export const ShareOffer: React.FC<Props> = ({offer, typeOffer, fighter}) => {
   const shareOffer = async () => {
     if (!offer) return;
-    console.log(typeOffer);
     switch (typeOffer) {
       case 'Public':
         await sharePublicOffer(offer as PublicOfferInfo);
@@ -106,7 +105,6 @@ export const ShareOffer: React.FC<Props> = ({offer, typeOffer, fighter}) => {
   };
 
   const shareExclusiveOffer = async (o: ExclusiveOfferInfo) => {
-    console.log('o', o);
     const control = {
       offerId: o.offerId,
       params: {

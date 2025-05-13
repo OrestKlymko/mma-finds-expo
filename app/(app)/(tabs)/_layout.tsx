@@ -6,13 +6,13 @@ import Profile from "@/assets/profile.svg";
 import Email from "@/assets/email.svg";
 import Order from "@/assets/order.svg";
 import colors from "@/styles/colors";
-import {useAuth} from "@/context/AuthContext";
 
 
 export default function TabsLayout() {
-    const {role} = useAuth();
+
     return (
         <Tabs
+            backBehavior={'history'}
             screenOptions={{
                 tabBarShowLabel: false,
                 headerShown: false,

@@ -11,10 +11,9 @@ import {
 } from 'react-native';
 
 import React, {useEffect, useState} from 'react';
-import { useRouter } from 'expo-router';
+import {useRouter} from 'expo-router';
 import {declineOffer, featureFighterOnOffer, getCredit} from '@/service/service';
 import colors from '@/styles/colors';
-
 
 
 interface FeatureFighterBottomSheetProps {
@@ -58,7 +57,7 @@ export const FeatureFighterBottomSheet = ({
         }
         if (availableCredits == 0) {
             onClose();
-            router.navigate('ChooseCreditOptionScreen',{
+            router.navigate('ChooseCreditOptionScreen', {
                 offerId: offerId,
                 fighterId: fighterId
             });
@@ -130,7 +129,7 @@ export const FeatureFighterBottomSheet = ({
                                     disabled={loading}
                                     onPress={handleFeatureFighter}>
                                     {loading ? (
-                                        <ActivityIndicator size="small" color={colors.white} />
+                                        <ActivityIndicator size="small" color={colors.white}/>
                                     ) : (
                                         <Text style={styles.modalButtonText}>
                                             Feature for 1 Credit
@@ -143,9 +142,7 @@ export const FeatureFighterBottomSheet = ({
                                 disabled={loading}
                                 onPress={() => {
                                     onClose();
-                                    router.navigate('FighterFullInfoScreen', {
-                                        fighterId: fighterId,
-                                    });
+                                    router.navigate(`/manager/fighter/${fighterId}`);
                                 }}>
                                 <Text style={styles.modalSecondaryButtonText}>
                                     Show info about fighter
@@ -156,7 +153,7 @@ export const FeatureFighterBottomSheet = ({
                                 disabled={cancelLoading}
                                 onPress={cancelFighter}>
                                 {cancelLoading ? (
-                                    <ActivityIndicator size="small" color={colors.white} />
+                                    <ActivityIndicator size="small" color={colors.white}/>
                                 ) : (
                                     <Text
                                         style={[

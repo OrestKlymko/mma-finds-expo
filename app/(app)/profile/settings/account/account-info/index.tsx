@@ -41,7 +41,7 @@ const AccountInfoScreen = () => {
                     contentContainerStyle={styles.content}>
                     <TouchableOpacity
                         style={styles.item}
-                        onPress={() => router.push('/profile/settings/account/account-info/verification')}>
+                        onPress={() => router.push('/profile/settings/account/account-info/account-details')}>
                         <Text style={styles.itemText}>Change Account Details</Text>
                         <Icon name="chevron-right" size={20} color={colors.gray}/>
                     </TouchableOpacity>

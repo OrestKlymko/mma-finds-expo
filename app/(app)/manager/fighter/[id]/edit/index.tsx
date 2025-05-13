@@ -40,6 +40,7 @@ import { SportTypeMultiSelectDropdown } from '@/components/fighter/SportTypeMult
 import { TapologyLinkInput } from '@/components/fighter/TapologyLinkInput';
 import SocialMediaModal from "@/components/SocialMediaModal";
 import {useLocalSearchParams} from "expo-router";
+import MissingFieldsModal from "@/components/offers/MissingFieldsModal";
 
 
 
@@ -71,6 +72,7 @@ const EditFightersProfileScreen = () => {
     const [heightUnit, setHeightUnit] = useState<'cm' | 'inch'>('cm');
     const [heightFeet, setHeightFeet] = useState('');
     const [heightInches, setHeightInches] = useState('');
+    const [missingFields, setMissingFields] = useState<string[]>([]);
 
     const [reachValue, setReachValue] = useState('');
     const [reachUnit, setReachUnit] = useState<'cm' | 'inch'>('cm');
@@ -92,7 +94,7 @@ const EditFightersProfileScreen = () => {
     const [amWins, setAmWins] = useState('');
     const [amLoss, setAmLoss] = useState('');
     const [amDraw, setAmDraw] = useState('');
-
+    const [modalVisible, setModalVisible] = useState(false);
     const [foundationStyle, setFoundationStyle] =
         useState<FoundationStyleResponse | null>(null);
 
@@ -242,30 +244,30 @@ const EditFightersProfileScreen = () => {
         }
     }, [fighter]);
 
+    const getMissingRequiredFields=()=>  {
+        const missing: string[] = [];
+        if (!profileImage)        missing.push('Profile Image');
+        if (!nameSurname)         missing.push('Name and Surname');
+        if (!gender)              missing.push('Gender');
+        if (!dateOfBirth)         missing.push('Date of Birth');
+        if (!weightClass)         missing.push('Weight Class');
+        if (!nationality)         missing.push('Nationality');
+        if (!foundationStyle)     missing.push('Foundation Style');
+        if (!selectedSportTypes.length) missing.push('Sport Types');
+        if (!minWeight || !maxWeight)  missing.push('Min/Max Weight');
+        if (!proWins || !proLoss || !proDraw)
+            missing.push('Professional Record');
+        if (!noTapologyLink && !tapologyLink)
+            missing.push('Tapology Link');
+        return missing;
+    }
     // --- Submission: Update Fighter
     const onUpdatePress = () => {
         setHasSubmitted(true);
-        // Basic validations
-        if (
-            !nameSurname ||
-            !gender ||
-            !dateOfBirth ||
-            !weightClass ||
-            !nationality
-        ) {
-            Alert.alert('Please fill all required fields');
-            return;
-        }
-        if (!proWins || !proLoss || !proDraw) {
-            Alert.alert('Please fill Professional MMA Record');
-            return;
-        }
-        if (!noTapologyLink && tapologyLink.trim() === '') {
-            Alert.alert('Please provide Tapology link');
-            return;
-        }
-        if (tapologyError !== '' && !noTapologyLink) {
-            Alert.alert('Please provide a valid Tapology link');
+        const missing = getMissingRequiredFields();
+        if (missing.length > 0) {
+            setMissingFields(missing);
+            setModalVisible(true);
             return;
         }
 
@@ -583,6 +585,11 @@ const EditFightersProfileScreen = () => {
                         </Text>
                     )}
                 </TouchableOpacity>
+                <MissingFieldsModal
+                    visible={modalVisible}
+                    missingFields={missingFields}
+                    onClose={() => setModalVisible(false)}
+                />
             </ScrollView>
         </KeyboardAvoidingView>
     );

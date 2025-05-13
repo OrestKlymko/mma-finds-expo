@@ -12,27 +12,28 @@ import {
     KeyboardAvoidingView,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import { Photo } from '@/models/model';
-import { useRouter } from 'expo-router';
+import {Photo} from '@/models/model';
+import {useRouter} from 'expo-router';
 import {FoundationStyleResponse, NationalityResponse, SportTypeResponse, WeightClassResponse} from '@/service/response';
 import {createFighter, getShortInfoManager} from '@/service/service';
 import colors from '@/styles/colors';
 import GoBackButton from '@/components/GoBackButton';
 import {ImageSelectorComponent} from "@/components/ImageSelectorComponent";
 import FloatingLabelInput from "@/components/FloatingLabelInput";
-import { Gender } from '@/components/Gender';
-import { WeightClassComponent } from '@/components/WeightClassComponent';
+import {Gender} from '@/components/Gender';
+import {WeightClassComponent} from '@/components/WeightClassComponent';
 import {DateOfBirth} from "@/components/fighter/DateOfBIrth";
-import { HeightInput } from '@/components/fighter/HeightInput';
-import { ReachInput } from '@/components/fighter/ReachInput';
-import { NationalityDropdown } from '@/components/NationalityDropdown';
+import {HeightInput} from '@/components/fighter/HeightInput';
+import {ReachInput} from '@/components/fighter/ReachInput';
+import {NationalityDropdown} from '@/components/NationalityDropdown';
 import {CountryAutocompleteInput} from "@/components/CityAutocompleteInput";
-import { ProfessionalRecordInputs } from '@/components/ProfessionalRecordInputs';
-import { AmateurRecordInputs } from '@/components/AmateurRecordInputs';
+import {ProfessionalRecordInputs} from '@/components/ProfessionalRecordInputs';
+import {AmateurRecordInputs} from '@/components/AmateurRecordInputs';
 import {FoundationStyleDropdown} from "@/components/fighter/FoundationStyleDropdown";
 import {SportTypeMultiSelectDropdown} from "@/components/fighter/SportTypeMultiSelectDropdown";
 import SocialMediaModal from "@/components/SocialMediaModal";
-import { TapologyLinkInput } from '@/components/fighter/TapologyLinkInput';
+import {TapologyLinkInput} from '@/components/fighter/TapologyLinkInput';
+import MissingFieldsModal from "@/components/offers/MissingFieldsModal";
 
 
 const CreateFightersProfileScreen = () => {
@@ -45,7 +46,7 @@ const CreateFightersProfileScreen = () => {
     const [profileImage, setProfileImage] = useState<Photo | null>(null);
     const [loading, setLoading] = useState(false);
     const [noTapologyLink, setNoTapologyLink] = useState(false);
-
+    const [tapologyLink, setTapologyLink] = useState('');
     // Поля
     const [nameSurname, setNameSurname] = useState('');
     const [nickname, setNickname] = useState('');
@@ -65,7 +66,8 @@ const CreateFightersProfileScreen = () => {
     const [nationality, setNationality] = useState<NationalityResponse | null>(
         null,
     );
-    // Based In
+    const [missingFields, setMissingFields] = useState<string[]>([]);
+    const [modalVisible, setModalVisible] = useState(false);
     const [basedIn, setBasedIn] = useState('');
 
     const [heightFeet, setHeightFeet] = useState(''); // Для зріст (feet)
@@ -92,7 +94,7 @@ const CreateFightersProfileScreen = () => {
 
     // Social Media
     const [socialList, setSocialList] = useState<
-        {network: string; link: string}[]
+        { network: string; link: string }[]
     >([]);
 
     // About Fighter
@@ -111,36 +113,32 @@ const CreateFightersProfileScreen = () => {
     }, []);
     // Соцмережі
 
-    const [tapologyLink, setTapologyLink] = useState('');
 
+    const getMissingRequiredFields=()=>  {
+        const missing: string[] = [];
+        if (!profileImage)        missing.push('Profile Image');
+        if (!emailFighter)        missing.push('Fighter Email');
+        if (!nameSurname)         missing.push('Name and Surname');
+        if (!gender)              missing.push('Gender');
+        if (!dateOfBirth)         missing.push('Date of Birth');
+        if (!weightClass)         missing.push('Weight Class');
+        if (!nationality)         missing.push('Nationality');
+        if (!foundationStyle)     missing.push('Foundation Style');
+        if (!selectedSportTypes.length) missing.push('Sport Types');
+        if (!minWeight || !maxWeight)  missing.push('Min/Max Weight');
+        if (!proWins || !proLoss || !proDraw)
+            missing.push('Professional Record');
+        if (!noTapologyLink && !tapologyLink)
+            missing.push('Tapology Link');
+        return missing;
+    }
     // Submit
     const onSignUpPress = () => {
         setHasSubmitted(true);
-        if (
-            !profileImage ||
-            !nameSurname ||
-            !gender ||
-            !dateOfBirth ||
-            !weightClass ||
-            !nationality ||
-            !continent ||
-            !country ||
-            !proDraw ||
-            !proLoss ||
-            !proWins ||
-            !foundationStyle
-        ) {
-            Alert.alert('Please fill all required fields');
-            return;
-        }
-
-        if (!agreeDisclaimer) {
-            Alert.alert('Please agree to the disclaimer');
-            return;
-        }
-
-        if (!minWeight || !maxWeight) {
-            Alert.alert('Please enter weight range for notifications');
+        const missing = getMissingRequiredFields();
+        if (missing.length > 0) {
+            setMissingFields(missing);
+            setModalVisible(true);
             return;
         }
 
@@ -229,7 +227,7 @@ const CreateFightersProfileScreen = () => {
         <KeyboardAvoidingView
             style={{flex: 1, backgroundColor: colors.background}}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <GoBackButton />
+            <GoBackButton/>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -238,11 +236,7 @@ const CreateFightersProfileScreen = () => {
                     styles.container,
                     {paddingBottom: insets.bottom},
                 ]}>
-                {/* Back */}
-
                 <Text style={styles.headerRoboto}>Create Fighter’s Profile</Text>
-
-                {/* Photo */}
                 <View style={styles.imageContainer}>
                     <View>
                         <Text style={styles.titleProfile}>Photo*</Text>
@@ -300,7 +294,7 @@ const CreateFightersProfileScreen = () => {
                 />
 
                 {/* Weight Class */}
-                <WeightClassComponent onSelect={setWeightClass} />
+                <WeightClassComponent onSelect={setWeightClass}/>
 
                 {/* Вибір одиниць зросту */}
                 <HeightInput
@@ -461,7 +455,7 @@ const CreateFightersProfileScreen = () => {
                     onPress={onSignUpPress}
                     disabled={loading}>
                     {loading ? (
-                        <ActivityIndicator size="small" color={colors.white} />
+                        <ActivityIndicator size="small" color={colors.white}/>
                     ) : (
                         <Text style={styles.createFighterButtonText}>
                             Create Fighter’s Profile
@@ -469,7 +463,12 @@ const CreateFightersProfileScreen = () => {
                     )}
                 </TouchableOpacity>
 
-                {/* Footer - при потребі */}
+                <MissingFieldsModal
+                    visible={modalVisible}
+                    missingFields={missingFields}
+                    onClose={() => setModalVisible(false)}
+                />
+
             </ScrollView>
         </KeyboardAvoidingView>
     );

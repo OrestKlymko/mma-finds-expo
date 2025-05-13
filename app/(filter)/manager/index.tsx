@@ -119,7 +119,7 @@ const FilterManagerScreen = () => {
                 {/* Кнопка "Show Results" */}
                 <TouchableOpacity
                     style={styles.showResultsButton}
-                    onPress={() => router.back()}>
+                    onPress={() => router.push('/feed')}>
                     <Text style={styles.showResultsText}>Show Results</Text>
                 </TouchableOpacity>
             </View>
