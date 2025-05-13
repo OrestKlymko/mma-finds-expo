@@ -21,6 +21,7 @@ export default function RootLayout() {
     useBranchDeepLinking();
     useReferralParams();
     usePushNotifications();
+
     return (
         <StripeProvider
             publishableKey="pk_test_51PDR6jRxes7eHgo9gthYYUPzuYs4hRSkNh90LUWIFKFDahVlq7xfrPvxE4qPA8NQl46UwYefTor8AzYot2XdJSky00GA1iREea"

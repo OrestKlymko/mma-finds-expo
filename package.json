@@ -36,6 +36,7 @@
     "expo-clipboard": "~7.1.4",
     "expo-constants": "~17.0.8",
     "expo-crypto": "~14.1.4",
+    "expo-dev-client": "~5.0.20",
     "expo-device": "~7.1.4",
     "expo-document-picker": "~13.1.5",
     "expo-font": "~13.3.1",
@@ -77,8 +78,7 @@
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
     "react-native-wheel-picker-expo": "^0.5.4",
-    "react-redux": "^9.2.0",
-    "expo-dev-client": "~5.0.20"
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
