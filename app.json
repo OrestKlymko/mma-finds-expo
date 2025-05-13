@@ -9,6 +9,18 @@
     "owner": "orestklymko",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
+
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-build-properties",
+      [
+        "@config-plugins/react-native-branch",
+        {
+          "apiKey": "key_live_grh585cIvSocBiDvpSS40jaizwoZP243",
+        }
+      ]
+    ],
     "ios": {
       "bundleIdentifier": "com.mmafinds.app",
       "usesAppleSignIn": true,
@@ -17,6 +29,11 @@
         "com.apple.developer.applesignin": [
           "Default"
         ]
+      },
+      "config": {
+        "branch": {
+            "apiKey": "key_live_grh585cIvSocBiDvpSS40jaizwoZP243"
+        }
       },
       "appleTeamId": "87TA2D22ST",
       "infoPlist": {
@@ -46,9 +63,17 @@
               "pathPrefix": "/s/"
             }
           ],
-          "category": ["BROWSABLE","DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
-      ]
+      ],
+      "config": {
+        "branch": {
+          "apiKey": "key_live_grh585cIvSocBiDvpSS40jaizwoZP243"
+        }
+      }
     },
     "experiments": {
       "typedRoutes": true
@@ -61,7 +86,7 @@
       }
     },
     "androidNavigationBar": {
-        "hidden": true
+      "hidden": true
     }
   }
 }

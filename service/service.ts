@@ -1,27 +1,29 @@
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  CancelEventRequest,
-  ChangeNotificationStatusRequest,
-  ChangePasswordRequest,
-  ChangeProfileRequest,
-  ChangeTaskStatusRequest,
-  CreateDocumentOfferRequest,
-  CreateExclusiveOfferRequest,
-  CreateMultiOfferRequest,
-  CreateMultiOfferTailoringRequest,
-  CreatePaymentIntentRequest, CreatePaymentIntentStripeRequest,
-  CreateTaskRequest, DefaultMethodRequest,
-  InvitationMemberRequest,
-  LoginRequest,
-  OfferSubmissionResponse,
-  PayCreditRequest, PayForCreditRequestStripe,
-  PublicOfferToSelectedFighterRequest,
-  RecoveryPasswordRequest,
-  ResponseExclusiveOfferRequest,
-  ResponsorOfferRequest,
-  SendNotificationRequest,
-  UpdateOfferRequest,
+    CancelEventRequest,
+    ChangeNotificationStatusRequest,
+    ChangePasswordRequest,
+    ChangeProfileRequest,
+    ChangeTaskStatusRequest,
+    CreateDocumentOfferRequest,
+    CreateExclusiveOfferRequest,
+    CreateMultiOfferRequest,
+    CreateMultiOfferTailoringRequest,
+    CreatePaymentIntentRequest,
+    CreatePaymentIntentStripeRequest,
+    CreateTaskRequest,
+    DefaultMethodRequest,
+    InvitationMemberRequest,
+    LoginRequest,
+    OfferSubmissionResponse,
+    PayCreditRequest,
+    PayForCreditRequestStripe,
+    PublicOfferToSelectedFighterRequest,
+    RecoveryPasswordRequest,
+    ResponseExclusiveOfferRequest,
+    ResponsorOfferRequest,
+    SendNotificationRequest,
+    UpdateOfferRequest,
 } from './request';
 import {
     Benefit,
@@ -60,8 +62,11 @@ import {
     PromotionNameResponse,
     PromotionResponse,
     PublicOfferInfo,
-    ShortInfoFighter, ShortLinkRequest, ShortLinkResponse,
-    SportTypeResponse, StripePaymentResponse,
+    ShortInfoFighter,
+    ShortLinkRequest,
+    ShortLinkResponse,
+    SportTypeResponse,
+    StripePaymentResponse,
     SubAccountResponse,
     TicketResponse,
     USER_ROLE,
@@ -70,1129 +75,457 @@ import {
     WeightClassResponse,
 } from './response';
 
-// export const API_BASE_URL = 'http://localhost:8080/api';
+// export const API_BASE_URL = 'https://api.mmafinds.com/api';
+export const API_BASE_URL = 'http://localhost:8080/api';
 
-export const API_BASE_URL = 'https://api.mmafinds.com/api';
+async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+    const token = await AsyncStorage.getItem('authToken');
+    const headers: Record<string, string> = {};
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
 
-const api = axios.create({
-    baseURL: API_BASE_URL,
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...options,
     headers: {
-        Connection: 'close',
+      ...headers,
+      ...(options.headers as Record<string, string>),
     },
-});
+  });
 
-api.interceptors.request.use(
-    async config => {
-        const accessToken = await AsyncStorage.getItem('authToken');
-        if (accessToken && config.headers) {
-            config.headers.Authorization = `Bearer ${accessToken}`;
-        }
-        return config;
-    },
-    error => {
-        return Promise.reject(error);
-    },
-);
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`HTTP ${response.status}: ${text}`);
+  }
 
-export const login = async (
-    loginRequest: LoginRequest,
-): Promise<LoginResponse> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/auth/login`,
-        loginRequest,
-    );
-    return axiosResponse.data;
-};
+  // 204 No Content
+  if (response.status === 204) return undefined as any;
+  // Some endpoints send empty body with 200: guard against parse error
+  const contentType = response.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) return undefined as any;
 
-export const createPromotion = async (
-    data: FormData,
-): Promise<LoginResponse> => {
-    const axiosResponse = await api.post(`${API_BASE_URL}/promotion`, data);
-    return axiosResponse.data;
-};
-
-export const createPromotionSecond = async (
-    data: FormData,
-): Promise<LoginResponse> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/promotion/secondary`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const changeProfile = async (
-    data: ChangeProfileRequest,
-): Promise<LoginResponse> => {
-    const axiosResponse = await api.put(
-        `${API_BASE_URL}/auth/change-profile`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const createManager = async (data: FormData): Promise<LoginResponse> => {
-    const axiosResponse = await api.post(`${API_BASE_URL}/manager`, data);
-    return axiosResponse.data;
-};
-
-export const createManagerSecond = async (
-    data: FormData,
-): Promise<LoginResponse> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/manager/secondary`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const requestOnForgotPassword = async (email: string): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/auth/recovery-password`,
-        {
-            email: email,
-        },
-    );
-    return axiosResponse.data;
-};
-
-export const verifyAndChangePassword = async (
-    data: RecoveryPasswordRequest,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/auth/recovery-password/verify`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const createFighter = async (data: FormData) => {
-    const axiosResponse = await api.post(`${API_BASE_URL}/fighter`, data);
-    return axiosResponse.data;
-};
-
-export const getSportTypes = async (): Promise<SportTypeResponse[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/sport-type`);
-    return axiosResponse.data;
-};
-
-export const getCountries = async (): Promise<CountryResponse[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/country`);
-    return axiosResponse.data;
-};
-
-export const getCountriesFighter = async (): Promise<CountryResponse[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/country/fighter`);
-    return axiosResponse.data;
-};
-
-export const getCountriesManager = async (): Promise<CountryResponse[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/country/manager`);
-    return axiosResponse.data;
-};
-export const getCountriesForSubmittedFighter = async (
-    offerId: string,
-): Promise<CountryResponse[]> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/country/submitted-fighters/${offerId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const getOfferFullInfo = async (
-    offerId: string,
-): Promise<EditPublicOfferResponse> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/public-offers/full-info/${offerId}`,
-    );
-    return axiosResponse.data;
-}; // only for edit public offer
-
-export const getWeightClasses = async (): Promise<WeightClassResponse[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/fighter/weight-classes`);
-    return axiosResponse.data;
-};
-
-export const getNationalities = async (): Promise<NationalityResponse[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/fighter/nationalities`);
-    return axiosResponse.data;
-};
-
-export const getFoundationStyles = async (): Promise<
-    FoundationStyleResponse[]
-> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/fighter/foundation-styles`,
-    );
-    return axiosResponse.data;
-};
-
-export const getFoundationStylesFilter = async (): Promise<
-    FoundationStyleResponse[]
-> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/fighter/foundation-styles/filter`,
-    );
-    return axiosResponse.data;
-};
-
-export const getFoundationStylesFilterOfferById = async (
-    offerId: string,
-): Promise<FoundationStyleResponse[]> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/fighter/foundation-styles/offer/${offerId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const getShortInfoManager = async (): Promise<UserInfoResponse> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/manager/short-info`);
-    return axiosResponse.data;
-};
-
-export const getShortInfoPromotion = async (): Promise<UserInfoResponse> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/promotion/short-info`,
-        {},
-    );
-    return axiosResponse.data;
-};
-
-export const getShortInfoPromotionEmployee = async (): Promise<UserInfoResponse> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/promotion-employee/short-info`,
-        {},
-    );
-    return axiosResponse.data;
-};
-
-export const getShortInfoPromotionForCard = async (): Promise<
-    PromotionResponse[]
-> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/promotion/short-info/card`,
-        {},
-    );
-    return axiosResponse.data;
-};
-
-export const getInformationPromotion =
-    async (): Promise<PromotionInformationResponse> => {
-        const axiosResponse = await api.get(`${API_BASE_URL}/promotion`);
-        return axiosResponse.data;
-    };
-
-export const getInformationPromotionById = async (
-    promotionId: string,
-): Promise<PromotionInformationResponse> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/promotion/${promotionId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const confirmFighterParticipationMultiFight = async (
-    offerId: string,
-    fighterId: string,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/multi-fight-offers/submit-fighter/${offerId}/${fighterId}`,
-        null,
-    );
-    return axiosResponse.data;
+  return (await response.json()) as T;
 }
 
-export const confirmFighterParticipationExclusive = async (
-    offerId: string,
-    fighterId: string,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/exclusive/submit-fighter/${offerId}/${fighterId}`,
-        null,
-    );
-    return axiosResponse.data;
-}
-
-export const getFighterByManager = async (): Promise<
-    ShortInfoFighter[]
-> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/fighter`);
-    return axiosResponse.data;
-};
-
-export const getFighterByManagerId = async (
-    managerId: string,
-): Promise<ShortInfoFighter[]> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/fighter/manager/${managerId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const generateLinkForShareOffer = async (
-    data:ShortLinkRequest
-): Promise<ShortLinkResponse> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/short-link/generate`,
-        data,
-    );
-    return axiosResponse.data;
-}
-
-export const getShortLink = async (
-    code:string
-):Promise<string> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/short-link/get/${code}`,
-    );
-    return axiosResponse.data;
-}
-
-export const createPaymentIntentForCharge = async (
-    data: CreatePaymentIntentRequest,
-): Promise<CreatePaymentIntentResponse> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/payment/create-payment-intent`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-
-
-export const createPaymentIntentForStripe = async (
-    data: CreatePaymentIntentStripeRequest,
-): Promise<CreatePaymentIntentResponse> => {
-  const axiosResponse = await api.post(
-      `${API_BASE_URL}/stripe/payment-intent`,
-      data,
-  );
-  return axiosResponse.data;
-};
-
-export const chargeDefault = async (
-    pay: PayForCreditRequestStripe
-): Promise<StripePaymentResponse> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/stripe/charge-default`,
-        pay,
-    );
-    return axiosResponse.data;
-}
-export const setDefaultPaymentMethod = async (): Promise<void> => {
-    const axiosResponse = await api.post(`${API_BASE_URL}/payment/default`, null);
-    return axiosResponse.data;
-};
-
-export const setDefaultPaymentMethodStripe = async (data:DefaultMethodRequest): Promise<void> => {
-  const axiosResponse = await api.post(`${API_BASE_URL}/stripe/set-default`, data);
-  return axiosResponse.data;
-};
-export const generateInviteLink = async (
-    data: InvitationMemberRequest,
-): Promise<InvitationLinkResponse> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/promotion/invitation`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const extractPromotionInfoFromInvitation = async (
-    token: string,
-): Promise<DecodeTokenInvitationResponse> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/promotion/invitation?token=${token}`,
-    );
-    return axiosResponse.data;
-};
-
-export const extractEmailFromInvitation = async (
-    token: string,
-): Promise<DecodeTokenFromEmailResponse> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/auth/verify-email?token=${token}`,
-    );
-    return axiosResponse.data;
-};
-
-export const createSubAccount = async (data: FormData): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/promotion-employee`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const changePassword = async (
-    data: ChangePasswordRequest,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/auth/change-password`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const getAccountInfo = async (): Promise<ManagerInformationResponse> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/manager`);
-    return axiosResponse.data;
-};
-
-export const getManagerInfoById = async (
-    id: string,
-): Promise<ManagerInformationResponse> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/manager/${id}`);
-    return axiosResponse.data;
-};
-
-export const updateAccountInfo = async (data: FormData): Promise<void> => {
-    const axiosResponse = await api.put(`${API_BASE_URL}/manager`, data);
-    return axiosResponse.data;
-};
-
-export const updateAccountInfoPromotion = async (
-    data: FormData,
-): Promise<void> => {
-    const axiosResponse = await api.put(`${API_BASE_URL}/promotion`, data);
-    return axiosResponse.data;
-};
-
-export const deleteAccount = async (): Promise<void> => {
-    const axiosResponse = await api.delete(`${API_BASE_URL}/auth`);
-    return axiosResponse.data;
-};
-
-export const deactivateAccount = async (): Promise<void> => {
-    const axiosResponse = await api.put(`${API_BASE_URL}/auth/deactivate`, null);
-    return axiosResponse.data;
-};
-
-export const getCredit = async (): Promise<CreditRemainingResponse> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/credit`);
-    return axiosResponse.data;
-};
-
-export const payForCredit = async (data: PayCreditRequest): Promise<void> => {
-    const axiosResponse = await api.post(`${API_BASE_URL}/credit`, data);
-    return axiosResponse.data;
-};
-
-export const sendVerificationDataForManager = async (
-    data: FormData,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/verification/manager-verification/upload-document`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const sendVerificationDataForPromotion = async (
-    data: FormData,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/verification/promotion-verification/upload-document`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const getVerificationStatus =
-    async (type: string): Promise<VerificationStatusResponse> => {
-        const axiosResponse = await api.get(`${API_BASE_URL}/verification/${type}`);
-        return axiosResponse.data;
-    };
-
-export const sendFeedback = async (data: FormData): Promise<void> => {
-    const axiosResponse = await api.post(`${API_BASE_URL}/feedback`, data);
-    return axiosResponse.data;
-};
-
-export const createTicket = async (data: FormData): Promise<void> => {
-    const axiosResponse = await api.post(`${API_BASE_URL}/ticket`, data);
-    return axiosResponse.data;
-};
-
-export const getTickets = async (): Promise<TicketResponse[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/ticket`);
-    return axiosResponse.data;
-};
-
-export const getPaymentMethods = async (): Promise<CardInfoResponse[]> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/payment/payment-methods`,
-    );
-    return axiosResponse.data;
-};
-
-export const createPaymentIntentWithoutCharge =
-    async (): Promise<PaymentSetupIntentResponse> => {
-        const axiosResponse = await api.post(
-            `${API_BASE_URL}/payment/create-setup-intent`,
-            {},
-        );
-        return axiosResponse.data;
-    };
-
-export const setDefaultPaymentMethodById = async (
-    paymentMethodId: string,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/payment/set-default-payment-method`,
-        {paymentMethodId},
-    );
-    return axiosResponse.data;
-};
-
-export const detachPaymentMethod = async (
-    paymentMethodId: string,
-): Promise<void> => {
-    const axiosResponse = await api.delete(
-        `${API_BASE_URL}/payment/detach-payment-method/${paymentMethodId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const getAllSubAccounts = async (): Promise<SubAccountResponse[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/promotion/sub-accounts`);
-    return axiosResponse.data;
-};
-
-export const deleteSubAccount = async (subAccountId: string): Promise<void> => {
-    const axiosResponse = await api.delete(
-        `${API_BASE_URL}/promotion/sub-accounts/${subAccountId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const createEvent = async (
-    data: FormData,
-): Promise<EventCreationResponse> => {
-    const axiosResponse = await api.post(`${API_BASE_URL}/event`, data);
-    return axiosResponse.data;
-};
-
-export const updateEvent = async (
-    eventId: string,
-    data: FormData,
-): Promise<EventCreationResponse> => {
-    const axiosResponse = await api.put(`${API_BASE_URL}/event/${eventId}`, data);
-    return axiosResponse.data;
-};
-
-export const getEvents = async (): Promise<EventDetailsResponse[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/event`);
-    return axiosResponse.data;
-};
-
-export const getEventById = async (
-    eventId: string,
-): Promise<EventDetailsResponse> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/event/${eventId}`);
-    return axiosResponse.data;
-};
-
-export const createPublicOffer = async (
-    data: UpdateOfferRequest,
-): Promise<void> => {
-    const axiosResponse = await api.post(`${API_BASE_URL}/public-offers`, data);
-    return axiosResponse.data;
-};
-
-export const getPublicOffers = async (): Promise<PublicOfferInfo[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/public-offers`);
-    return axiosResponse.data;
-};
-
-export const getPublicOffersByPromotion = async (
-    promotionId: string,
-): Promise<PublicOfferInfo[]> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/public-offers/promotion/${promotionId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const getAllPublicOffers = async (): Promise<PublicOfferInfo[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/public-offers/all`);
-    return axiosResponse.data;
-};
-
-export const getExclusiveOffers = async () => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/exclusive-offers`);
-    return axiosResponse.data;
-};
-
-export const getPublicOfferInfoById = async (
-    offerId: string,
-): Promise<FullInfoAboutPublicOffer> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/public-offers/${offerId}`,
-    );
-
-    return axiosResponse.data;
-};
-
-export const getPublicOfferInfoByIdForManagerByFighter = async (
-    offerId: string,
-    fighterId: string,
-): Promise<FullInfoAboutPublicOffer> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/public-offers/${offerId}/${fighterId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const getPublicInfoForManager = async (
-    offerId: string,
-): Promise<FullInfoAboutPublicOffer> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/public-offers/submitted-fighters/manager/${offerId}`,
-    );
-    return axiosResponse.data;
-};
-export const submitOfferByFighterWithoutFeaturing = async (
-    offerId: string,
-    fighterId: string,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/public-offers/submit-fighter/${offerId}/${fighterId}`,
-        {},
-    );
-    return axiosResponse.data;
-};
-
-export const getExclusiveOfferInfoById = async (
-    offerId: string,
-): Promise<FullInfoAboutExclusiveOffer> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/exclusive-offers/${offerId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const chooseFighterForExclusiveOffer = async (
-    fighterId: string,
-    offerId: string,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/exclusive-offers/choose-fighter/${fighterId}/${offerId}`,
-        {},
-    );
-    return axiosResponse.data;
-}
-export const declineExclusiveOffer = async (
-    offerId: string,
-    data: ResponseExclusiveOfferRequest,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/exclusive-offer/reject/${offerId}/${data.fighterId}`,
-        {rejectedReason: data.response},
-    );
-    return axiosResponse.data;
-};
-
-export const declineMultiFightOffer = async (
-    offerId: string,
-    data: ResponseExclusiveOfferRequest,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/multi-fight-contract/reject/${offerId}/${data.fighterId}`,
-        {rejectedReason: data.response},
-    );
-    return axiosResponse.data;
-}
-
-export const acceptMultiFightOffer = async (
-    offerId: string,
-    fighterId: string,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/multi-fight-contract/confirm/${offerId}/${fighterId}`,
-    );
-    return axiosResponse.data;
-}
-export const negotiationDocumentForMultiFightOffer = async (
-    data: CreateMultiOfferTailoringRequest
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/multi-fight-contract/negotiation/${data.offerId}/${data.fighterId}`, data.purses
-    );
-    return axiosResponse.data;
-}
-
-export const getFullInfoAboutFighter = async (
-    fighterId: string,
-): Promise<FighterInfoResponse> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/fighter/${fighterId}`);
-    return axiosResponse.data;
-};
-
-export const switchFighterLookingStatus = async (
-    fighterId: string,
-): Promise<void> => {
-    const axiosResponse = await api.put(
-        `${API_BASE_URL}/fighter/looking-opponent/${fighterId}`,
-        {},
-    );
-    return axiosResponse.data;
-};
-
-export const getAllManagers = async (): Promise<ManagerInfo[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/manager/all`);
-    return axiosResponse.data;
-};
-export const getShortInfoFighters = async (): Promise<ShortInfoFighter[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/fighter/short-info`);
-    return axiosResponse.data;
-};
-
-export const getShortInfoFightersByManager = async (): Promise<
-    ShortInfoFighter[]
-> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/fighter/short-info/manager`,
-    );
-    return axiosResponse.data;
-};
-
-export const createExclusiveOffer = async (
-    data: CreateExclusiveOfferRequest,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/exclusive-offers`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const createMultiFightOffer = async (data: CreateMultiOfferRequest): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/multi-fight-offers`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const getEmployees = async (): Promise<EmployeeInfo[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/promotion-employee`);
-    return axiosResponse.data;
-};
-
-export const createTask = async (data: CreateTaskRequest) => {
-    const axiosResponse = await api.post(`${API_BASE_URL}/task`, data);
-    return axiosResponse.data;
-};
-
-export const getTaskOnEmployee = async (
-    employeeId: string,
-): Promise<EmployeeTaskResponse[]> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/task/employee/${employeeId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const getTaskOnEvent = async (
-    eventId: string,
-): Promise<EventTaskResponse[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/task/event/${eventId}`);
-    return axiosResponse.data;
-};
-
-export const changeStatusOfTask = async (data: ChangeTaskStatusRequest) => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/task/change-status`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const deleteTask = async (taskId: string): Promise<void> => {
-    const axiosResponse = await api.delete(`${API_BASE_URL}/task/${taskId}`);
-    return axiosResponse.data;
-};
-
-export const getMultiFightOffers = async (): Promise<
-    MultiContractShortInfo[]
-> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/multi-fight-offers`);
-    return axiosResponse.data;
-};
-
-export const renewDueDate = async (
-    offerId: string,
-    newDueDate: string,
-): Promise<void> => {
-    const axiosResponse = await api.put(
-        `${API_BASE_URL}/public-offers/due-date/${offerId}`,
-        {dueDate: newDueDate},
-    );
-    return axiosResponse.data;
-};
-
-export const renewExclusiveOfferDueDate = async (
-    offerId: string,
-    newDueDate: string,
-): Promise<void> => {
-    const axiosResponse = await api.put(
-        `${API_BASE_URL}/exclusive-offers/renew/${offerId}`,
-        {dueDate: newDueDate},
-    );
-    return axiosResponse.data;
-};
-
-export const renewDueDateMultifight = async (
-    offerId: string,
-    newDueDate: string,
-): Promise<void> => {
-    const axiosResponse = await api.put(
-        `${API_BASE_URL}/multi-fight-offers/due-date/${offerId}`,
-        {dueDate: newDueDate},
-    );
-    return axiosResponse.data;
-};
-export const closeOffer = async (
-    offerId: string,
-    reason: string,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/public-offers/close/${offerId}`,
-        {reason},
-    );
-    return axiosResponse.data;
-};
-
-export const closeMultiFightOffer = async (
-    offerId: string,
-    reason: string,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/multi-fight-offers/close/${offerId}`,
-        {reason},
-    );
-    return axiosResponse.data;
-};
-
-export const closeExclusiveOffer = async (
-    offerId: string,
-    reason: string,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/exclusive-offers/close/${offerId}`,
-        {reason},
-    );
-    return axiosResponse.data;
-};
-
-export const getBenefitsInPublicOffer = async (
-    offerId: string,
-): Promise<Benefit> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/public-offers/benefits/${offerId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const featureYourOffer = async (offerId: string): Promise<void> => {
-    return await api.post(`${API_BASE_URL}/public-offers/feature/${offerId}`);
-};
-
-export const getSubmissionsOfferByFighter = async (
-    fighterId: string,
-): Promise<OfferSubmissionResponse[]> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/public-offers/submission-offer/${fighterId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const getSubmissionManager = async (): Promise<
-    OfferSubmissionResponse[]
-> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/public-offers/submission-offer`,
-    );
-    return axiosResponse.data;
-};
-
-export const declineOffer = async (
-    offerId: string,
-    fighterId: string,
-): Promise<void> => {
-    const axiosResponse = await api.delete(
-        `${API_BASE_URL}/public-offers/decline/${offerId}/${fighterId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const getMultiFightOfferById = async (
-    offerId: string,
-): Promise<MultiContractResponse> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/multi-fight-offers/${offerId}`,
-    );
-    return axiosResponse.data;
-};
-
-
-export const getAllPromotionName = async (): Promise<
-    PromotionNameResponse[]
-> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/promotion/all-name`);
-    return axiosResponse.data;
-};
-
-export const getUpdateFighter = async (
-    fighterId: string,
-): Promise<FighterFullProfile> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/fighter/edit/${fighterId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const updateFighter = async (fighterId: string, data: FormData) => {
-    const axiosResponse = await api.put(
-        `${API_BASE_URL}/fighter/${fighterId}`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const featureFighterOnOffer = async (
-    offerId: string,
-    fighterId: string,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/fighter/feature/${offerId}/${fighterId}`,
-        {},
-    );
-    return axiosResponse.data;
-};
-
-export const changeNotificationState = async (
-    state: ChangeNotificationStatusRequest,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/auth/notification`,
-        state,
-    );
-    return axiosResponse.data;
-};
-
-export const getMessageInfo = async (
-    userId: string,
-    userRole: USER_ROLE | undefined,
-): Promise<MessageInfoResponse> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/user/message-info?userIds=${userId}&userRole=${userRole}`,
-    );
-    return axiosResponse.data;
-};
-
-export const sendNotification = async (data: SendNotificationRequest) => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/user/notification`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const sendNotificationOffer = async (data: SendNotificationRequest) => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/user/notification/offer`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const getFeatures = async (): Promise<FeatureResponse[]> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/features`);
-    return axiosResponse.data;
-};
-
-export const getFilterForPublicOffers =
-    async (): Promise<FilterPublicOfferPromotionResponse> => {
-        const axiosResponse = await api.get(`${API_BASE_URL}/filter/public-offers`);
-        return axiosResponse.data;
-    };
-export const getFilterForPublicOffersManager =
-    async (): Promise<FilterPublicOfferManagerResponse> => {
-        const axiosResponse = await api.get(
-            `${API_BASE_URL}/filter/public-offers/manager`,
-        );
-        return axiosResponse.data;
-    };
-
-export const getFilterForExclusiveOffers =
-    async (): Promise<FilterPublicOfferPromotionResponse> => {
-        const axiosResponse = await api.get(
-            `${API_BASE_URL}/filter/exclusive-offers`,
-        );
-        return axiosResponse.data;
-    };
-
-export const getAllRequiredDocumentByPromotion = async (): Promise<
-    DocumentRequiredResponse[]
-> => {
-    const axiosResponse = await api.get(`${API_BASE_URL}/document`);
-    return axiosResponse.data;
-};
-
-export const saveRequiredDocumentByPromotion = async (
-    doc: CreateDocumentOfferRequest,
-) => {
-    const axiosResponse = await api.post(`${API_BASE_URL}/document`, doc);
-    return axiosResponse.data;
-};
-
-export const deleteRequiredDocumentByPromotion = async (
-    docId: string,
-): Promise<void> => {
-    const axiosResponse = await api.delete(`${API_BASE_URL}/document/${docId}`);
-    return axiosResponse.data;
-};
-
-export const sendFirstOfferAfterSelectedFighter = async (
-    doc: PublicOfferToSelectedFighterRequest,
-) => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/public-offer`,
-        doc,
-    );
-    return axiosResponse.data;
-};
-
-export const confirmPublicOffer = async (
-    data: ResponsorOfferRequest,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/public-offer/confirm/${data.offerId}/${data.fighterId}`,
-        {},
-    );
-    return axiosResponse.data;
-};
-
-export const confirmExclusiveOffer = async (
-    data: ResponsorOfferRequest,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/exclusive-offer/confirm/${data.offerId}/${data.fighterId}`,
-        {},
-    );
-    return axiosResponse.data;
-};
-
-export const rejectPublicOffer = async (data: ResponsorOfferRequest) => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/public-offer/reject/${data.offerId}/${data.fighterId}`,
-        {rejectedReason: data.rejectedReason},
-    );
-    return axiosResponse.data;
-};
-
-export const cancelEvent = async (data: CancelEventRequest): Promise<void> => {
-    const axiosResponse = await api.post(`${API_BASE_URL}/event/close`, data);
-    return axiosResponse.data;
-};
-
-export const negotiationPublicOffer = async (data: ResponsorOfferRequest) => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/public-offer/negotiation/${data.offerId}/${data.fighterId}`,
-        data.negotiateRequest,
-    );
-    return axiosResponse.data;
-};
-export const negotiationExclusiveOffer = async (
-    data: ResponsorOfferRequest,
-) => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/exclusive-offer/negotiation/${data.offerId}/${data.fighterId}`,
-        data.negotiateRequest,
-    );
-    return axiosResponse.data;
-};
-
-export const getAllRequiredDocumentsForPublicOffer = async (
-    offerId: string,
-): Promise<DocumentRequiredResponse[]> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/document/public-offer/${offerId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const getAllRequiredDocumentsForExclusiveOffer = async (
-    offerId: string,
-): Promise<DocumentRequiredResponse[]> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/document/exclusive-offer/${offerId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const getAllRequiredDocumentsForMultiFightOffer = async (
-    offerId: string,
-): Promise<DocumentRequiredResponse[]> => {
-    const axiosResponse = await api.get(
-        `${API_BASE_URL}/document/multi-fight-contract/${offerId}`,
-    );
-    return axiosResponse.data;
-};
-
-export const addDocument = async (data: FormData): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/required-document`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const addDocumentExclusiveOffer = async (data: FormData): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/exclusive-offer/required-document`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const addDocumentMultiFightOffer = async (data: FormData): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/multi-fight-contract/required-document`,
-        data,
-    );
-    return axiosResponse.data;
-};
-
-export const renewDocumentPublicOfferDueDate = async (
-    offerId: string,
-    dueDate: string,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/public-offer/due-date/${offerId}`,
-        {dueDate},
-    );
-    return axiosResponse.data;
-};
-export const renewDocumentExclusiveOfferDueDate = async (
-    offerId: string,
-    dueDate: string,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/exclusive-offer/due-date/${offerId}`,
-        {dueDate},
-    );
-    return axiosResponse.data;
-};
-export const renewDocumentMultiFightOfferDueDate = async (
-    offerId: string,
-    dueDate: string,
-): Promise<void> => {
-    const axiosResponse = await api.post(
-        `${API_BASE_URL}/document/multi-contract-offer/due-date/${offerId}`,
-        {dueDate},
-    );
-    return axiosResponse.data;
-};
+// Helper to make JSON requests easier
+const jsonRequest = <T>(path: string, method: string, body?: any) =>
+  request<T>(path, {
+    method,
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+
+export const login = (body: LoginRequest): Promise<LoginResponse> =>
+  jsonRequest<LoginResponse>('/auth/login', 'POST', body);
+
+export const createPromotion = (data: FormData): Promise<LoginResponse> =>
+  request<LoginResponse>('/promotion', { method: 'POST', body: data });
+
+export const createPromotionSecond = (data: FormData): Promise<LoginResponse> =>
+  request<LoginResponse>('/promotion/secondary', { method: 'POST', body: data });
+
+export const changeProfile = (data: ChangeProfileRequest): Promise<LoginResponse> =>
+  jsonRequest<LoginResponse>('/auth/change-profile', 'PUT', data);
+
+export const createManager = (data: FormData): Promise<LoginResponse> =>
+  request<LoginResponse>('/manager', { method: 'POST', body: data });
+
+export const createManagerSecond = (data: FormData): Promise<LoginResponse> =>
+  request<LoginResponse>('/manager/secondary', { method: 'POST', body: data });
+
+export const requestOnForgotPassword = (email: string): Promise<void> =>
+  jsonRequest<void>('/auth/recovery-password', 'POST', { email });
+
+export const verifyAndChangePassword = (data: RecoveryPasswordRequest): Promise<void> =>
+  jsonRequest<void>('/auth/recovery-password/verify', 'POST', data);
+
+export const createFighter = (data: FormData): Promise<any> =>
+  request<any>('/fighter', { method: 'POST', body: data });
+
+export const getSportTypes = (): Promise<SportTypeResponse[]> =>
+  request<SportTypeResponse[]>('/sport-type', { method: 'GET' });
+
+export const getCountries = (): Promise<CountryResponse[]> =>
+  request<CountryResponse[]>('/country', { method: 'GET' });
+
+export const getCountriesFighter = (): Promise<CountryResponse[]> =>
+  request<CountryResponse[]>('/country/fighter', { method: 'GET' });
+
+export const getCountriesManager = (): Promise<CountryResponse[]> =>
+  request<CountryResponse[]>('/country/manager', { method: 'GET' });
+
+export const getCountriesForSubmittedFighter = (offerId: string): Promise<CountryResponse[]> =>
+  request<CountryResponse[]>(`/country/submitted-fighters/${offerId}`, { method: 'GET' });
+
+export const getOfferFullInfo = (offerId: string): Promise<EditPublicOfferResponse> =>
+  request<EditPublicOfferResponse>(`/public-offers/full-info/${offerId}`, { method: 'GET' });
+
+export const getWeightClasses = (): Promise<WeightClassResponse[]> =>
+  request<WeightClassResponse[]>('/fighter/weight-classes', { method: 'GET' });
+
+export const getNationalities = (): Promise<NationalityResponse[]> =>
+  request<NationalityResponse[]>('/fighter/nationalities', { method: 'GET' });
+
+export const getFoundationStyles = (): Promise<FoundationStyleResponse[]> =>
+  request<FoundationStyleResponse[]>('/fighter/foundation-styles', { method: 'GET' });
+
+export const getFoundationStylesFilter = (): Promise<FoundationStyleResponse[]> =>
+  request<FoundationStyleResponse[]>('/fighter/foundation-styles/filter', { method: 'GET' });
+
+export const getFoundationStylesFilterOfferById = (offerId: string): Promise<FoundationStyleResponse[]> =>
+  request<FoundationStyleResponse[]>(`/fighter/foundation-styles/offer/${offerId}`, { method: 'GET' });
+
+export const getShortInfoManager = (): Promise<UserInfoResponse> =>
+  request<UserInfoResponse>('/manager/short-info', { method: 'GET' });
+
+export const getShortInfoPromotion = (): Promise<UserInfoResponse> =>
+  request<UserInfoResponse>('/promotion/short-info', { method: 'GET' });
+
+export const getShortInfoPromotionEmployee = (): Promise<UserInfoResponse> =>
+  request<UserInfoResponse>('/promotion-employee/short-info', { method: 'GET' });
+
+export const getShortInfoPromotionForCard = (): Promise<PromotionResponse[]> =>
+  request<PromotionResponse[]>('/promotion/short-info/card', { method: 'GET' });
+
+export const getInformationPromotion = (): Promise<PromotionInformationResponse> =>
+  request<PromotionInformationResponse>('/promotion', { method: 'GET' });
+
+export const getInformationPromotionById = (promotionId: string): Promise<PromotionInformationResponse> =>
+  request<PromotionInformationResponse>(`/promotion/${promotionId}`, { method: 'GET' });
+
+export const confirmFighterParticipationMultiFight = (offerId: string, fighterId: string): Promise<void> =>
+  request<void>(`/multi-fight-offers/submit-fighter/${offerId}/${fighterId}`, { method: 'POST' });
+
+    export const confirmFighterParticipationExclusive = (offerId: string, fighterId: string): Promise<void> =>
+        request<void>(`/exclusive/submit-fighter/${offerId}/${fighterId}`, { method: 'POST' });
+
+    export const getFighterByManager = (): Promise<ShortInfoFighter[]> =>
+        request<ShortInfoFighter[]>('/fighter', { method: 'GET' });
+
+    export const getFighterByManagerId = (managerId: string): Promise<ShortInfoFighter[]> =>
+        request<ShortInfoFighter[]>(`/fighter/manager/${managerId}`, { method: 'GET' });
+
+    export const generateLinkForShareOffer = (data: ShortLinkRequest): Promise<ShortLinkResponse> =>
+        jsonRequest<ShortLinkResponse>('/short-link/generate', 'POST', data);
+
+    export const getShortLink = (code: string): Promise<string> =>
+        request<string>(`/short-link/get/${code}`, { method: 'GET' });
+
+    export const createPaymentIntentForCharge = (data: CreatePaymentIntentRequest): Promise<CreatePaymentIntentResponse> =>
+        jsonRequest<CreatePaymentIntentResponse>('/payment/create-payment-intent', 'POST', data);
+
+    export const createPaymentIntentForStripe = (data: CreatePaymentIntentStripeRequest): Promise<CreatePaymentIntentResponse> =>
+        jsonRequest<CreatePaymentIntentResponse>('/stripe/payment-intent', 'POST', data);
+
+    export const chargeDefault = (pay: PayForCreditRequestStripe): Promise<StripePaymentResponse> =>
+        jsonRequest<StripePaymentResponse>('/stripe/charge-default', 'POST', pay);
+
+    export const setDefaultPaymentMethod = (): Promise<void> =>
+        request<void>('/payment/default', { method: 'POST' });
+
+    export const setDefaultPaymentMethodStripe = (data: DefaultMethodRequest): Promise<void> =>
+        jsonRequest<void>('/stripe/set-default', 'POST', data);
+
+    export const generateInviteLink = (data: InvitationMemberRequest): Promise<InvitationLinkResponse> =>
+        jsonRequest<InvitationLinkResponse>('/promotion/invitation', 'POST', data);
+
+    export const extractPromotionInfoFromInvitation = (token: string): Promise<DecodeTokenInvitationResponse> =>
+        request<DecodeTokenInvitationResponse>(`/promotion/invitation?token=${token}`, { method: 'GET' });
+
+    export const extractEmailFromInvitation = (token: string): Promise<DecodeTokenFromEmailResponse> =>
+        request<DecodeTokenFromEmailResponse>(`/auth/verify-email?token=${token}`, { method: 'GET' });
+
+    export const createSubAccount = (data: FormData): Promise<void> =>
+        request<void>('/promotion-employee', { method: 'POST', body: data });
+
+    export const changePassword = (data: ChangePasswordRequest): Promise<void> =>
+        jsonRequest<void>('/auth/change-password', 'POST', data);
+
+    export const getAccountInfo = (): Promise<ManagerInformationResponse> =>
+        request<ManagerInformationResponse>('/manager', { method: 'GET' });
+
+    export const getManagerInfoById = (id: string): Promise<ManagerInformationResponse> =>
+        request<ManagerInformationResponse>(`/manager/${id}`, { method: 'GET' });
+
+    export const updateAccountInfo = (data: FormData): Promise<void> =>
+        request<void>('/manager', { method: 'PUT', body: data });
+
+    export const updateAccountInfoPromotion = (data: FormData): Promise<void> =>
+        request<void>('/promotion', { method: 'PUT', body: data });
+
+    export const deleteAccount = (): Promise<void> =>
+        request<void>('/auth', { method: 'DELETE' });
+
+    export const deactivateAccount = (): Promise<void> =>
+        request<void>('/auth/deactivate', { method: 'PUT' });
+
+    export const getCredit = (): Promise<CreditRemainingResponse> =>
+        request<CreditRemainingResponse>('/credit', { method: 'GET' });
+
+    export const payForCredit = (data: PayCreditRequest): Promise<void> =>
+        jsonRequest<void>('/credit', 'POST', data);
+
+    export const sendVerificationDataForManager = (data: FormData): Promise<void> =>
+        request<void>('/verification/manager-verification/upload-document', { method: 'POST', body: data });
+
+    export const sendVerificationDataForPromotion = (data: FormData): Promise<void> =>
+        request<void>('/verification/promotion-verification/upload-document', { method: 'POST', body: data });
+
+    export const getVerificationStatus = (type: string): Promise<VerificationStatusResponse> =>
+        request<VerificationStatusResponse>(`/verification/${type}`, { method: 'GET' });
+
+    export const sendFeedback = (data: FormData): Promise<void> =>
+        request<void>('/feedback', { method: 'POST', body: data });
+
+    export const createTicket = (data: FormData): Promise<void> =>
+        request<void>('/ticket', { method: 'POST', body: data });
+
+    export const getTickets = (): Promise<TicketResponse[]> =>
+        request<TicketResponse[]>('/ticket', { method: 'GET' });
+
+    export const getPaymentMethods = (): Promise<CardInfoResponse[]> =>
+        request<CardInfoResponse[]>('/payment/payment-methods', { method: 'GET' });
+
+    export const createPaymentIntentWithoutCharge = (): Promise<PaymentSetupIntentResponse> =>
+        jsonRequest<PaymentSetupIntentResponse>('/payment/create-setup-intent', 'POST', {});
+
+    export const setDefaultPaymentMethodById = (paymentMethodId: string): Promise<void> =>
+        jsonRequest<void>('/payment/set-default-payment-method', 'POST', { paymentMethodId });
+
+    export const detachPaymentMethod = (paymentMethodId: string): Promise<void> =>
+        request<void>(`/payment/detach-payment-method/${paymentMethodId}`, { method: 'DELETE' });
+
+    export const getAllSubAccounts = (): Promise<SubAccountResponse[]> =>
+        request<SubAccountResponse[]>('/promotion/sub-accounts', { method: 'GET' });
+
+    export const deleteSubAccount = (subAccountId: string): Promise<void> =>
+        request<void>(`/promotion/sub-accounts/${subAccountId}`, { method: 'DELETE' });
+
+    export const createEvent = (data: FormData): Promise<EventCreationResponse> =>
+        request<EventCreationResponse>('/event', { method: 'POST', body: data });
+
+    export const updateEvent = (eventId: string, data: FormData): Promise<EventCreationResponse> =>
+        request<EventCreationResponse>(`/event/${eventId}`, { method: 'PUT', body: data });
+
+    export const getEvents = (): Promise<EventDetailsResponse[]> =>
+        request<EventDetailsResponse[]>('/event', { method: 'GET' });
+
+    export const getEventById = (eventId: string): Promise<EventDetailsResponse> =>
+        request<EventDetailsResponse>(`/event/${eventId}`, { method: 'GET' });
+
+    export const createPublicOffer = (data: UpdateOfferRequest): Promise<void> =>
+        jsonRequest<void>('/public-offers', 'POST', data);
+
+    export const getPublicOffers = (): Promise<PublicOfferInfo[]> =>
+        request<PublicOfferInfo[]>('/public-offers', { method: 'GET' });
+
+    export const getPublicOffersByPromotion = (promotionId: string): Promise<PublicOfferInfo[]> =>
+        request<PublicOfferInfo[]>(`/public-offers/promotion/${promotionId}`, { method: 'GET' });
+
+    export const getAllPublicOffers = (): Promise<PublicOfferInfo[]> =>
+        request<PublicOfferInfo[]>('/public-offers/all', { method: 'GET' });
+
+    export const getExclusiveOffers = (): Promise<any> =>
+        request<any>('/exclusive-offers', { method: 'GET' });
+
+    export const getPublicOfferInfoById = (offerId: string): Promise<FullInfoAboutPublicOffer> =>
+        request<FullInfoAboutPublicOffer>(`/public-offers/${offerId}`, { method: 'GET' });
+
+    export const getPublicOfferInfoByIdForManagerByFighter = (offerId: string, fighterId: string): Promise<FullInfoAboutPublicOffer> =>
+        request<FullInfoAboutPublicOffer>(`/public-offers/${offerId}/${fighterId}`, { method: 'GET' });
+
+    export const getPublicInfoForManager = (offerId: string): Promise<FullInfoAboutPublicOffer> =>
+        request<FullInfoAboutPublicOffer>(`/public-offers/submitted-fighters/manager/${offerId}`, { method: 'GET' });
+
+    export const submitOfferByFighterWithoutFeaturing = (offerId: string, fighterId: string): Promise<void> =>
+        jsonRequest<void>(`/public-offers/submit-fighter/${offerId}/${fighterId}`, 'POST', {});
+
+    export const getExclusiveOfferInfoById = (offerId: string): Promise<FullInfoAboutExclusiveOffer> =>
+        request<FullInfoAboutExclusiveOffer>(`/exclusive-offers/${offerId}`, { method: 'GET' });
+
+    export const chooseFighterForExclusiveOffer = (fighterId: string, offerId: string): Promise<void> =>
+        request<void>(`/exclusive-offers/choose-fighter/${fighterId}/${offerId}`, { method: 'POST' });
+
+    export const declineExclusiveOffer = (offerId: string, data: ResponseExclusiveOfferRequest): Promise<void> =>
+        jsonRequest<void>(`/document/exclusive-offer/reject/${offerId}/${data.fighterId}`, 'POST', { rejectedReason: data.response });
+
+    export const declineMultiFightOffer = (offerId: string, data: ResponseExclusiveOfferRequest): Promise<void> =>
+        jsonRequest<void>(`/document/multi-fight-contract/reject/${offerId}/${data.fighterId}`, 'POST', { rejectedReason: data.response });
+
+    export const acceptMultiFightOffer = (offerId: string, fighterId: string): Promise<void> =>
+        request<void>(`/document/multi-fight-contract/confirm/${offerId}/${fighterId}`, { method: 'POST' });
+
+    export const negotiationDocumentForMultiFightOffer = (data: CreateMultiOfferTailoringRequest): Promise<void> =>
+        jsonRequest<void>(`/document/multi-fight-contract/negotiation/${data.offerId}/${data.fighterId}`, 'POST', data.purses);
+
+    export const getFullInfoAboutFighter = (fighterId: string): Promise<FighterInfoResponse> =>
+        request<FighterInfoResponse>(`/fighter/${fighterId}`, { method: 'GET' });
+
+    export const switchFighterLookingStatus = (fighterId: string): Promise<void> =>
+        jsonRequest<void>(`/fighter/looking-opponent/${fighterId}`, 'PUT', {});
+
+    export const getAllManagers = (): Promise<ManagerInfo[]> =>
+        request<ManagerInfo[]>('/manager/all', { method: 'GET' });
+
+    export const getShortInfoFighters = (): Promise<ShortInfoFighter[]> =>
+        request<ShortInfoFighter[]>('/fighter/short-info', { method: 'GET' });
+
+    export const getShortInfoFightersByManager = (): Promise<ShortInfoFighter[]> =>
+        request<ShortInfoFighter[]>('/fighter/short-info/manager', { method: 'GET' });
+
+    export const createExclusiveOffer = (data: CreateExclusiveOfferRequest): Promise<void> =>
+        jsonRequest<void>('/exclusive-offers', 'POST', data);
+
+    export const createMultiFightOffer = (data: CreateMultiOfferRequest): Promise<void> =>
+        jsonRequest<void>('/multi-fight-offers', 'POST', data);
+
+    export const getEmployees = (): Promise<EmployeeInfo[]> =>
+        request<EmployeeInfo[]>('/promotion-employee', { method: 'GET' });
+
+    export const createTask = (data: CreateTaskRequest): Promise<any> =>
+        jsonRequest<any>('/task', 'POST', data);
+
+    export const getTaskOnEmployee = (employeeId: string): Promise<EmployeeTaskResponse[]> =>
+        request<EmployeeTaskResponse[]>(`/task/employee/${employeeId}`, { method: 'GET' });
+
+    export const getTaskOnEvent = (eventId: string): Promise<EventTaskResponse[]> =>
+        request<EventTaskResponse[]>(`/task/event/${eventId}`, { method: 'GET' });
+
+    export const changeStatusOfTask = (data: ChangeTaskStatusRequest): Promise<any> =>
+        jsonRequest<any>('/task/change-status', 'POST', data);
+
+    export const deleteTask = (taskId: string): Promise<void> =>
+        request<void>(`/task/${taskId}`, { method: 'DELETE' });
+
+    export const getMultiFightOffers = (): Promise<MultiContractShortInfo[]> =>
+        request<MultiContractShortInfo[]>('/multi-fight-offers', { method: 'GET' });
+
+    export const renewDueDate = (offerId: string, newDueDate: string): Promise<void> =>
+        jsonRequest<void>(`/public-offers/due-date/${offerId}`, 'PUT', { dueDate: newDueDate });
+
+    export const renewExclusiveOfferDueDate = (offerId: string, newDueDate: string): Promise<void> =>
+        jsonRequest<void>(`/exclusive-offers/renew/${offerId}`, 'PUT', { dueDate: newDueDate });
+
+    export const renewDueDateMultifight = (offerId: string, newDueDate: string): Promise<void> =>
+        jsonRequest<void>(`/multi-fight-offers/due-date/${offerId}`, 'PUT', { dueDate: newDueDate });
+
+    export const closeOffer = (offerId: string, reason: string): Promise<void> =>
+        jsonRequest<void>(`/public-offers/close/${offerId}`, 'POST', { reason });
+
+    export const closeMultiFightOffer = (offerId: string, reason: string): Promise<void> =>
+        jsonRequest<void>(`/multi-fight-offers/close/${offerId}`, 'POST', { reason });
+
+    export const closeExclusiveOffer = (offerId: string, reason: string): Promise<void> =>
+        jsonRequest<void>(`/exclusive-offers/close/${offerId}`, 'POST', { reason });
+
+    export const getBenefitsInPublicOffer = (offerId: string): Promise<Benefit> =>
+        request<Benefit>(`/public-offers/benefits/${offerId}`, { method: 'GET' });
+
+    export const featureYourOffer = (offerId: string): Promise<void> =>
+        request<void>(`/public-offers/feature/${offerId}`, { method: 'POST' });
+
+    export const getSubmissionsOfferByFighter = (fighterId: string): Promise<OfferSubmissionResponse[]> =>
+        request<OfferSubmissionResponse[]>(`/public-offers/submission-offer/${fighterId}`, { method: 'GET' });
+
+    export const getSubmissionManager = (): Promise<OfferSubmissionResponse[]> =>
+        request<OfferSubmissionResponse[]>('/public-offers/submission-offer', { method: 'GET' });
+
+    export const declineOffer = (offerId: string, fighterId: string): Promise<void> =>
+        request<void>(`/public-offers/decline/${offerId}/${fighterId}`, { method: 'DELETE' });
+
+    export const getMultiFightOfferById = (offerId: string): Promise<MultiContractResponse> =>
+        request<MultiContractResponse>(`/multi-fight-offers/${offerId}`, { method: 'GET' });
+
+    export const getAllPromotionName = (): Promise<PromotionNameResponse[]> =>
+        request<PromotionNameResponse[]>('/promotion/all-name', { method: 'GET' });
+
+    export const getUpdateFighter = (fighterId: string): Promise<FighterFullProfile> =>
+        request<FighterFullProfile>(`/fighter/edit/${fighterId}`, { method: 'GET' });
+
+    export const updateFighter = (fighterId: string, data: FormData): Promise<any> =>
+        request<any>(`/fighter/${fighterId}`, { method: 'PUT', body: data });
+
+    export const featureFighterOnOffer = (offerId: string, fighterId: string): Promise<void> =>
+        request<void>(`/fighter/feature/${offerId}/${fighterId}`, { method: 'POST', body: JSON.stringify({}) });
+
+    export const changeNotificationState = (state: ChangeNotificationStatusRequest): Promise<void> =>
+        jsonRequest<void>('/auth/notification', 'POST', state);
+
+    export const getMessageInfo = (userId: string, userRole: USER_ROLE | undefined): Promise<MessageInfoResponse> =>
+        request<MessageInfoResponse>(`/user/message-info?userIds=${userId}&userRole=${userRole}`, { method: 'GET' });
+
+    export const sendNotification = (data: SendNotificationRequest): Promise<any> =>
+        jsonRequest<any>('/user/notification', 'POST', data);
+
+    export const sendNotificationOffer = (data: SendNotificationRequest): Promise<any> =>
+        jsonRequest<any>('/user/notification/offer', 'POST', data);
+
+    export const getFeatures = (): Promise<FeatureResponse[]> =>
+        request<FeatureResponse[]>('/features', { method: 'GET' });
+
+    export const getFilterForPublicOffers = (): Promise<FilterPublicOfferPromotionResponse> =>
+        request<FilterPublicOfferPromotionResponse>('/filter/public-offers', { method: 'GET' });
+
+    export const getFilterForPublicOffersManager = (): Promise<FilterPublicOfferManagerResponse> =>
+        request<FilterPublicOfferManagerResponse>('/filter/public-offers/manager', { method: 'GET' });
+
+    export const getFilterForExclusiveOffers = (): Promise<FilterPublicOfferPromotionResponse> =>
+        request<FilterPublicOfferPromotionResponse>('/filter/exclusive-offers', { method: 'GET' });
+
+    export const getAllRequiredDocumentByPromotion = (): Promise<DocumentRequiredResponse[]> =>
+        request<DocumentRequiredResponse[]>('/document', { method: 'GET' });
+
+    export const saveRequiredDocumentByPromotion = (doc: CreateDocumentOfferRequest): Promise<any> =>
+        jsonRequest<any>('/document', 'POST', doc);
+
+    export const deleteRequiredDocumentByPromotion = (docId: string): Promise<void> =>
+        request<void>(`/document/${docId}`, { method: 'DELETE' });
+
+    export const sendFirstOfferAfterSelectedFighter = (doc: PublicOfferToSelectedFighterRequest): Promise<any> =>
+        jsonRequest<any>('/document/public-offer', 'POST', doc);
+
+    export const confirmPublicOffer = (data: ResponsorOfferRequest): Promise<void> =>
+        request<void>(`/document/public-offer/confirm/${data.offerId}/${data.fighterId}`, { method: 'POST' });
+
+    export const confirmExclusiveOffer = (data: ResponsorOfferRequest): Promise<void> =>
+        request<void>(`/document/exclusive-offer/confirm/${data.offerId}/${data.fighterId}`, { method: 'POST' });
+
+    export const rejectPublicOffer = (data: ResponsorOfferRequest): Promise<void> =>
+        jsonRequest<void>(`/document/public-offer/reject/${data.offerId}/${data.fighterId}`, 'POST', { rejectedReason: data.rejectedReason });
+
+    export const cancelEvent = (data: CancelEventRequest): Promise<void> =>
+        jsonRequest<void>('/event/close', 'POST', data);
+
+    export const negotiationPublicOffer = (data: ResponsorOfferRequest): Promise<any> =>
+        jsonRequest<any>(`/document/public-offer/negotiation/${data.offerId}/${data.fighterId}`, 'POST', data.negotiateRequest);
+
+    export const negotiationExclusiveOffer = (data: ResponsorOfferRequest): Promise<any> =>
+        jsonRequest<any>(`/document/exclusive-offer/negotiation/${data.offerId}/${data.fighterId}`, 'POST', data.negotiateRequest);
+
+    export const getAllRequiredDocumentsForPublicOffer = (offerId: string): Promise<DocumentRequiredResponse[]> =>
+        request<DocumentRequiredResponse[]>(`/document/public-offer/${offerId}`, { method: 'GET' });
+
+    export const getAllRequiredDocumentsForExclusiveOffer = (offerId: string): Promise<DocumentRequiredResponse[]> =>
+        request<DocumentRequiredResponse[]>(`/document/exclusive-offer/${offerId}`, { method: 'GET' });
+
+    export const getAllRequiredDocumentsForMultiFightOffer = (offerId: string): Promise<DocumentRequiredResponse[]> =>
+        request<DocumentRequiredResponse[]>(`/document/multi-fight-contract/${offerId}`, { method: 'GET' });
+
+    export const addDocument = (data: FormData): Promise<void> =>
+        request<void>('/document/required-document', { method: 'POST', body: data });
+
+    export const addDocumentExclusiveOffer = (data: FormData): Promise<void> =>
+        request<void>('/document/exclusive-offer/required-document', { method: 'POST', body: data });
+
+    export const addDocumentMultiFightOffer = (data: FormData): Promise<void> =>
+        request<void>('/document/multi-fight-contract/required-document', { method: 'POST', body: data });
+
+    export const renewDocumentPublicOfferDueDate = (offerId: string, dueDate: string): Promise<void> =>
+        jsonRequest<void>(`/document/public-offer/due-date/${offerId}`, 'POST', { dueDate });
+
+    export const renewDocumentExclusiveOfferDueDate = (offerId: string, dueDate: string): Promise<void> =>
+        jsonRequest<void>(`/document/exclusive-offer/due-date/${offerId}`, 'POST', { dueDate });
+
+    export const renewDocumentMultiFightOfferDueDate = (offerId: string, dueDate: string): Promise<void> =>
+        jsonRequest<void>(`/document/multi-contract-offer/due-date/${offerId}`, 'POST', { dueDate });

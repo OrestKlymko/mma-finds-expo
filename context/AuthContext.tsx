@@ -4,7 +4,6 @@ import React, {
   useState,
   ReactNode,
   useEffect,
-  use,
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -157,7 +156,7 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
 // Хук для використання AuthContext
 export const useAuth = () => {
   //TODO: Check if use vs useContext is better, in the instructions, use is prefered.
-  const context = use(AuthContext);
+  const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
