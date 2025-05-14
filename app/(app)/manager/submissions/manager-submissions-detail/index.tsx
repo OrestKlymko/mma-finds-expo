@@ -109,7 +109,7 @@ export const ManagerSubmissionDetailScreen = () => {
                     <OfferExtendedDetailsInfo offer={offer} benefits={benefits}/>
                     <OpponentDetailsSection offer={offer}/>
 
-                    {(submittedInformation && !submittedInformation.feePayment) ?
+                    {(submittedInformation && submittedInformation.statusResponded === 'ACCEPTED' && !submittedInformation.feePayment) ?
                         <SuccessFeePaymentSection offerId={offerId} submittedInformation={submittedInformation}/> : (
                             <ManagerOfferDetailFooter
                                 submittedInformation={submittedInformation}

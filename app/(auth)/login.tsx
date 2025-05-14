@@ -17,12 +17,9 @@ import FooterSingUp from "@/components/FooterSingUp";
 import GoBackButton from "@/components/GoBackButton";
 import {useAuth} from "@/context/AuthContext";
 import useAppleAuth from "@/hooks/useAppleAuth";
-import useGoogleAuth from "@/hooks/useGoogleAuth";
 import RolePicker from "@/components/RolePicker";
-import * as Google from 'expo-auth-session/providers/google';
-import { auth } from '@/firebase/firebase';
+import {GoogleMethod} from "@/components/method-auth/GoogleMethod";
 
-import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 export const useWarmUpBrowser = () => {
     useEffect(() => {
         void WebBrowser.warmUpAsync()
@@ -35,27 +32,6 @@ WebBrowser.maybeCompleteAuthSession();
 
 type AuthMethod = 'standard' | 'google' | 'apple' | null;
 const LoginScreen = () => {
-    const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-        iosClientId:     "712660973446-q1o7h9v7nk36d2bdict84nfn8o6ackcg.apps.googleusercontent.com",
-        androidClientId: "712660973446-em7jf27c07obt4re1iihcq9oinjgrlqb.apps.googleusercontent.com",
-        webClientId:     "712660973446-em7jf27c07obt4re1iihcq9oinjgrlqb.apps.googleusercontent.com",
-    });
-
-    useEffect(() => {
-        if (response?.type === 'success') {
-            getEmail(response.params.access_token).then(email => {
-                console.log('Google email =>', email);
-            });
-        }
-    }, [response]);
-
-    async function getEmail(accessToken: string) {
-        const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-            headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        return data.email;
-    }
 
     useWarmUpBrowser()
     const insets = useSafeAreaInsets();
@@ -77,15 +53,9 @@ const LoginScreen = () => {
         (error) => Alert.alert('Apple Sign-In Error', error)
     );
 
-    const {signIn, loading} = useGoogleAuth(
-        async (email, fcm) => {
-            handleLoginToBackend(email, null, 'oauth', fcm);
-        },
-        (error) => {
-            Alert.alert('Google Sign-In', error);
-            setAuthLoading(null);
-        }
-    );
+    const onSuccessOauth = (email: string, fcm: string | null) => {
+        handleLoginToBackend(email, null, 'oauth', fcm);
+    }
 
     const handleLoginToBackend = (
         email: string,
@@ -212,15 +182,7 @@ const LoginScreen = () => {
                 {/* Кнопка входу через Google */}
 
 
-                <SocialButton
-                    text="Sign in with Google"
-                    onPress={()=>promptAsync()}
-                    iconSource={GoogleIcon}
-                    backgroundColor="#FFFFFF"
-                    textColor="#000"
-                    disabled={loading}
-                    isLoading={loading}
-                />
+                <GoogleMethod onSuccess={onSuccessOauth} text={"Sign in with Google"}/>
 
                 <SocialButton
                     text="Sign in with Facebook"
