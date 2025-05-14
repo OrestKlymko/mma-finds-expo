@@ -1,5 +1,10 @@
 {
   "expo": {
+    "autolinking": {
+      "exclude": [
+        "expo-haptics"
+      ]
+    },
     "name": "MMA Finds",
     "slug": "mma-finds-expo",
     "version": "1.0.0",
@@ -9,18 +14,18 @@
     "owner": "orestklymko",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
-
     "plugins": [
       "expo-dev-client",
       "expo-router",
-      "expo-secure-store",
-      "expo-build-properties",
       [
         "@config-plugins/react-native-branch",
         {
-          "apiKey": "key_live_grh585cIvSocBiDvpSS40jaizwoZP243",
+          "apiKey": "key_live_grh585cIvSocBiDvpSS40aizwoZP243"
         }
-      ]
+      ],
+      "expo-secure-store",
+      "expo-build-properties",
+      "expo-font"
     ],
     "ios": {
       "bundleIdentifier": "com.mmafinds.app",
@@ -33,7 +38,7 @@
       },
       "config": {
         "branch": {
-            "apiKey": "key_live_grh585cIvSocBiDvpSS40jaizwoZP243"
+          "apiKey": "key_live_grh585cIvSocBiDvpSS40jaizwoZP243"
         }
       },
       "appleTeamId": "87TA2D22ST",
@@ -49,7 +54,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/main-logo/splash.png",
+        "foregroundImage": "./assets/main-logo/logo.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -69,12 +74,7 @@
             "DEFAULT"
           ]
         }
-      ],
-      "config": {
-        "branch": {
-          "apiKey": "key_live_grh585cIvSocBiDvpSS40jaizwoZP243"
-        }
-      }
+      ]
     },
     "experiments": {
       "typedRoutes": true
