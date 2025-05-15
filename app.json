@@ -1,10 +1,5 @@
 {
   "expo": {
-    "autolinking": {
-      "exclude": [
-        "expo-haptics"
-      ]
-    },
     "name": "MMA Finds",
     "slug": "mma-finds-expo",
     "version": "1.0.0",
@@ -13,7 +8,7 @@
     "scheme": "com.mmafinds.app",
     "owner": "orestklymko",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": false,
+    "newArchEnabled": true,
     "plugins": [
       "expo-dev-client",
       "expo-router",
@@ -57,7 +52,6 @@
         "foregroundImage": "./assets/main-logo/logo.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
       "package": "com.mmafinds.app",
       "intentFilters": [
         {
@@ -80,14 +74,11 @@
       "typedRoutes": true
     },
     "extra": {
-      "googleWebClientId": "712660973446-9t222hmquqadadee9a3d31dqrhka89s5.apps.googleusercontent.com",
+      "googleWebClientId": "712660973446-0diefighnlioiiv9ktt1pkdgkckoa4om.apps.googleusercontent.com",
       "router": {},
       "eas": {
         "projectId": "330888a6-9e8b-416d-988a-51794fb23e33"
       }
-    },
-    "androidNavigationBar": {
-      "hidden": true
     }
   }
 }

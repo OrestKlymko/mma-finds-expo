@@ -4,6 +4,8 @@ import SocialButton from '@/components/method-auth/SocialButton';
 import GoogleIcon from '@/assets/icons/google.png';
 import * as Google from 'expo-auth-session/providers/google';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {Platform} from "react-native";
+import {makeRedirectUri} from "expo-auth-session";
 
 
 type GoogleMethodProps = {
@@ -17,8 +19,8 @@ export const GoogleMethod = ({onSuccess,text}: GoogleMethodProps) => {
     const [loadingGoogle, setLoadingGoogle] = useState(false);
     const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
         iosClientId: "712660973446-q1o7h9v7nk36d2bdict84nfn8o6ackcg.apps.googleusercontent.com",
-        androidClientId: "712660973446-em7jf27c07obt4re1iihcq9oinjgrlqb.apps.googleusercontent.com",
         webClientId: "712660973446-em7jf27c07obt4re1iihcq9oinjgrlqb.apps.googleusercontent.com",
+        androidClientId: "712660973446-0diefighnlioiiv9ktt1pkdgkckoa4om.apps.googleusercontent.com",
     });
 
     useEffect(() => {
