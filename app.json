@@ -20,7 +20,14 @@
       ],
       "expo-secure-store",
       "expo-build-properties",
-      "expo-font"
+      "expo-font",
+        [
+          "@react-native-google-signin/google-signin",
+          {
+          "iosUrlScheme": "com.googleusercontent.apps.712660973446-q1o7h9v7nk36d2bdict84nfn8o6ackcg"
+          }
+
+      ]
     ],
     "ios": {
       "bundleIdentifier": "com.mmafinds.app",

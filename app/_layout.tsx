@@ -1,5 +1,5 @@
 import {Slot} from 'expo-router';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {AuthProvider} from '@/context/AuthContext';
 import 'react-native-get-random-values';   // ← MUST come before any uuid import
 import {store} from '@/store/store';
@@ -15,6 +15,7 @@ import {tokenCache} from "@clerk/clerk-expo/token-cache";
 import {StripeProvider} from "@stripe/stripe-react-native";
 import {useBranchDeepLinking, useReferralParams} from "@/service/branchIoService";
 import {usePushNotifications} from "@/hooks/usePushNotifications";
+import {GoogleSignin} from "@react-native-google-signin/google-signin";
 
 
 export default function RootLayout() {
@@ -22,6 +23,13 @@ export default function RootLayout() {
     useReferralParams();
     usePushNotifications();
 
+    useEffect(() => {
+        GoogleSignin.configure({
+            iosClientId: "712660973446-q1o7h9v7nk36d2bdict84nfn8o6ackcg.apps.googleusercontent.com",
+            webClientId: "712660973446-9t222hmquqadadee9a3d31dqrhka89s5.apps.googleusercontent.com",
+            profileImageSize: 150
+        })
+    },[])
     return (
         <StripeProvider
             publishableKey="pk_test_51PDR6jRxes7eHgo9gthYYUPzuYs4hRSkNh90LUWIFKFDahVlq7xfrPvxE4qPA8NQl46UwYefTor8AzYot2XdJSky00GA1iREea"
