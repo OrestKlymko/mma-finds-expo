@@ -5,8 +5,7 @@ import * as Clipboard from 'expo-clipboard';
 import {useAuth} from "@/context/AuthContext";
 import {useRouter} from "expo-router";
 import colors from "@/styles/colors";
-import branch, {BranchLinkControlParams, BranchLinkProperties, BranchShareSheetOptions} from "react-native-branch";
-
+import appsFlyer from 'react-native-appsflyer';
 
 interface ReferralInputComponentProps {
     blackBackground?: boolean;
@@ -21,7 +20,7 @@ export function ReferralInputComponent({
 
     useEffect(() => {
         if(referralLink===''&&entityId){
-           createReferralLink(entityId);
+           createReferralLink(entityId).then(setReferralLink);
         }
     }, [entityId, referralLink]);
     const handleCopyLink = async () => {
@@ -31,49 +30,22 @@ export function ReferralInputComponent({
 
     // Приклад створення реферального лінку для запрошення
     const createReferralLink = async (userId: string) => {
+        return new Promise<string>((resolve, reject) => {
+            // OneLink template ID з дашборду
+            appsFlyer.setAppInviteOneLinkID('abc123', () => {
+                const params = {
+                    channel: 'referral',
+                    campaign: 'user_invite',
+                    userParams: { userId },       // будь-які мета-дані
+                };
 
-        try {
-            const branchUniversalObject = await branch.createBranchUniversalObject(
-                `invite/${userId}`,
-                {
-                    title: 'Join and earn rewards!',
-                    contentDescription:
-                        'Sign up using my invite link and get bonus cash rewards.',
-                    contentMetadata: {
-                        customMetadata: {
-                            userId: userId
-                        },
-                    },
-                },
-            );
-
-            const shareOptions: BranchShareSheetOptions = {
-                messageHeader: 'Join and earn rewards!',
-                messageBody: 'Sign up using my invite link and get bonus cash rewards.',
-                emailSubject: 'Join and earn rewards!',
-                title: 'Join and earn rewards!',
-                text: 'Sign up using my invite link and get bonus cash rewards.',
-            }
-            // Додаткові налаштування лінку (якщо потрібно)
-            const linkProperties: BranchLinkProperties = {
-                feature: 'invite',
-                channel: 'referral',
-            };
-
-            // Контрольні параметри можна використати для встановлення fallback URL або deep link URL
-            const controlParams: BranchLinkControlParams = {
-                $fallback_url: 'https://mmafinds.com', // Якщо апка не встановлена
-                $ios_url: 'com.mmafinds.app://invite',
-                $android_url: 'com.mmafinds.app://invite',
-            };
-            const {url} = await branchUniversalObject.generateShortUrl(linkProperties, controlParams);
-            setReferralLink(url);
-            // await branchUniversalObject.showShareSheet(shareOptions, linkProperties, controlParams);
-            // return url;
-        } catch (error) {
-            console.error('Error generating referral link:', error);
-            return null;
-        }
+                appsFlyer.generateInviteLink(
+                    params,
+                    (link) => resolve(link),      // отримали короткий URL
+                    (err)  => reject(err),
+                );
+            });
+        });
     };
 
     /** Share Link **/

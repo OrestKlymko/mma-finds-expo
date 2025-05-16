@@ -13,23 +13,44 @@ import {CountryModalProvider} from "react-native-country-picker-modal";
 import {ClerkProvider} from "@clerk/clerk-expo";
 import {tokenCache} from "@clerk/clerk-expo/token-cache";
 import {StripeProvider} from "@stripe/stripe-react-native";
-import {useBranchDeepLinking, useReferralParams} from "@/service/branchIoService";
 import {usePushNotifications} from "@/hooks/usePushNotifications";
+import appsFlyer, {InitSDKOptions} from 'react-native-appsflyer';
 import {GoogleSignin} from "@react-native-google-signin/google-signin";
 
 
 export default function RootLayout() {
-    useBranchDeepLinking();
-    useReferralParams();
     usePushNotifications();
 
     useEffect(() => {
+        const afOptions: InitSDKOptions = {
+            devKey: '9HiahBKEZuYX7PhdpkzUge',
+            appId: '6740005810',
+            isDebug: true,
+        };
+        appsFlyer.initSdk(
+            afOptions,
+            (res) => console.log('AF init success', res),
+            (err) => console.log('AF init error', err),
+        );
+
+        appsFlyer.setOneLinkCustomDomains(
+            ['links.mmafinds.com'],
+            () => console.log('custom domain OK'),
+            console.warn
+        );
+
+        appsFlyer.onDeepLink((res) => {
+            if (res.deepLinkStatus === 'FOUND') {
+                const {deepLink} = res.data;
+                // deepLink = "mmafinds://invite?userId=42" → роутимо
+            }
+        });
         GoogleSignin.configure({
             iosClientId: "712660973446-q1o7h9v7nk36d2bdict84nfn8o6ackcg.apps.googleusercontent.com",
             webClientId: "712660973446-9t222hmquqadadee9a3d31dqrhka89s5.apps.googleusercontent.com",
             profileImageSize: 150
         })
-    },[])
+    }, []);
     return (
         <StripeProvider
             publishableKey="pk_test_51PDR6jRxes7eHgo9gthYYUPzuYs4hRSkNh90LUWIFKFDahVlq7xfrPvxE4qPA8NQl46UwYefTor8AzYot2XdJSky00GA1iREea"

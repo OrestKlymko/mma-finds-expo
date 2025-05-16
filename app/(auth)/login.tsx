@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, Alert, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
-import GoogleIcon from '@/assets/icons/google.png';
 import FacebookIcon from '@/assets/icons/facebook.png';
 import AppleIcon from '@/assets/icons/apple.png';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
