@@ -12,7 +12,7 @@ export function TermAndConditionComponent({
   agreeState,
 }: TermAndConditionComponentProps) {
   const openTerms = () => {
-    const url = 'https://your-terms-url.com'; // Замість цього вставте свою URL адресу
+    const url = 'https://www.mmafinds.com/terms-and-conditions/'; // Замість цього вставте свою URL адресу
     Linking.canOpenURL(url)
       .then(supported => {
         if (supported) {
@@ -24,7 +24,7 @@ export function TermAndConditionComponent({
   };
 
   const openPrivacy = () => {
-    const url = 'https://your-privacy-url.com'; // Замість цього вставте свою URL адресу
+    const url = 'https://www.mmafinds.com/privacy-policy/'; // Замість цього вставте свою URL адресу
     Linking.canOpenURL(url)
       .then(supported => {
         if (supported) {

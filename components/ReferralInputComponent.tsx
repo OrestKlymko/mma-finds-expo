@@ -5,7 +5,7 @@ import * as Clipboard from 'expo-clipboard';
 import {useAuth} from "@/context/AuthContext";
 import {useRouter} from "expo-router";
 import colors from "@/styles/colors";
-import appsFlyer from 'react-native-appsflyer';
+import appsFlyer, {GenerateInviteLinkParams} from 'react-native-appsflyer';
 
 interface ReferralInputComponentProps {
     blackBackground?: boolean;
@@ -32,11 +32,13 @@ export function ReferralInputComponent({
     const createReferralLink = async (userId: string) => {
         return new Promise<string>((resolve, reject) => {
             // OneLink template ID з дашборду
-            appsFlyer.setAppInviteOneLinkID('abc123', () => {
-                const params = {
-                    channel: 'referral',
-                    campaign: 'user_invite',
-                    userParams: { userId },       // будь-які мета-дані
+            appsFlyer.setAppInviteOneLinkID('CACT', () => {
+                const params: GenerateInviteLinkParams = {
+                    channel     : 'referral',
+                    campaign    : 'user_invite',
+                    brandDomain : 'links.mmafinds.com',  // кастом-домен (CNAME → AppsFlyer)
+                    baseDeeplink: 'mmafinds://',         // відкриє app без роута
+                    userParams  : { userId },            // переїде в ?userId=… та в SDK
                 };
 
                 appsFlyer.generateInviteLink(

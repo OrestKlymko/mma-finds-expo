@@ -128,7 +128,7 @@ const CreateFightersProfileScreen = () => {
         if (!minWeight || !maxWeight)  missing.push('Min/Max Weight');
         if (!proWins || !proLoss || !proDraw)
             missing.push('Professional Record');
-        if (!noTapologyLink && !tapologyLink)
+        if (noTapologyLink && !tapologyLink)
             missing.push('Tapology Link');
         return missing;
     }
@@ -212,7 +212,7 @@ const CreateFightersProfileScreen = () => {
 
         createFighter(formData)
             .then(() => {
-                router.push('/fighter');
+                router.push('/profile/my-fighters');
             })
             .catch((e) => {
                 console.log(e.message);

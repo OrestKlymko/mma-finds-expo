@@ -16,43 +16,61 @@ export function ImageSelectorComponent({
     const hasError = hasSubmitted && !image;
 
     const onAddImage = async () => {
-        const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        /** 1. Перевірка permission – залишаємо, як є */
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
             Alert.alert(
                 'Permission Required',
                 'Please allow access to your media library to continue.',
                 [
-                    {text: 'Cancel', style: 'cancel'},
-                    {
-                        text: 'Open Settings',
-                        onPress: () => Linking.openSettings(),
-                    },
+                    { text: 'Cancel', style: 'cancel' },
+                    { text: 'Open Settings', onPress: () => Linking.openSettings() },
                 ]
             );
             return;
         }
 
         try {
-            // 2. Launch the system picker, allow editing
-            const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,                  // cropping UI
-                aspect: isPoster ? [4,3] : [1,1],     // poster = 4:3, avatar = 1:1
-                quality: 0.8,
-            });
+            /** 2. POSTER: звичайний ImagePicker (4:3) */
+            if (isPoster) {
+                const res = await ImagePicker.launchImageLibraryAsync({
+                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                    allowsEditing: true,
+                    aspect: [4, 3],
+                    quality: 0.8,
+                });
 
-            if (!result.canceled && result.assets.length > 0) {
-                const asset = result.assets[0];    // <-- pull the first asset
+                if (!res.canceled && res.assets.length) {
+                    const a = res.assets[0];
+                    setPhoto({
+                        uri: a.uri,
+                        type: a.mimeType ?? 'image/jpeg',
+                        name: a.fileName ?? `poster_${Date.now()}.jpg`,
+                    });
+                }
+            }
+            /** 3. AVATAR: колове обрізання через ImageCropPicker */
+            else {
+                const img = await ImageCropPicker.openPicker({
+                    width: 400,
+                    height: 400,
+                    cropping: true,
+                    cropperCircleOverlay: true,   // ← коло!
+                    mediaType: 'photo',
+                    compressImageQuality: 0.8,
+                });
+
                 setPhoto({
-                    uri: asset.uri,                  // ✅ correct
-                    type: asset.mimeType ?? 'image/jpeg',
-                    name: asset.fileName ?? `photo_${Date.now()}.jpg`,
+                    uri: img.path,
+                    type: img.mime ?? 'image/jpeg',
+                    name: img.filename ?? `avatar_${Date.now()}.jpg`,
                 });
             }
         } catch (e) {
-            console.warn('ImagePicker error:', e);
+            console.warn('Image picker error:', e);
         }
     };
+
 
     return (
         <View>

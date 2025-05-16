@@ -44,6 +44,7 @@ const LoginScreen = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState('');
+    const [loadingGoogle, setLoadingGoogle] = useState(false);
     const {setToken, setMethodAuth, setRole, setEntityId} = useAuth();
     const [authLoading, setAuthLoading] = useState<AuthMethod>(null);
     const [selectedRole, setSelectedRole] = useState<'MANAGER' | 'PROMOTION' | 'PROMOTION_EMPLOYEE'>('MANAGER');
@@ -91,6 +92,7 @@ const LoginScreen = () => {
                     await AsyncStorage.setItem('authToken', res.token);
                 }
                 setTimeout(() => {
+                    setLoadingGoogle(false);
                     router.push('/');
                 }, 1000);
             })
@@ -103,6 +105,7 @@ const LoginScreen = () => {
                 } else {
                     Alert.alert('Error', 'Failed to sign in');
                 }
+                setLoadingGoogle(false);
 
             }).finally(() => {
             setAuthLoading(null)
@@ -188,7 +191,7 @@ const LoginScreen = () => {
                 {/* Кнопка входу через Google */}
 
 
-                <GoogleMethod onSuccess={onSuccessOauth} text={"Sign in with Google"}/>
+                <GoogleMethod onSuccess={onSuccessOauth} text={"Sign in with Google"} loading={loadingGoogle} setLoading={setLoadingGoogle}/>
 
                 <SocialButton
                     text="Sign in with Facebook"

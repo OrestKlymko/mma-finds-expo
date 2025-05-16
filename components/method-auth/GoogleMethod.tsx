@@ -3,35 +3,34 @@ import * as WebBrowser from 'expo-web-browser';
 import SocialButton from '@/components/method-auth/SocialButton';
 import GoogleIcon from '@/assets/icons/google.png';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {GoogleSignin, isSuccessResponse, isErrorWithCode, statusCodes } from "@react-native-google-signin/google-signin";
+import {GoogleSignin, isSuccessResponse, isErrorWithCode, statusCodes} from "@react-native-google-signin/google-signin";
 
 type GoogleMethodProps = {
-    onSuccess(email: string, fcm: string|null): void;
-    text:string
+    onSuccess(email: string, fcm: string | null): void;
+    text: string
+    loading: boolean
+    setLoading: (loading: boolean) => void
 };
 
 WebBrowser.maybeCompleteAuthSession();
 
-export const GoogleMethod = ({onSuccess,text}: GoogleMethodProps) => {
-    const [loadingGoogle, setLoadingGoogle] = useState(false);
+export const GoogleMethod = ({onSuccess, text,loading,setLoading}: GoogleMethodProps) => {
 
     const handleGoogleSignin = async () => {
         try {
-            setLoadingGoogle(true);
+            setLoading(true);
             await GoogleSignin.hasPlayServices();
             const response = await GoogleSignin.signIn();
-            if(isSuccessResponse(response)) {
+            if (isSuccessResponse(response)) {
                 const {user} = response.data;
                 const {email} = user;
                 console.log("Email:", email);
                 const fcm = await AsyncStorage.getItem('deviceToken');
                 onSuccess(email, fcm ?? '');
             }
-
-            setLoadingGoogle(false);
-        }
-        catch (error) {
-            if(isErrorWithCode(error)) {
+        } catch (error) {
+            console.error("Google Signin Error:", error?.response); //TODO
+            if (isErrorWithCode(error)) {
                 switch (error.code) {
                     case statusCodes.IN_PROGRESS:
                         console.error("Google Signin is in progress");
@@ -45,27 +44,19 @@ export const GoogleMethod = ({onSuccess,text}: GoogleMethodProps) => {
                 }
             }
 
-            setLoadingGoogle(false);
+            setLoading(false);
         }
-    }
-
-    async function getEmail(accessToken: string) {
-        const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-            headers: {Authorization: `Bearer ${accessToken}`},
-        });
-        const data = await res.json();
-        return data.email;
     }
 
     return (
         <SocialButton
             text={text}
             onPress={() => handleGoogleSignin()}
-            isLoading={loadingGoogle}
+            isLoading={loading}
             iconSource={GoogleIcon}
             backgroundColor="#FFFFFF"
             textColor="#000"
-            disabled={loadingGoogle}
+            disabled={loading}
         />
     );
 };

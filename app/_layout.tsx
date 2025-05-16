@@ -14,10 +14,12 @@ import {StripeProvider} from "@stripe/stripe-react-native";
 import {usePushNotifications} from "@/hooks/usePushNotifications";
 import appsFlyer, {InitSDKOptions} from 'react-native-appsflyer';
 import {GoogleSignin} from "@react-native-google-signin/google-signin";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function RootLayout() {
     usePushNotifications();
+
 
     useEffect(() => {
         const afOptions: InitSDKOptions = {
@@ -37,9 +39,13 @@ export default function RootLayout() {
             console.warn
         );
 
+        appsFlyer.onInstallConversionData(({data}) => {
+            const id = data?.userId;
+            AsyncStorage.setItem("referralUserId", id)
+        });
         appsFlyer.onDeepLink((res) => {
             if (res.deepLinkStatus === 'FOUND') {
-                const {deepLink} = res.data;
+                const {userId} = res.data;
                 // deepLink = "mmafinds://invite?userId=42" → роутимо
             }
         });
@@ -54,21 +60,21 @@ export default function RootLayout() {
             publishableKey="pk_test_51PDR6jRxes7eHgo9gthYYUPzuYs4hRSkNh90LUWIFKFDahVlq7xfrPvxE4qPA8NQl46UwYefTor8AzYot2XdJSky00GA1iREea"
             merchantIdentifier="merchant.com.youApp">
             <ReduxProvider store={store}>
-                    <CountryModalProvider>
-                        <AuthProvider>
-                            <NotificationProvider>
-                                <FilterProvider>
-                                    <ExclusiveOfferFilterProvider>
-                                        <SubmittedFilterFighterProvider>
-                                            <FilterFighterProvider>
-                                                <Slot/>
-                                            </FilterFighterProvider>
-                                        </SubmittedFilterFighterProvider>
-                                    </ExclusiveOfferFilterProvider>
-                                </FilterProvider>
-                            </NotificationProvider>
-                        </AuthProvider>
-                    </CountryModalProvider>
+                <CountryModalProvider>
+                    <AuthProvider>
+                        <NotificationProvider>
+                            <FilterProvider>
+                                <ExclusiveOfferFilterProvider>
+                                    <SubmittedFilterFighterProvider>
+                                        <FilterFighterProvider>
+                                            <Slot/>
+                                        </FilterFighterProvider>
+                                    </SubmittedFilterFighterProvider>
+                                </ExclusiveOfferFilterProvider>
+                            </FilterProvider>
+                        </NotificationProvider>
+                    </AuthProvider>
+                </CountryModalProvider>
             </ReduxProvider>
         </StripeProvider>
     );

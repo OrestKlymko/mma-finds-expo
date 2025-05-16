@@ -12,7 +12,13 @@ interface FighterCardProps {
 
 const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress}) => {
     const isRejected = fighter?.contractStatus === 'REJECTED';
-
+    const shortCountry = ()=>{
+        if(fighter?.country?.length>25){
+            return fighter?.country?.slice(0, 25) + '...'
+        }else {
+            return fighter?.country
+        }
+    }
     return (
         <View style={{position: 'relative'}}>
             <TouchableOpacity
@@ -52,7 +58,7 @@ const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress}) => {
                     </View>
                     <View style={{flexDirection: 'row'}}>
                         <Text style={styles.fighterInfo}>Based In: </Text>
-                        <Text style={styles.fighterInfoValue}>{fighter?.country}</Text>
+                        <Text style={styles.fighterInfoValue}>{shortCountry()}</Text>
                     </View>
                     <View style={{flexDirection: 'row'}}>
                         <Text style={styles.fighterInfo}>Professional MMA Record: </Text>

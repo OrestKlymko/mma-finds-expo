@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import GoBackButton from "@/components/GoBackButton";
@@ -23,12 +23,12 @@ const LegalScreen = () => {
 
             {/* Preferences Options */}
             <View style={styles.section}>
-                <TouchableOpacity style={styles.item} onPress={() => {}}>
+                <TouchableOpacity style={styles.item} onPress={() => Linking.openURL('https://www.mmafinds.com/terms-and-conditions/')}>
                     <Text style={styles.itemText}>Terms and Conditions</Text>
                     <Icon name="chevron-right" size={24} color={colors.gray} />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.item} onPress={() => {}}>
+                <TouchableOpacity style={styles.item} onPress={() => Linking.openURL('https://www.mmafinds.com/privacy-policy/')}>
                     <Text style={styles.itemText}>Privacy Policy</Text>
                     <Icon name="chevron-right" size={24} color={colors.gray} />
                 </TouchableOpacity>

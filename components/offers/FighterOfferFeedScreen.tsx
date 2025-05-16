@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
-import { PublicOfferInfo } from '@/service/response';
-import { useRouter } from 'expo-router';
+import {PublicOfferInfo} from '@/service/response';
+import {useRouter} from 'expo-router';
 import {useFilter} from "@/context/FilterContext";
 import {getAllPublicOffers} from "@/service/service";
 import {Filter} from "@/models/model";
@@ -96,7 +96,7 @@ const FighterOfferFeedScreen = () => {
         if (filters.length === 0) return null;
 
         if (contentLoading) {
-            return <ContentLoader />;
+            return <ContentLoader/>;
         }
         return (
             <ScrollView
@@ -110,7 +110,7 @@ const FighterOfferFeedScreen = () => {
                         style={styles.filterChip}
                         onPress={() => removeFilter(filter.category, filter.value)}>
                         <Text style={styles.filterText}>{filter.value.split(',')[0]}</Text>
-                        <Ionicons name="close" size={14} color={colors.white} />
+                        <Ionicons name="close" size={14} color={colors.white}/>
                     </TouchableOpacity>
                 ))}
             </ScrollView>
@@ -118,15 +118,17 @@ const FighterOfferFeedScreen = () => {
     };
     const renderContent = () => {
         return publicOffers.length > 0 ? (
-            <OfferListForFighter offers={publicOffers} />
+            <OfferListForFighter offers={publicOffers}/>
         ) : (
-            <Text style={styles.noOffersText}>No Public Offers Available</Text>
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text style={styles.noOffersText}>No Public Offers Available</Text>
+            </View>
         );
     };
 
     return (
         <View style={{flex: 1, backgroundColor: colors.background}}>
-            <GoBackButton specificScreen={'/(app)/(tabs)'} />
+            <GoBackButton specificScreen={'/(app)/(tabs)'}/>
             <View style={[styles.container, {paddingBottom: insets.bottom}]}>
                 {/* Title */}
                 <Text style={styles.title}>Fight Offers Feed</Text>
@@ -143,13 +145,13 @@ const FighterOfferFeedScreen = () => {
                                 onChangeText={setSearchQuery}
                             />
                             <TouchableOpacity>
-                                <Ionicons name="search" size={24} color={colors.primaryBlack} />
+                                <Ionicons name="search" size={24} color={colors.primaryBlack}/>
                             </TouchableOpacity>
                         </View>
                         <TouchableOpacity
                             onPress={() => router.push("/(filter)/public-offer")}
                             style={styles.filterButton}>
-                            <FilterLogo width={16} height={16} color={colors.primaryBlack} />
+                            <FilterLogo width={16} height={16} color={colors.primaryBlack}/>
                         </TouchableOpacity>
                     </View>
                     {renderFilters()}

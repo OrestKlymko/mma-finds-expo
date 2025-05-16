@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,7 +22,7 @@ export default function Index() {
     const params = useLocalSearchParams();
     const data = params.data ? JSON.parse(params.data as string) as SignUpDataManager | SignUpDataPromotion : undefined;
     const role = params.role as 'MANAGER' | 'PROMOTION';
-
+    const [googleLoading, setGoogleLoading] = useState(false);
     const {setToken, setMethodAuth, setRole, setEntityId} = useAuth();
 
 
@@ -32,11 +32,13 @@ export default function Index() {
                 const formData = await createFormDataForPromotion(data as SignUpDataPromotion, email, 'oauth');
                 const res = await createPromotion(formData);
                 await handleSuccessAuth(res);
+                setGoogleLoading(false);
                 router.push('/(app)/(tabs)');
             } else if (role === 'MANAGER') {
                 const formData = await createFormDataForManager(data as SignUpDataManager, email, 'oauth');
                 const res = await createManager(formData);
                 await handleSuccessAuth(res);
+                setGoogleLoading(false);
                 router.push('/manager/fighter/create');
             }
         } catch (err: any) {
@@ -45,6 +47,7 @@ export default function Index() {
             } else {
                 Alert.alert('Failed to create a profile.');
             }
+            setGoogleLoading(false);
         }
     }
 
@@ -75,7 +78,8 @@ export default function Index() {
             <View style={styles.container}>
                 <TraditionalMethod data={data} role={role}/>
                 <Divider/>
-                <GoogleMethod onSuccess={createProfile} text={"Sign up with Google"}/>
+                <GoogleMethod onSuccess={createProfile} text={"Sign up with Google"} loading={googleLoading}
+                              setLoading={setGoogleLoading}/>
                 <FacebookMethod data={data} handleSuccessAuth={handleSuccessAuth}/>
                 <AppleMethod data={data} handleSuccessAuth={handleSuccessAuth} role={role}/>
             </View>
