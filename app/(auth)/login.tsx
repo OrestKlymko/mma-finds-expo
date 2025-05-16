@@ -32,6 +32,13 @@ WebBrowser.maybeCompleteAuthSession();
 type AuthMethod = 'standard' | 'google' | 'apple' | null;
 const LoginScreen = () => {
 
+    useEffect(() => {
+        fetch('http://157.180.82.0:9090/api/country').then(res => {
+            console.log(res.json())
+        }).catch(err => {
+            console.log(err)
+        });
+    }, []);
     useWarmUpBrowser()
     const insets = useSafeAreaInsets();
     const [passwordVisible, setPasswordVisible] = useState(false);

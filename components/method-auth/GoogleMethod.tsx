@@ -21,8 +21,8 @@ export const GoogleMethod = ({onSuccess,text}: GoogleMethodProps) => {
             await GoogleSignin.hasPlayServices();
             const response = await GoogleSignin.signIn();
             if(isSuccessResponse(response)) {
-                const {idToken, user} = response.data;
-                const {name, email, photo} = user;
+                const {user} = response.data;
+                const {email} = user;
                 console.log("Email:", email);
                 const fcm = await AsyncStorage.getItem('deviceToken');
                 onSuccess(email, fcm ?? '');

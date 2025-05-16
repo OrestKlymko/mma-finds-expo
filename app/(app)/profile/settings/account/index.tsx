@@ -6,21 +6,17 @@ import colors from "@/styles/colors";
 import GoBackButton from "@/components/GoBackButton";
 import {useAuth} from "@/context/AuthContext";
 import {useRouter} from "expo-router";
-import {useAuth as useAuthGoogle} from "@clerk/clerk-expo";
 
 const AccountScreen = () => {
     const insets = useSafeAreaInsets();
     const {setToken, setRole, setMethodAuth} = useAuth();
     const router = useRouter();
     const [isSignOutVisible, setSignOutVisible] = useState(false);
-    const {signOut} = useAuthGoogle();
 
     const handleSignOut = async () => {
         setRole(null);
         setToken(null);
         setMethodAuth(null);
-        await signOut();
-
         setSignOutVisible(false);
         router.push('/login');
     };

@@ -11,7 +11,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import colors from '@/styles/colors';
 
 export interface RoleItem {
-    id: string;
+    id: 'MANAGER' | 'PROMOTION' | 'PROMOTION_EMPLOYEE';
     label: string;
     icon: keyof typeof MaterialCommunityIcons.glyphMap;
 }
@@ -24,7 +24,7 @@ const roles: RoleItem[] = [
 
 interface Props {
     value: string | null;
-    onChange: (value: string) => void;
+    onChange: (rol: 'MANAGER' | 'PROMOTION' | 'PROMOTION_EMPLOYEE') => void;
 }
 
 export default function RolePicker({ value, onChange }: Props) {
