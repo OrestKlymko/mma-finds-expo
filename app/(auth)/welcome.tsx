@@ -3,7 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {ResizeMode, Video} from "expo-av";
+import {useVideoPlayer, VideoSource, VideoView} from "expo-video";
 import * as Notifications from 'expo-notifications';
 import colors from "@/styles/colors";
 import {changeNotificationState} from "@/service/service";
@@ -22,6 +22,21 @@ export default function Welcome() {
             setRole(null);
         }, [setMethodAuth, setRole, setToken]),
     );
+
+    const assetId = require('@/assets/back.mp4');
+    const videoSource: VideoSource = {
+        assetId,
+        metadata: {
+            title: 'MMA-FINDS',
+            artist: 'MMA-FINDS',
+        },
+    };
+
+    const player = useVideoPlayer(videoSource, player => {
+        player.loop = true;
+        player.muted = true;
+        player.play();
+    });
 
     useEffect(() => {
         const register = async () => {
@@ -44,13 +59,10 @@ export default function Welcome() {
 
     return (
         <View style={styles.container}>
-            <Video
-                source={require('@/assets/back.mp4')}
+            <VideoView
+                player={player}
                 style={styles.backgroundVideo}
-                isMuted
-                isLooping={true}
-                resizeMode={ResizeMode.COVER}
-                shouldPlay
+                contentFit={'cover'}
             />
             <View style={styles.overlay}/>
 
