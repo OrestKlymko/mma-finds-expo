@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import colors from '@/styles/colors';
 import GoBackButton from '@/components/GoBackButton';
@@ -42,7 +42,16 @@ const PromotionAllFighterMainList = () => {
     }, [activeTab]);
 
     return (
-        <View style={{flex: 1, backgroundColor: colors.white}}>
+        <SafeAreaView
+            style={[
+                styles.safeArea,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    marginBottom: 65,
+                },
+            ]}>
+        <View style={{flex: 1, backgroundColor: colors.white, paddingBottom: insets.bottom}}>
             <GoBackButton />
             <View style={[styles.container, {paddingBottom: insets.bottom}]}>
                 {renderTitle}
@@ -75,12 +84,16 @@ const PromotionAllFighterMainList = () => {
                 )}
             </View>
         </View>
+        </SafeAreaView>
     );
 };
 
 export default PromotionAllFighterMainList;
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+    },
     container: {
         backgroundColor: colors.white,
         paddingHorizontal: 24,
