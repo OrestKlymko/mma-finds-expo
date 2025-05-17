@@ -63,6 +63,7 @@ export default function Welcome() {
                 player={player}
                 style={styles.backgroundVideo}
                 contentFit={'cover'}
+                nativeControls={false}
             />
             <View style={styles.overlay}/>
 

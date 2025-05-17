@@ -34,7 +34,10 @@ export const FighterCharacters = ({fighter}: {fighter: FighterInfoResponse | nul
           value: fighter?.sherdogLink ? 'Click to Open' : null,
           link: fighter?.sherdogLink,
         },
-        {label: 'Instagram', value: fighter?.instagram},
+        {label: 'Instagram', value: fighter?.instagram && `@${new URL(fighter?.instagram).pathname.replace(/^\/+|\/+$/g, '')}`, link: fighter?.instagram},
+        {label: 'Facebook', value: fighter?.instagram && `@${new URL(fighter?.facebook).pathname.replace(/^\/+|\/+$/g, '')}`, link: fighter?.facebook},
+        {label: 'Twitter/X', value: fighter?.instagram && `@${new URL(fighter?.twitter).pathname.replace(/^\/+|\/+$/g, '')}`, link: fighter?.twitter},
+        {label: 'Snapchat', value: fighter?.instagram && `@${new URL(fighter?.snapchat).pathname.replace(/^\/+|\/+$/g, '')}`, link: fighter?.snapchat},
       ]
         .filter(
           detail =>

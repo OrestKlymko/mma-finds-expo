@@ -468,6 +468,9 @@ export type FighterInfoResponse = {
   tapologyLink: string;
   sherdogLink: string;
   instagram: string;
+  twitter: string;
+  facebook: string;
+  snapchat: string;
   managerName: string;
   userId: string;
   lookingForOpponent: boolean;
