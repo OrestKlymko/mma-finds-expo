@@ -40,9 +40,9 @@ const MyTicketsScreen = () => {
             {/* Header */}
             <View style={styles.header}>
                 <GoBackButton />
-                <TouchableOpacity onPress={() => router.push('/profile/settings/resource/support')}>
-                    <Text style={styles.faqText}>FAQs</Text>
-                </TouchableOpacity>
+                {/*<TouchableOpacity onPress={() => router.push('/profile/settings/resource/support')}>*/}
+                {/*    <Text style={styles.faqText}>FAQs</Text>*/}
+                {/*</TouchableOpacity>*/}
             </View>
 
             {/* Title */}

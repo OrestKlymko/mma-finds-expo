@@ -4,7 +4,7 @@ import {
     ChangeNotificationStatusRequest,
     ChangePasswordRequest,
     ChangeProfileRequest,
-    ChangeTaskStatusRequest,
+    ChangeTaskStatusRequest, CheckEntityExistsRequest,
     CreateDocumentOfferRequest,
     CreateExclusiveOfferRequest,
     CreateMultiOfferRequest,
@@ -28,7 +28,7 @@ import {
 import {
     Benefit,
     CardInfoFighterResponse,
-    CardInfoResponse,
+    CardInfoResponse, CheckCriteriaExistResponse,
     CountryResponse,
     CreatePaymentIntentResponse,
     CreditRemainingResponse,
@@ -143,6 +143,12 @@ export const verifyAndChangePassword = (data: RecoveryPasswordRequest): Promise<
 
 export const createFighter = (data: FormData): Promise<any> =>
     request<any>('/fighter', {method: 'POST', body: data});
+
+export const checkExistFighterByEmail = (request: CheckEntityExistsRequest): Promise<any> =>
+    jsonRequest<CheckCriteriaExistResponse>(`/fighter/check/email`, 'POST', request);
+
+export const checkExistFighterByName = (request: CheckEntityExistsRequest): Promise<any> =>
+    jsonRequest<CheckCriteriaExistResponse>(`/fighter/check/name`, 'POST', request);
 
 export const getSportTypes = (): Promise<SportTypeResponse[]> =>
     request<SportTypeResponse[]>('/sport-type', {method: 'GET'});

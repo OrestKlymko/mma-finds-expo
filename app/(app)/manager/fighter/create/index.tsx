@@ -14,8 +14,14 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Photo} from '@/models/model';
 import {useRouter} from 'expo-router';
-import {FoundationStyleResponse, NationalityResponse, SportTypeResponse, WeightClassResponse} from '@/service/response';
-import {createFighter, getShortInfoManager} from '@/service/service';
+import {
+    CheckCriteriaExistResponse,
+    FoundationStyleResponse,
+    NationalityResponse,
+    SportTypeResponse,
+    WeightClassResponse
+} from '@/service/response';
+import {checkExistFighterByEmail, checkExistFighterByName, createFighter, getShortInfoManager} from '@/service/service';
 import colors from '@/styles/colors';
 import GoBackButton from '@/components/GoBackButton';
 import {ImageSelectorComponent} from "@/components/ImageSelectorComponent";
@@ -34,6 +40,7 @@ import {SportTypeMultiSelectDropdown} from "@/components/fighter/SportTypeMultiS
 import SocialMediaModal from "@/components/SocialMediaModal";
 import {TapologyLinkInput} from '@/components/fighter/TapologyLinkInput';
 import MissingFieldsModal from "@/components/offers/MissingFieldsModal";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 
 const CreateFightersProfileScreen = () => {
@@ -50,7 +57,8 @@ const CreateFightersProfileScreen = () => {
     // Поля
     const [nameSurname, setNameSurname] = useState('');
     const [nickname, setNickname] = useState('');
-
+    const [emailAvailable, setEmailAvailable] = useState<boolean | null>(null);
+    const [nameAvailable, setNameAvailable] = useState<boolean | null>(null);
     // Дата народження + age
     const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
     const [age, setAge] = useState('');
@@ -114,18 +122,18 @@ const CreateFightersProfileScreen = () => {
     // Соцмережі
 
 
-    const getMissingRequiredFields=()=>  {
+    const getMissingRequiredFields = () => {
         const missing: string[] = [];
-        if (!profileImage)        missing.push('Profile Image');
-        if (!emailFighter)        missing.push('Fighter Email');
-        if (!nameSurname)         missing.push('Name and Surname');
-        if (!gender)              missing.push('Gender');
-        if (!dateOfBirth)         missing.push('Date of Birth');
-        if (!weightClass)         missing.push('Weight Class');
-        if (!nationality)         missing.push('Nationality');
-        if (!foundationStyle)     missing.push('Foundation Style');
+        if (!profileImage) missing.push('Profile Image');
+        if (!emailFighter) missing.push('Fighter Email');
+        if (!nameSurname) missing.push('Name and Surname');
+        if (!gender) missing.push('Gender');
+        if (!dateOfBirth) missing.push('Date of Birth');
+        if (!weightClass) missing.push('Weight Class');
+        if (!nationality) missing.push('Nationality');
+        if (!foundationStyle) missing.push('Foundation Style');
         if (!selectedSportTypes.length) missing.push('Sport Types');
-        if (!minWeight || !maxWeight)  missing.push('Min/Max Weight');
+        if (!minWeight || !maxWeight) missing.push('Min/Max Weight');
         if (!proWins || !proLoss || !proDraw)
             missing.push('Professional Record');
         if (noTapologyLink && !tapologyLink)
@@ -134,6 +142,14 @@ const CreateFightersProfileScreen = () => {
     }
     // Submit
     const onSignUpPress = () => {
+        if (!agreeDisclaimer) {
+            Alert.alert('Please read and agree to the disclaimer.');
+            return;
+        }
+        if (!emailAvailable || !nameAvailable) {
+            Alert.alert('We already have a fighter with this name or email.');
+            return;
+        }
         setHasSubmitted(true);
         const missing = getMissingRequiredFields();
         if (missing.length > 0) {
@@ -223,6 +239,31 @@ const CreateFightersProfileScreen = () => {
             });
     };
 
+    const handleExistNameSurname = () => {
+        if (!nameSurname) {
+            setNameAvailable(null);
+            return;
+        }
+        checkExistFighterByName({criteria: nameSurname})
+            .then((data: CheckCriteriaExistResponse) => {
+                setNameAvailable(!data.existEntity);
+            })
+            .catch(() => setNameAvailable(null));
+    };
+
+    // Check email availability
+    const handleExistEmail = () => {
+        if (!emailFighter) {
+            setEmailAvailable(null);
+            return;
+        }
+        checkExistFighterByEmail({criteria: emailFighter})
+            .then((data: CheckCriteriaExistResponse) => {
+                setEmailAvailable(!data.existEntity);
+            })
+            .catch(() => setEmailAvailable(null));
+    };
+
     return (
         <KeyboardAvoidingView
             style={{flex: 1, backgroundColor: colors.background}}
@@ -260,8 +301,21 @@ const CreateFightersProfileScreen = () => {
                     label="Fighter's Email*"
                     value={emailFighter}
                     onChangeText={setEmailFighter}
-                    containerStyle={styles.inputContainer}
+                    containerStyle={[emailAvailable == null && styles.inputContainer]}
+                    onEndEditing={handleExistEmail}
                 />
+                {emailAvailable != null && (
+                    <View style={styles.statusRow}>
+                        <MaterialCommunityIcons
+                            name={emailAvailable ? "check-circle-outline" : "close-circle-outline"}
+                            size={16}
+                            color={emailAvailable ? colors.primaryGreen : '#FF3B30'}
+                        />
+                        <Text style={[styles.statusText, {color: emailAvailable ? colors.primaryGreen : '#FF3B30'}]}>
+                            {emailAvailable ? 'Email is available' : 'Email is already registered'}
+                        </Text>
+                    </View>
+                )}
                 {/* Name, Nickname */}
                 <FloatingLabelInput
                     label="Name and Surname*"
@@ -269,8 +323,21 @@ const CreateFightersProfileScreen = () => {
                     hasSubmitted={hasSubmitted}
                     isRequired={true}
                     onChangeText={setNameSurname}
-                    containerStyle={styles.inputContainer}
+                    onEndEditing={handleExistNameSurname}
+                    containerStyle={[nameAvailable == null && styles.inputContainer]}
                 />
+                {nameAvailable != null && (
+                    <View style={styles.statusRow}>
+                        <MaterialCommunityIcons
+                            name={nameAvailable ? "check-circle-outline" : "close-circle-outline"}
+                            size={16}
+                            color={nameAvailable ? colors.primaryGreen : '#FF3B30'}
+                        />
+                        <Text style={[styles.statusText, {color: nameAvailable ? colors.primaryGreen : '#FF3B30'}]}>
+                            {nameAvailable ? 'Name is available' : 'Name is already registered'}
+                        </Text>
+                    </View>
+                )}
                 <FloatingLabelInput
                     label="Nickname"
                     value={nickname}
@@ -660,4 +727,6 @@ const styles = StyleSheet.create({
         marginRight: 8,
         borderRadius: 8,
     },
+    statusRow: {flexDirection: 'row', alignItems: 'center', marginBottom: 20, paddingLeft: 4, marginTop: 5},
+    statusText: {fontSize: 12, marginLeft: 6},
 });

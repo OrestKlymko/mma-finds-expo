@@ -658,3 +658,8 @@ export type PromotionResponse = {
   country: string;
   activeNumberOffer: number;
 };
+
+export type CheckCriteriaExistResponse = {
+  existEntity: boolean;
+
+}

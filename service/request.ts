@@ -258,3 +258,7 @@ export type PaySuccessFeeRequest = {
   fighterId:string;
   feePayment:string;
 }
+
+export type CheckEntityExistsRequest = {
+  criteria: string;
+}
