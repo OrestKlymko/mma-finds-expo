@@ -12,12 +12,6 @@ type RecentlySavedSectionProps = {
     refreshFavorites: () => void;
 }
 
-// type RecentlySavedSectionProps = {
-//     favoriteOffers: PublicOfferShortInfo[];
-//     refreshFavorites: () => void;
-// }
-// TODO: Replace public offer
-
 export const RecentlySavedSection = (
     {favoriteOffers, refreshFavorites}: RecentlySavedSectionProps
 ) => {
@@ -29,7 +23,7 @@ export const RecentlySavedSection = (
                 <View style={styles.sectionHeader}>
                     <Text style={styles.sectionTitle}>Recently Saved</Text>
                     <TouchableOpacity
-                        onPress={() => router.push('/(app)/offer/recently-saved')}> {/*TODO: fix paths for recently saved*/}
+                        onPress={() => router.push('/(app)/offer/recently-saved')}>
                         <Text style={styles.seeAll}>See All</Text>
                     </TouchableOpacity>
                 </View>

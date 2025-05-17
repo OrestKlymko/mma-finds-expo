@@ -5,7 +5,6 @@ import GoBackButton from '@/components/GoBackButton';
 import {useRoute} from '@react-navigation/native';
 
 import {useDispatch} from 'react-redux';
-import {resetMultiOffer} from '@/store/createExclusiveOfferSlice';
 import {resetMultiOffer as MultiContractReset} from '@/store/createMultiContractOfferSlice';
 import {ContractTypeButton} from "@/components/offers/ContractTypeButton";
 import {SingleBoutOfferFlow} from "@/components/offers/SingleBoutOfferFlow";
@@ -14,7 +13,6 @@ import MultiFightOfferFlow from "@/components/offers/MultiFightOfferFlow";
 const CreateExclusiveOfferScreen = () => {
     const dispatch = useDispatch();
     const clearReduxState = () => {
-        dispatch(resetMultiOffer());
         dispatch(MultiContractReset());
     };
 

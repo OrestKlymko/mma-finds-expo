@@ -24,10 +24,21 @@ export const SearchSubmission = ({
             const matchesQuery = sub.eventName
                 ? sub.eventName.toLowerCase().includes(normalizedQuery)
                 : true;
+            const matchesFighterName = sub.formattedName
+                .toLowerCase()
+                .includes(normalizedQuery);
             if (activeTab === 'Active') {
-                return matchesQuery && sub.fighterStateApprove === 'ACTIVE';
+                return (
+                    (matchesQuery ||
+                    matchesFighterName) &&
+                    sub.fighterStateApprove === 'ACTIVE'
+                );
             } else {
-                return matchesQuery && sub.fighterStateApprove !== 'ACTIVE';
+                return (
+                    (matchesQuery ||
+                        matchesFighterName) &&
+                    sub.fighterStateApprove !== 'ACTIVE'
+                );
             }
         });
         setFilteredSubmissions(filtered);
