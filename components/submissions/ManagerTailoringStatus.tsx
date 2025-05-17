@@ -4,12 +4,12 @@ import {SubmittedInformationPublicOffer} from "@/models/tailoring-model";
 import NegotiationOfferComponent from "@/components/offers/NegotiationOfferComponent";
 import {getCurrencySymbol} from "@/utils/utils";
 import colors from "@/styles/colors";
-import {ExclusiveOfferInfo, PublicOfferInfo} from "@/service/response";
+import {ExclusiveOfferInfo, PublicOfferInfo, SubmittedInformationOffer} from "@/service/response";
 
 
 type ManagerTailoringStatusProps = {
-    submittedInformation?: SubmittedInformationPublicOffer | undefined | null,
-    previousInfo?: SubmittedInformationPublicOffer | undefined | null,
+    submittedInformation?: SubmittedInformationOffer | undefined | null,
+    previousInfo?: SubmittedInformationOffer | undefined | null,
     typeOffer: string,
     offer: PublicOfferInfo |ExclusiveOfferInfo | null | undefined
 };

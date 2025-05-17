@@ -348,6 +348,9 @@ export const getPublicInfoForManager = (offerId: string): Promise<FullInfoAboutP
 export const submitOfferByFighterWithoutFeaturing = (offerId: string, fighterId: string): Promise<void> =>
     jsonRequest<void>(`/public-offers/submit-fighter/${offerId}/${fighterId}`, 'POST', {});
 
+export const renewSubmissionOffer = (offerId: string, fighterId: string): Promise<void> =>
+    jsonRequest<void>(`/public-offers/renew-submission/${offerId}/${fighterId}`, 'POST', {});
+
 export const getExclusiveOfferInfoById = (offerId: string): Promise<FullInfoAboutExclusiveOffer> =>
     request<FullInfoAboutExclusiveOffer>(`/exclusive-offers/${offerId}`, {method: 'GET'});
 

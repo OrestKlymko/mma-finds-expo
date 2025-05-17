@@ -24,6 +24,7 @@ import colors from "@/styles/colors";
 import {ManagerOfferDetailFooter} from "@/components/submissions/ManagerOfferDetailFooter";
 import {useLocalSearchParams} from "expo-router";
 import {SuccessFeePaymentSection} from "@/components/offers/SuccessFeePaymentSection";
+import {RejectedReasonSection} from "@/components/submissions/RejectedReasonSection";
 
 
 export const ManagerSubmissionDetailScreen = () => {
@@ -75,6 +76,23 @@ export const ManagerSubmissionDetailScreen = () => {
         }
     };
 
+    const renderFooter = () => {
+        if (submittedInformation && submittedInformation.statusResponded === 'ACCEPTED' && !submittedInformation.feePayment) {
+            return <SuccessFeePaymentSection offerId={offerId} submittedInformation={submittedInformation}/>
+        }
+
+        if (submittedInformation?.statusResponded === 'REJECTED' || fighters[0]?.contractStatus === 'REJECTED') {
+            console.log(submittedInformation?.statusResponded);
+            return <RejectedReasonSection rejectionReason={fighters[0]?.rejectedReason}/>
+        }
+        return <ManagerOfferDetailFooter
+            submittedInformation={submittedInformation}
+            previousInfo={previousInfo}
+            fighters={fighters}
+            offer={offer}
+            onRefreshFighterList={loadData}
+        />
+    }
     if (contentLoading) {
         return <ContentLoader/>;
     }
@@ -108,17 +126,7 @@ export const ManagerSubmissionDetailScreen = () => {
                     <EventDescription eventDescription={offer?.eventDescription}/>
                     <OfferExtendedDetailsInfo offer={offer} benefits={benefits}/>
                     <OpponentDetailsSection offer={offer}/>
-
-                    {(submittedInformation && submittedInformation.statusResponded === 'ACCEPTED' && !submittedInformation.feePayment) ?
-                        <SuccessFeePaymentSection offerId={offerId} submittedInformation={submittedInformation}/> : (
-                            <ManagerOfferDetailFooter
-                                submittedInformation={submittedInformation}
-                                previousInfo={previousInfo}
-                                fighters={fighters}
-                                offer={offer}
-                                onRefreshFighterList={loadData}
-                            />
-                        )}
+                    {renderFooter()}
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>

@@ -191,6 +191,7 @@ export type ShortInfoFighter = {
   contractStatus?: StatusResponse;
   rejectedReason?: string;
   feePayment: string;
+  fighterStateApprove?: 'ACTIVE'|'INACTIVE';
 };
 
 export type CreatePaymentIntentResponse = {

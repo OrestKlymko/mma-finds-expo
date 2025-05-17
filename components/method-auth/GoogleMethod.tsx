@@ -24,7 +24,6 @@ export const GoogleMethod = ({onSuccess, text,loading,setLoading}: GoogleMethodP
             if (isSuccessResponse(response)) {
                 const {user} = response.data;
                 const {email} = user;
-                console.log("Email:", email);
                 const fcm = await AsyncStorage.getItem('deviceToken');
                 onSuccess(email, fcm ?? '');
             }

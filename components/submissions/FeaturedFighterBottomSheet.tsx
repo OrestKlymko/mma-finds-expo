@@ -12,18 +12,20 @@ import {
 
 import React, {useEffect, useState} from 'react';
 import {useRouter} from 'expo-router';
-import {declineOffer, featureFighterOnOffer, getCredit} from '@/service/service';
+import {declineOffer, featureFighterOnOffer, getCredit, renewSubmissionOffer} from '@/service/service';
 import colors from '@/styles/colors';
+import {ShortInfoFighter} from "@/service/response";
 
 
 interface FeatureFighterBottomSheetProps {
-    offerId?: string | undefined;
-    fighterId: string;
-    eventImage?: string | undefined;
-    isFeatured?: string;
-    visible?: boolean;
-    onClose: () => void;
-    onRefreshFighterList: () => void;
+    offerId?: string | undefined,
+    fighterId: string,
+    eventImage?: string | undefined,
+    isFeatured?: string,
+    visible?: boolean,
+    onClose: () => void,
+    onRefreshFighterList: () => void,
+    fighters?: ShortInfoFighter[]
 }
 
 export const FeatureFighterBottomSheet = ({
@@ -34,11 +36,11 @@ export const FeatureFighterBottomSheet = ({
                                               visible,
                                               onRefreshFighterList,
                                               onClose,
+                                              fighters
                                           }: FeatureFighterBottomSheetProps) => {
     const [cancelLoading, setCancelLoading] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-
     const [availableCredits, setAvailableCredits] = useState(0);
 
     useEffect(() => {
@@ -57,10 +59,13 @@ export const FeatureFighterBottomSheet = ({
         }
         if (availableCredits == 0) {
             onClose();
-            router.navigate('ChooseCreditOptionScreen', {
-                offerId: offerId,
-                fighterId: fighterId
-            });
+            router.push({
+                pathname: '/profile/balance/credit-option',
+                params: {
+                    offerId: offerId,
+                    fighterId: fighterId
+                },
+            })
             return;
         }
         setLoading(true);
@@ -79,25 +84,105 @@ export const FeatureFighterBottomSheet = ({
             });
     };
 
-    const cancelFighter = () => {
+    const renewSubmission = async () => {
         if (!offerId || !fighterId) {
             Alert.alert('Error', 'Invalid offer or fighter ID');
-            setCancelLoading(false);
             return;
         }
-        setCancelLoading(true);
-        declineOffer(offerId, fighterId)
-            .then(() => {
-                onRefreshFighterList();
-            })
-            .catch(() => {
-                Alert.alert('Error', 'Something went wrong. Please try again');
-            })
-            .finally(() => {
-                setCancelLoading(false);
-                onClose();
-            });
+        setLoading(true);
+        await renewSubmissionOffer(offerId, fighterId)
+        setLoading(false);
+        router.back();
+    }
+
+    const cancelFighter = () => {
+        Alert.alert("Are you sure?", "Are you sure you want to cancel the fighter from the offer?", [
+            {
+                text: "No",
+                onPress: () => {
+                    setCancelLoading(false);
+                    onClose();
+                },
+                style: "cancel"
+            },
+            {
+                text: "Yes",
+                onPress: () => {
+                    if (!offerId || !fighterId) {
+                        Alert.alert('Error', 'Invalid offer or fighter ID');
+                        setCancelLoading(false);
+                        return;
+                    }
+                    setCancelLoading(true);
+                    declineOffer(offerId, fighterId)
+                        .then(() => {
+                            onRefreshFighterList();
+                            router.back();
+                        })
+                        .catch(() => {
+                            Alert.alert('Error', 'Something went wrong. Please try again');
+                        })
+                        .finally(() => {
+                            setCancelLoading(false);
+                            onClose();
+                        });
+                }
+            }
+        ]);
+
     };
+
+    const renderChangeStateSubmission = () => {
+        if (fighters && fighters[0]?.fighterStateApprove === 'INACTIVE') {
+            return <TouchableOpacity
+                style={styles.modalThirdButton}
+                disabled={loading}
+                onPress={renewSubmission}>
+                {loading ? (
+                    <ActivityIndicator size="small" color={colors.primaryGreen}/>
+                ) : (
+                    <Text
+                        style={[
+                            styles.modalSecondaryButtonText,
+                            {color: colors.primaryGreen},
+                        ]}>
+                        Renew submission
+                    </Text>
+                )}
+            </TouchableOpacity>
+        }
+        return <TouchableOpacity
+            style={styles.modalThirdButton}
+            disabled={cancelLoading}
+            onPress={cancelFighter}>
+            {cancelLoading ? (
+                <ActivityIndicator size="small" color={colors.white}/>
+            ) : (
+                <Text
+                    style={[
+                        styles.modalSecondaryButtonText,
+                        {color: colors.darkError},
+                    ]}>
+                    Cancel fighter
+                </Text>
+            )}
+        </TouchableOpacity>
+    }
+
+    const renderBodySubmission = () => {
+        if (fighters && fighters[0]?.fighterStateApprove === 'ACTIVE' && fighters[0]?.isFeatured === 'false') {
+            return <>
+                <Text style={styles.modalTitle}>Feature Your Fighter</Text>
+                <Text style={styles.modalSubtitle}>
+                    You currently have {availableCredits} credits left.
+                </Text>
+                <Text style={styles.modalDescription}>
+                    Do you want to elevate your fighter's position, securing a prime
+                    spot on the list of potential fighters?
+                </Text>
+            </>
+        }
+    }
 
     return (
         <Modal
@@ -115,15 +200,8 @@ export const FeatureFighterBottomSheet = ({
                             style={styles.bannerInModal}
                         />
                         <View style={{paddingHorizontal: 28}}>
-                            <Text style={styles.modalTitle}>Feature Your Fighter</Text>
-                            <Text style={styles.modalSubtitle}>
-                                You currently have {availableCredits} credits left.
-                            </Text>
-                            <Text style={styles.modalDescription}>
-                                Do you want to elevate your fighter's position, securing a prime
-                                spot on the list of potential fighters?
-                            </Text>
-                            {isFeatured === 'false' && (
+                            {renderBodySubmission()}
+                            {isFeatured === 'false' && fighters && fighters[0].fighterStateApprove === 'ACTIVE' && (
                                 <TouchableOpacity
                                     style={styles.modalButton}
                                     disabled={loading}
@@ -148,22 +226,7 @@ export const FeatureFighterBottomSheet = ({
                                     Show info about fighter
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.modalThirdButton}
-                                disabled={cancelLoading}
-                                onPress={cancelFighter}>
-                                {cancelLoading ? (
-                                    <ActivityIndicator size="small" color={colors.white}/>
-                                ) : (
-                                    <Text
-                                        style={[
-                                            styles.modalSecondaryButtonText,
-                                            {color: colors.darkError},
-                                        ]}>
-                                        Cancel fighter
-                                    </Text>
-                                )}
-                            </TouchableOpacity>
+                            {renderChangeStateSubmission()}
                         </View>
                     </View>
                 </View>
