@@ -11,20 +11,24 @@
     "newArchEnabled": false,
     "plugins": [
       "./withCustomAndroidManifest.js",
-      ["react-native-appsflyer", {
-        "shouldUseStrictMode": true
-      }],
+      [
+        "react-native-appsflyer",
+        {
+          "shouldUseStrictMode": true
+        }
+      ],
       "expo-dev-client",
       "expo-router",
       "expo-secure-store",
       "expo-build-properties",
       "expo-font",
-        [
-          "@react-native-google-signin/google-signin",
-          {
+      [
+        "@react-native-google-signin/google-signin",
+        {
           "iosUrlScheme": "com.googleusercontent.apps.712660973446-q1o7h9v7nk36d2bdict84nfn8o6ackcg"
-          }
-      ]
+        }
+      ],
+      "expo-video"
     ],
     "ios": {
       "bundleIdentifier": "com.mmafinds.app",
@@ -42,7 +46,9 @@
         "NSUserActivityTypes": [],
         "NSUserNotificationsUsageDescription": "We use notifications to keep you informed."
       },
-      "associatedDomains": ["applinks:links.mmafinds.com"]
+      "associatedDomains": [
+        "applinks:links.mmafinds.com"
+      ]
     },
     "android": {
       "adaptiveIcon": {
@@ -50,11 +56,21 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.mmafinds.app",
-      "intentFilters": [{
-        "action": "VIEW",
-        "category": ["BROWSABLE","DEFAULT"],
-        "data":[{"scheme":"https","host":"links.mmafinds.com"}]
-      }]
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ],
+          "data": [
+            {
+              "scheme": "https",
+              "host": "links.mmafinds.com"
+            }
+          ]
+        }
+      ]
     },
     "experiments": {
       "typedRoutes": true
