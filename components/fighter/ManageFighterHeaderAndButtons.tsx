@@ -90,13 +90,6 @@ export const ManageFighterHeaderAndButtons = ({
                     <Text style={[styles.statusText, {color: fg}]}>{label}</Text>
                 </View>
             </View>
-
-            <Text style={styles.managerName}>
-                Manager:{' '}
-                <Text style={styles.managerLink}>
-                    {fighter?.managerName || 'Manager Name'}
-                </Text>
-            </Text>
         </View>
     );
 };
