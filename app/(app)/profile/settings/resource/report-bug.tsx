@@ -71,9 +71,6 @@ const ShareAnIdeaScreen = () => {
             return;
         }
 
-        router.push('/login')
-
-
         const data = new FormData();
         setLoading(true);
         data.append('subject', activeTab);
@@ -92,7 +89,7 @@ const ShareAnIdeaScreen = () => {
                 Alert.alert('Success', 'Your bug has been successfully submitted!');
                 setIdea('');
                 setFileAttached(null);
-                navigation.goBack();
+                router.push('/(app)/(tabs)/profile');
             })
             .catch(err => {
                 Alert.alert('Error', 'Failed to submit your bug');
