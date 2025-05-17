@@ -77,10 +77,13 @@ export default function Index() {
         }
 
         setLoading(true);
+        // format email to lower case
+        const formattedEmail = email.toLowerCase()
+
         if (role === 'PROMOTION') {
             const formData = await createFormDataForPromotion(
                 data as SignUpDataPromotion,
-                email,
+                formattedEmail,
                 'standard',
             );
             formData.append('password', password);
@@ -108,7 +111,7 @@ export default function Index() {
         if (role === 'MANAGER') {
             const formData = await createFormDataForManager(
                 data as SignUpDataManager,
-                email,
+                formattedEmail,
                 'standard',
             );
             formData.append('password', password);

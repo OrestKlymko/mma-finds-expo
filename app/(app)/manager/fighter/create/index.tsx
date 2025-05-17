@@ -224,7 +224,7 @@ const CreateFightersProfileScreen = () => {
         formData.append('continent', continent);
         formData.append('minWeight', minWeight);
         formData.append('maxWeight', maxWeight);
-        formData.append('fighterEmail', emailFighter);
+        formData.append('fighterEmail', emailFighter.toLowerCase());
 
         createFighter(formData)
             .then(() => {
