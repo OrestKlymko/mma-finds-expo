@@ -64,7 +64,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
                 </TouchableOpacity>
             )}
 
-            {item.isOfferFeatured && (
+            {(item.isOfferFeatured&&!isFavorite) && (
                 <View style={styles.featuredBadge}>
                     <Text style={styles.featuredBadgeText}>Featured</Text>
                 </View>
