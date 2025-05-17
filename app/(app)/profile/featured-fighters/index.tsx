@@ -42,7 +42,7 @@ const InviteFriendsScreen = () => {
                     {/* Referral Link */}
                     <View style={styles.referralSection}>
                         <View style={styles.referralContainer}>
-                            <TouchableOpacity style={styles.featuredButton} onPress={()=>router.push('/profile/my-fighters')}>
+                            <TouchableOpacity style={styles.featuredButton} onPress={()=>router.push('/(app)/(tabs)/feed')}>
                                 <Text>Feature Your Fighters</Text>
                             </TouchableOpacity>
                         </View>
