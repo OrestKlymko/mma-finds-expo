@@ -477,7 +477,7 @@ const CreateFightersProfileScreen = () => {
                 </Text>
                 <View style={styles.recordRow}>
                     <FloatingLabelInput
-                        label="Min Weight (kg)"
+                        label="Min Weight (kg)*"
                         value={minWeight}
                         onChangeText={setMinWeight}
                         keyboardType="numeric"
@@ -488,7 +488,7 @@ const CreateFightersProfileScreen = () => {
                         ]}
                     />
                     <FloatingLabelInput
-                        label="Max Weight (kg)"
+                        label="Max Weight (kg)*"
                         value={maxWeight}
                         onChangeText={setMaxWeight}
                         keyboardType="numeric"
