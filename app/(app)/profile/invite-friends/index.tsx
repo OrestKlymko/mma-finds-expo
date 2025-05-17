@@ -7,6 +7,7 @@ import Question from '@/assets/question.svg';
 import {useRouter} from "expo-router";
 import colors from "@/styles/colors";
 import {ReferralInputComponent} from "@/components/ReferralInputComponent";
+import GoBackButton from "@/components/GoBackButton";
 const InviteFriendsScreen = () => {
     const router = useRouter();
     const insets = useSafeAreaInsets();
@@ -26,6 +27,7 @@ const InviteFriendsScreen = () => {
                     <Icon name="chevron-left" size={24} color={colors.white} />
                     <Text style={styles.backText}>Back</Text>
                 </TouchableOpacity>
+
 
                 {/* Top Section Content */}
                 <View style={styles.topSection}>
@@ -79,7 +81,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 20,
-        marginLeft: 20,
+        marginLeft: 10,
     },
     backText: {
         marginLeft: 8,
