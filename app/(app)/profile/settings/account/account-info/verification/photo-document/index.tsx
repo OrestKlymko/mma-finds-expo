@@ -34,7 +34,6 @@ export default function VerifyAccountDocumentScreen() {
         setBusy(true);
         try {
             const { uri } = await cameraRef.current.takePictureAsync({ quality: 0.8 });
-            console.log(uri);
             router.push({
                 pathname: '/profile/settings/account/account-info/verification/photo-selfie',
                 params: { documentPhoto: uri, documentType },

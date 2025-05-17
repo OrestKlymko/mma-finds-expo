@@ -54,6 +54,7 @@ export const ManagerSubmittedFighterList = ({
                 <Text style={styles.submitText}>Submit Fighter</Text>
             </TouchableOpacity>
             <FeatureFighterBottomSheet
+                fighters={fighters}
                 onRefreshFighterList={onRefreshFighterList}
                 visible={showFeatureModal}
                 onClose={handleOnCloseModalFeature}
