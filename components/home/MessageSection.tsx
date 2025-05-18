@@ -41,7 +41,7 @@ export const MessageSection = () => {
                             data.unreadCounts && data.unreadCounts[entityId] !== undefined
                                 ? data.unreadCounts[entityId]
                                 : 0;
-
+                        console.log(res);
                         convList.push({
                             id: docSnap.id,
                             conversationId: data.conversationId,
@@ -49,8 +49,8 @@ export const MessageSection = () => {
                             lastMessage: data.lastMessage,
                             lastTimestamp: data.lastTimestamp,
                             unreadCount,
-                            avatar: res.profileImage,
-                            sender: res.name,
+                            avatar: res?.profileImage,
+                            sender: res?.name,
                             archived: data.archived,
                             isBlocked: data.isBlocked,
                         });
@@ -60,7 +60,6 @@ export const MessageSection = () => {
                     setConversations(convList);
                 } catch (error) {
                     console.error('Error fetching conversations:', error);
-                    Alert.alert('Error', 'Unable to fetch conversations');
                 }
             });
 
