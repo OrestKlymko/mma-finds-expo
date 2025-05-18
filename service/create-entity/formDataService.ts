@@ -20,7 +20,7 @@ export const createFormDataForPromotion = async (
     formData.append('facebook', data.facebook);
     formData.append('twitter', data.twitter);
     formData.append('snapchat', data.snapchat);
-    formData.append('email', email);
+    formData.append('email', email.toLowerCase());
     formData.append('method', method);
     if(method==='standard'&&data.password){
         formData.append('password', data.password);
@@ -68,7 +68,7 @@ export const createFormDataForManager = async (
     formData.append('phone', data.phoneNumber);
     formData.append('country', data.country);
     formData.append('continent', data.continent);
-    formData.append('email', email);
+    formData.append('email', email.toLowerCase());
     formData.append('method', method);
     if(method==='standard'&&data.password){
         formData.append('password', data.password);

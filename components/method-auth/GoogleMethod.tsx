@@ -42,7 +42,7 @@ export const GoogleMethod = ({onSuccess, text,loading,setLoading}: GoogleMethodP
                         break;
                 }
             }
-
+        }finally {
             setLoading(false);
         }
     }

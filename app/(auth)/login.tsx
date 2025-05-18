@@ -70,12 +70,13 @@ const LoginScreen = () => {
             return;
         }
         const loginRequest: LoginRequest = {
-            email: email,
+            email: email.toLowerCase(),
             password: password,
             method: method,
             fcmToken: token,
             userRole: selectedRole,
         };
+        console.log(loginRequest);
         login(loginRequest)
             .then(async res => {
                 setToken(res.token);
@@ -91,7 +92,9 @@ const LoginScreen = () => {
                 }, 1000);
             })
             .catch(err => {
-                if (err.response.status === 407) {
+                const status = err.status;
+                console.log(err);
+                if (err.status === 407) {
                     Alert.alert(
                         'Error',
                         'User with this email not found, please sign up',
