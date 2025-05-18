@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
-import {useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuth} from "@/context/AuthContext";
 import {SignUpDataManager, SignUpDataPromotion} from "@/models/model";
@@ -23,31 +22,35 @@ export default function Index() {
     const data = params.data ? JSON.parse(params.data as string) as SignUpDataManager | SignUpDataPromotion : undefined;
     const role = params.role as 'MANAGER' | 'PROMOTION';
     const [googleLoading, setGoogleLoading] = useState(false);
+    const [appleLoading, setAppleLoading] = useState(false);
     const {setToken, setMethodAuth, setRole, setEntityId} = useAuth();
 
 
-    const createProfile = async (email: string, fcm: string | null) => {
+    const createProfile = async (email: string) => {
         try {
             if (role === 'PROMOTION') {
                 const formData = await createFormDataForPromotion(data as SignUpDataPromotion, email, 'oauth');
                 const res = await createPromotion(formData);
                 await handleSuccessAuth(res);
                 setGoogleLoading(false);
+                setAppleLoading(false);
                 router.push('/(app)/(tabs)');
             } else if (role === 'MANAGER') {
                 const formData = await createFormDataForManager(data as SignUpDataManager, email, 'oauth');
                 const res = await createManager(formData);
                 await handleSuccessAuth(res);
                 setGoogleLoading(false);
+                setAppleLoading(false);
                 router.push('/manager/fighter/create');
             }
         } catch (err: any) {
-            if (err?.response?.status === 409) {
+            if (err?.status === 409) {
                 Alert.alert('This email is already registered.');
             } else {
                 Alert.alert('Failed to create a profile.');
             }
             setGoogleLoading(false);
+            setAppleLoading(false);
         }
     }
 
@@ -81,7 +84,8 @@ export default function Index() {
                 <GoogleMethod onSuccess={createProfile} text={"Sign up with Google"} loading={googleLoading}
                               setLoading={setGoogleLoading}/>
                 <FacebookMethod data={data} handleSuccessAuth={handleSuccessAuth}/>
-                <AppleMethod data={data} handleSuccessAuth={handleSuccessAuth} role={role}/>
+                <AppleMethod handleSuccessAuth={createProfile} text={"Sign up with Google"} loadingApple={appleLoading}
+                             setLoadingApple={setAppleLoading}/>
             </View>
         </View>
     );

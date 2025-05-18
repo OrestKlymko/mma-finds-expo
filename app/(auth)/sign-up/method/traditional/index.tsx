@@ -97,7 +97,8 @@ export default function Index() {
                     }, 1000);
                 })
                 .catch(err => {
-                    if (err?.response?.status === 409) {
+                    console.log(err);
+                    if (err?.status === 409) {
                         Alert.alert('This email is already registered.');
                     } else {
                         Alert.alert('Failed to create a profile.');
@@ -125,7 +126,8 @@ export default function Index() {
                     }, 1000);
                 })
                 .catch(err => {
-                    if (err?.response?.status === 409) {
+                    console.log(err.status);
+                    if (err.status === 409) {
                         Alert.alert('This email is already registered.');
                     } else {
                         Alert.alert('Failed to create a profile. Please try again later.');

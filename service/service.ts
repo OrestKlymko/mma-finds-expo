@@ -80,42 +80,71 @@ export const API_BASE_URL = 'http://localhost:8080/api';
 
 // export const API_BASE_URL = 'https://api.dev.mmafinds.com/api';
 
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+interface HttpError extends Error {
+    status: number;
+    body?: any;
+}
+
+export async function request<T>(
+    path: string,
+    options: RequestInit = {}
+): Promise<T> {
     const token = await AsyncStorage.getItem('authToken');
-    const headers: Record<string, string> = {};
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
+
+    const headers: Record<string, string> = {
+        ...(options.headers as Record<string, string>),
+    };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const isFormData = options.body instanceof FormData;
 
     const response = await fetch(`${API_BASE_URL}${path}`, {
         ...options,
-        headers: {
-            ...headers,
-            ...(options.headers as Record<string, string>),
-        },
+        headers: isFormData ? headers : {'Content-Type': 'application/json', ...headers},
     });
 
     if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`HTTP ${response.status}: ${text}`);
+        const text = await response.text().catch(() => '');
+        const err: HttpError = new Error(
+            text || `HTTP ${response.status} ${response.statusText}`
+        ) as HttpError;
+        err.status = response.status;
+        err.body = text;
+        throw err;
     }
 
-    // 204 No Content
     if (response.status === 204) return undefined as any;
-    // Some endpoints send empty body with 200: guard against parse error
-    const contentType = response.headers.get('content-type') || '';
-    if (!contentType.includes('application/json')) return undefined as any;
+
+    const ct = response.headers.get('content-type') ?? '';
+    if (!ct.includes('application/json')) return undefined as any;
 
     return (await response.json()) as T;
 }
 
-// Helper to make JSON requests easier
-const jsonRequest = <T>(path: string, method: string, body?: any) =>
-    request<T>(path, {
+export async function jsonRequest<T>(
+    path: string,
+    method: string,
+    body?: any
+): Promise<T> {
+    const res = await fetch(API_BASE_URL + path, {
         method,
-        body: body !== undefined ? JSON.stringify(body) : undefined,
         headers: {'Content-Type': 'application/json'},
+        body: body && JSON.stringify(body),
     });
+
+    const data = await res.json().catch(() => null);
+
+    if (!res.ok) {
+        const err = new Error(
+            data?.message ?? `HTTP ${res.status}: ${res.statusText}`
+        );
+        (err as any).status = res.status;
+        (err as any).response = data;
+        throw err;
+    }
+
+    return data as T;
+}
 
 
 export const login = (body: LoginRequest): Promise<LoginResponse> =>
