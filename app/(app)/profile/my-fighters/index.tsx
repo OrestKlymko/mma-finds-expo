@@ -41,7 +41,7 @@ const MyFighters = () => {
     }
     return (
         <View style={{flex: 1, backgroundColor: colors.background}}>
-            <GoBackButton />
+            <GoBackButton specificScreen={'/(app)/(tabs)'}/>
             <View style={[styles.container, {paddingBottom: insets.bottom + 42}]}>
                 {/* Back Button */}
 

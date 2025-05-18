@@ -547,7 +547,7 @@ const EditFightersProfileScreen = () => {
                 />
 
                 <Text style={styles.sectionTitle}>
-                    Preferred Weight Range for Offers
+                    Preferred Weight Range for Offers*
                 </Text>
                 <View style={styles.recordRow}>
                     <FloatingLabelInput
