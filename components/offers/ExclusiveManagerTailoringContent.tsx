@@ -38,15 +38,6 @@ export const ExclusiveManagerTailoringContent = ({
                             router.push(`/(app)/manager/fighter/${item.id}/offer`)
                         }}
                     />
-                    {offer && (
-                        <ChatOfferComponent
-                            avatar={offer?.promotionAvatar}
-                            offer={offer}
-                            receiverUserId={offer?.promotionId}
-                            senderName={offer?.promotionName}
-                            typeOffer={'Exclusive'}
-                        />
-                    )}
                     <ManagerTailoringStatus
                         offer={offer}
                         typeOffer={'Exclusive'}

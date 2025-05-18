@@ -39,7 +39,7 @@ const PasswordRecoveryScreen = () => {
     const onRecoverPassword = () => {
         if (emailsMatch && email.length > 0) {
             setLoading(true);
-            requestOnForgotPassword(email)
+            requestOnForgotPassword(email.toLowerCase())
                 .then(() => {
                     router.push({pathname:'/(auth)/password/success-email-forgot',params:{email}});
                 })

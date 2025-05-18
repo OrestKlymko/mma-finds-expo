@@ -40,11 +40,11 @@ const LoginScreen = () => {
     const [password, setPassword] = useState('');
     const [loadingGoogle, setLoadingGoogle] = useState(false);
     const {setToken, setMethodAuth, setRole, setEntityId} = useAuth();
-    const [authLoading, setAuthLoading] = useState<AuthMethod>(null);
+    const [standardLoading, setAuthLoading] = useState(false);
     const [selectedRole, setSelectedRole] = useState<'MANAGER' | 'PROMOTION' | 'PROMOTION_EMPLOYEE'>('MANAGER');
     const router = useRouter();
     const handleSignIn = async () => {
-        setAuthLoading('standard');
+        setAuthLoading(true)
         const token = await AsyncStorage.getItem('deviceToken');
         handleLoginToBackend(email, password, 'standard', token);
     };
@@ -66,7 +66,7 @@ const LoginScreen = () => {
     ) => {
         if (!selectedRole) {
             Alert.alert('Error', 'Please select a role');
-            setAuthLoading(null);
+            setAuthLoading(false);
             return;
         }
         const loginRequest: LoginRequest = {
@@ -76,7 +76,6 @@ const LoginScreen = () => {
             fcmToken: token,
             userRole: selectedRole,
         };
-        console.log(loginRequest);
         login(loginRequest)
             .then(async res => {
                 setToken(res.token);
@@ -92,8 +91,6 @@ const LoginScreen = () => {
                 }, 1000);
             })
             .catch(err => {
-                const status = err.status;
-                console.log(err);
                 if (err.status === 407) {
                     Alert.alert(
                         'Error',
@@ -105,7 +102,8 @@ const LoginScreen = () => {
                 setLoadingGoogle(false);
 
             }).finally(() => {
-            setAuthLoading(null)
+
+            setAuthLoading(false);
         });
     };
 
@@ -171,8 +169,8 @@ const LoginScreen = () => {
                 <TouchableOpacity
                     style={styles.signInButton}
                     onPress={handleSignIn}
-                    disabled={authLoading !== null && authLoading !== 'standard'}>
-                    {authLoading === 'standard' ? (
+                    disabled={standardLoading}>
+                    {standardLoading ? (
                         <ActivityIndicator size="small" color={colors.white}/>
                     ) : (
                         <Text style={styles.signInButtonText}>Sign In</Text>

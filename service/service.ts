@@ -126,9 +126,13 @@ export async function jsonRequest<T>(
     method: string,
     body?: any
 ): Promise<T> {
+    const token = await AsyncStorage.getItem('authToken');
     const res = await fetch(API_BASE_URL + path, {
         method,
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+            'Content-Type': 'application/json',
+            ...(token ? {Authorization: `Bearer ${token}`} : {}),
+        },
         body: body && JSON.stringify(body),
     });
 
@@ -381,8 +385,11 @@ export const submitOfferByFighterWithoutFeaturing = (offerId: string, fighterId:
 export const renewSubmissionOffer = (offerId: string, fighterId: string): Promise<void> =>
     jsonRequest<void>(`/public-offers/renew-submission/${offerId}/${fighterId}`, 'POST', {});
 
-export const getExclusiveOfferInfoById = (offerId: string, fighterId: string | null): Promise<FullInfoAboutExclusiveOffer> =>
+export const getExclusiveOfferInfoByIdAndFighterId = (offerId: string, fighterId: string | null): Promise<FullInfoAboutExclusiveOffer> =>
     request<FullInfoAboutExclusiveOffer>(`/exclusive-offers/${offerId}/${fighterId}`, {method: 'GET'});
+
+export const getExclusiveOfferInfoById = (offerId: string): Promise<FullInfoAboutExclusiveOffer> =>
+    request<FullInfoAboutExclusiveOffer>(`/exclusive-offers/${offerId}`, {method: 'GET'});
 
 export const chooseFighterForExclusiveOffer = (fighterId: string, offerId: string): Promise<void> =>
     request<void>(`/exclusive-offers/choose-fighter/${fighterId}/${offerId}`, {method: 'POST'});
@@ -476,6 +483,9 @@ export const declineOffer = (offerId: string, fighterId: string): Promise<void> 
 
 export const getMultiFightOfferById = (offerId: string): Promise<MultiContractResponse> =>
     request<MultiContractResponse>(`/multi-fight-offers/${offerId}`, {method: 'GET'});
+
+export const getMultiFightOfferByIdAndFighterId = (offerId: string, fighterId: string): Promise<MultiContractResponse> =>
+    request<MultiContractResponse>(`/multi-fight-offers/${offerId}/${fighterId}`, {method: 'GET'});
 
 export const getAllPromotionName = (): Promise<PromotionNameResponse[]> =>
     request<PromotionNameResponse[]>('/promotion/all-name', {method: 'GET'});

@@ -7,6 +7,7 @@ import {RootState} from "@/store/store";
 import {confirmFighterParticipationExclusive, confirmFighterParticipationMultiFight} from "@/service/service";
 import {resetMultiOffer} from "@/store/createMultiContractOfferSlice";
 import {resetExclusiveOffer} from "@/store/createExclusiveOfferSlice";
+import {useAuth} from "@/context/AuthContext";
 
 type ChooseAnotherFighterButtonProps = {
     type: 'Exclusive' | 'Public' | 'Multi-Fight',
@@ -16,15 +17,16 @@ export const ChooseAnotherFighterButton = (
     {type, offerId}: ChooseAnotherFighterButtonProps
 ) => {
     const dispatch = useDispatch();
+    const {role} = useAuth();
     const {fighterId: exclusiveFighterId} = useSelector((state: RootState) => state.createExclusiveOffer);
     const {fighterId: multiContractFighterId} = useSelector((state: RootState) => state.createMultiContractOffer);
     const router = useRouter();
     useEffect(() => {
         if (type === 'Exclusive' && exclusiveFighterId) {
             confirmFighterParticipationExclusive(offerId, exclusiveFighterId).then(() => {
-                router.back();
-                dispatch(resetExclusiveOffer());
-            }
+                    router.back();
+                    dispatch(resetExclusiveOffer());
+                }
             )
         }
         if (type === 'Multi-Fight' && multiContractFighterId) {
@@ -35,7 +37,7 @@ export const ChooseAnotherFighterButton = (
         }
     }, [exclusiveFighterId, multiContractFighterId, offerId, type]);
 
-    return <TouchableOpacity
+    return role === 'PROMOTION' && <TouchableOpacity
         style={styles.createProfileButton}
         onPress={() => {
             router.push({

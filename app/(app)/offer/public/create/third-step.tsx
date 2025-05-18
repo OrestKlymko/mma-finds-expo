@@ -110,9 +110,9 @@ const PromotionSetDueDatePublicOffer = () => {
             opponentGender: opponentGender,
             opponentNationality: opponentNationality?.id,
         };
-
         createPublicOffer(dataToSend)
             .then(_ => {
+                console.log('success');
                 dispatch(resetPublicOffer());
                 getShortInfoPromotion()
                     .then(res => {
@@ -140,7 +140,8 @@ const PromotionSetDueDatePublicOffer = () => {
                     })
                     .finally(() => setLoading(false));
             })
-            .catch(_ => {
+            .catch(err => {
+                console.error(err);
                 Alert.alert('Error', 'Something went wrong');
             })
             .finally(() => {
