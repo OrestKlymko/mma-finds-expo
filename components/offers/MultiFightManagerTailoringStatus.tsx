@@ -11,6 +11,7 @@ import {DocumentTailoring} from "@/components/DocumentTailoring";
 import {ChooseAnotherFighterButton} from "@/components/offers/exclusive-multi/ChooseAnotherFighterButton";
 import MultiFightNegotiationOfferComponent
     from "@/components/offers/exclusive-multi/MultiFightNegotiationOfferComponent";
+import {useAuth} from "@/context/AuthContext";
 
 
 type TailoringStatusProps = {
@@ -24,9 +25,8 @@ export const MultiFightManagerTailoringStatus: React.FC<
 > = ({submittedInformation = [], previousInfo = [], offer}) => {
 
     if (submittedInformation.length === 0) return null;
-
+    const {role} = useAuth();
     const first = submittedInformation[0];
-
 
     const renderPurseGridAllFights = () => (
         <>
@@ -68,7 +68,7 @@ export const MultiFightManagerTailoringStatus: React.FC<
             {/* PENDING або PROMOTION‐NEGOTIATING */}
             {(first.statusResponded === 'PENDING' ||
                     first.statusResponded === 'NEGOTIATING') &&
-                first.offered === 'MANAGER' && (
+                first.offered === role && (
                     <>
                         {renderPurseGridAllFights()}
                         <Text style={styles.detailLabel}>Waiting for confirmation.</Text>

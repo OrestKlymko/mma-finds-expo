@@ -9,123 +9,152 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     View,
+    ActivityIndicator,
 } from 'react-native';
-
-import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
-import FloatingLabelInput from '@/components/FloatingLabelInput';
-import colors from '@/styles/colors';
+import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
-import {formatDateFromLocalDate} from '@/utils/utils';
 
-interface DocumentItem {
-    documentName: string;
-    documentType: 'FILE' | 'TEXT';
-    response: string;
-    originalValue: string;
-    onUploadPress: () => void;
-    onChangeText: (text: string) => void;
-    onConfirm: () => void;
+import FloatingLabelInput from '@/components/FloatingLabelInput';
+import { formatDateFromLocalDate } from '@/utils/utils';
+import colors from '@/styles/colors';
+
+export interface DocumentRow {
+    documentId:    string;
+    documentName:  string;
+    documentType:  'FILE' | 'TEXT';
+    response:      string;          // value the user is editing
+    originalValue: string;          // value that came from backend
+    isLoading:     boolean;
+    hasSuccess:    boolean;
+    onUpload:      () => void;
+    onChangeText:  (t: string) => void;
+    onConfirm:     () => void;
 }
 
 interface Props {
-    documents: DocumentItem[];
+    rows: DocumentRow[];
     dueDate?: string;
 }
 
 export const RequiredDocumentsSection: React.FC<Props> = ({
-                                                              documents,
+                                                              rows,
                                                               dueDate,
                                                           }) => {
-    const isDeadlinePassed = dueDate ? new Date(dueDate) < new Date() : false;
-
-    const openFileInBrowser = async (url: string) => {
+    /* helpers ---------------------------------------------------- */
+    const openFile = async (url: string) => {
         try {
-            const result = await WebBrowser.openBrowserAsync(url);
-            if (result.type !== 'opened') {
-                Alert.alert('Error', 'Could not open the file.');
+            const r = await WebBrowser.openBrowserAsync(url);
+            if (r.type !== 'opened') {
+                Alert.alert('Error', 'Could not open the file');
             }
-        } catch (error) {
-            console.error('WebBrowser error:', error);
+        } catch (e) {
+            console.error(e);
             Alert.alert('Error', 'An error occurred while opening the file.');
         }
     };
+
+    /* render ----------------------------------------------------- */
+    const deadlinePassed =
+        dueDate ? new Date(dueDate) < new Date() : false;
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                style={{flex: 1}}>
+                style={{ flex: 1 }}
+            >
                 <View style={styles.container}>
-                    <Text style={styles.sectionTitle}>Required Documents</Text>
+                    <Text style={styles.title}>Required Documents</Text>
 
-                    {isDeadlinePassed && (
+                    {deadlinePassed && (
                         <View style={styles.overlay}>
-                            <Text style={styles.overlayText}>
-                                Deadline for uploading documents has passed. Please contact the
-                                promotion.
+                            <Text style={styles.overlayTxt}>
+                                Deadline has passed. Please contact promotion.
                             </Text>
                         </View>
                     )}
 
-                    {documents.map((doc, index) => {
-                        const isChanged = doc.response !== doc.originalValue;
+                    {rows.map((row) => {
+                        const changed   = row.response !== row.originalValue;
+                        const uploading = row.isLoading;
+
                         return (
-                            <View key={doc.documentName} style={styles.documentContainer}>
-                                {doc.documentType === 'TEXT' ? (
+                            <View key={row.documentId} style={styles.docBlock}>
+                                {row.documentType === 'TEXT' ? (
+                                    /* -------- TEXT ROW -------------------------------- */
                                     <View style={styles.row}>
                                         <FloatingLabelInput
-                                            label={doc.documentName}
-                                            value={doc.response || doc.originalValue}
-                                            onChangeText={doc.onChangeText}
-                                            containerStyle={{flex: 1}}
-                                            keyboardType="default"
+                                            label={row.documentName}
+                                            value={row.response}
+                                            onChangeText={row.onChangeText}
+                                            containerStyle={{ flex: 1 }}
                                         />
-                                        {!isChanged && doc.response && (
+
+                                        {!changed && row.response && row.hasSuccess && (
                                             <Icon
                                                 name="check"
                                                 size={20}
                                                 color={colors.primaryGreen}
-                                                style={styles.checkStyle}
+                                                style={styles.checkIcon}
                                             />
                                         )}
-                                        {isChanged && (
+
+                                        {changed && !uploading && (
                                             <TouchableOpacity
-                                                onPress={doc.onConfirm}
-                                                style={styles.confirmButton}>
+                                                onPress={row.onConfirm}
+                                                style={styles.confirmBtn}
+                                            >
                                                 <Icon name="check" size={20} color={colors.white} />
                                             </TouchableOpacity>
                                         )}
+
+                                        {uploading && (
+                                            <ActivityIndicator
+                                                size="small"
+                                                color={colors.primaryGreen}
+                                                style={styles.spinner}
+                                            />
+                                        )}
                                     </View>
                                 ) : (
+                                    /* -------- FILE ROW -------------------------------- */
                                     <>
-                                        <Text style={styles.label}>{doc.documentName}</Text>
-                                        <View style={styles.uploadRow}>
+                                        <Text style={styles.label}>{row.documentName}</Text>
+
+                                        <View style={styles.fileRow}>
                                             <TouchableOpacity
                                                 style={styles.fileBox}
-                                                onPress={() => {
-                                                    if (doc.response) {
-                                                        openFileInBrowser(doc.response);
-                                                    }
-                                                }}
-                                                disabled={!doc.response}>
+                                                onPress={() => row.response && openFile(row.response)}
+                                                disabled={!row.response}
+                                            >
                                                 <Text style={styles.fileName}>
-                                                    {doc.response
-                                                        ? doc.documentName.trim() +
-                                                        ' was successfully uploaded'
-                                                        : 'Upload ' + doc.documentName}
+                                                    {row.response
+                                                        ? `${row.documentName} uploaded`
+                                                        : `Upload ${row.documentName}`}
                                                 </Text>
                                             </TouchableOpacity>
+
                                             <TouchableOpacity
-                                                onPress={doc.onUploadPress}
-                                                style={styles.uploadBtn}>
-                                                <Icon name="upload" size={20} color={colors.white} />
+                                                onPress={row.onUpload}
+                                                style={[
+                                                    styles.uploadBtn,
+                                                    uploading && { opacity: 0.6 },
+                                                ]}
+                                                disabled={uploading}
+                                            >
+                                                {uploading ? (
+                                                    <ActivityIndicator size="small" color={colors.white} />
+                                                ) : (
+                                                    <Icon name="upload" size={20} color={colors.white} />
+                                                )}
                                             </TouchableOpacity>
-                                            {doc.response && (
+
+                                            {row.hasSuccess && !uploading && (
                                                 <Icon
                                                     name="check"
                                                     size={20}
                                                     color={colors.primaryGreen}
-                                                    style={[styles.checkStyle, {right: 60}]}
+                                                    style={[styles.checkIcon, { right: 60 }]}
                                                 />
                                             )}
                                         </View>
@@ -136,9 +165,9 @@ export const RequiredDocumentsSection: React.FC<Props> = ({
                     })}
 
                     {dueDate && (
-                        <View style={styles.dueDateContainer}>
-                            <Text style={styles.dueDateText}>
-                                <Text style={{fontWeight: 'bold'}}>Due date for upload: </Text>
+                        <View style={styles.dueBox}>
+                            <Text style={styles.dueTxt}>
+                                <Text style={{ fontWeight: 'bold' }}>Due date: </Text>
                                 {formatDateFromLocalDate(dueDate)}
                             </Text>
                         </View>
@@ -149,92 +178,22 @@ export const RequiredDocumentsSection: React.FC<Props> = ({
     );
 };
 
+/* ---------------- styles ------------------------------------- */
 const styles = StyleSheet.create({
-    container: {
-        marginTop: 20,
-    },
-    sectionTitle: {
-        fontWeight: '600',
-        fontSize: 13,
-        marginBottom: 16,
-        color: colors.primaryBlack,
-    },
-    documentContainer: {
-        marginBottom: 10,
-    },
-    label: {
-        marginBottom: 8,
-        fontSize: 14,
-        color: colors.primaryBlack,
-    },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        position: 'relative',
-    },
-    checkStyle: {
-        position: 'absolute',
-        right: 10,
-    },
-    confirmButton: {
-        marginLeft: 8,
-        backgroundColor: colors.primaryGreen,
-        padding: 10,
-        borderRadius: 8,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 56,
-    },
-    uploadRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        position: 'relative',
-    },
-    fileBox: {
-        flex: 1,
-        backgroundColor: colors.lightGray,
-        borderRadius: 8,
-        padding: 12,
-        height: 56,
-        justifyContent: 'center',
-    },
-    fileName: {
-        color: colors.primaryBlack,
-    },
-    uploadBtn: {
-        marginLeft: 8,
-        backgroundColor: colors.buttonUploadGray,
-        padding: 10,
-        borderRadius: 8,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 56,
-    },
-    dueDateContainer: {
-        marginTop: 10,
-        backgroundColor: colors.lightGray,
-        padding: 12,
-        borderRadius: 8,
-        height: 56,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    dueDateText: {
-        fontSize: 15,
-        color: colors.primaryBlack,
-    },
-    overlay: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(255,255,255,0.8)',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 10,
-        paddingHorizontal: 20,
-    },
-    overlayText: {
-        textAlign: 'center',
-        fontSize: 16,
-        fontWeight: '600',
-        color: colors.primaryBlack,
-    },
+    container:     { marginTop: 20 },
+    title:         { fontWeight: '600', fontSize: 13, marginBottom: 16, color: colors.primaryBlack },
+    docBlock:      { marginBottom: 12 },
+    row:           { flexDirection: 'row', alignItems: 'center', position: 'relative' },
+    fileRow:       { flexDirection: 'row', alignItems: 'center', position: 'relative' },
+    label:         { marginBottom: 8, fontSize: 14, color: colors.primaryBlack },
+    fileBox:       { flex: 1, backgroundColor: colors.lightGray, borderRadius: 8, padding: 12, height: 56, justifyContent: 'center' },
+    fileName:      { color: colors.primaryBlack },
+    uploadBtn:     { marginLeft: 8, backgroundColor: colors.buttonUploadGray, padding: 10, borderRadius: 8, height: 56, justifyContent: 'center', alignItems: 'center' },
+    confirmBtn:    { marginLeft: 8, backgroundColor: colors.primaryGreen, padding: 10, borderRadius: 8, height: 56, justifyContent: 'center', alignItems: 'center' },
+    checkIcon:     { position: 'absolute', right: 10 },
+    spinner:       { position: 'absolute', right: 16 },
+    dueBox:        { marginTop: 10, backgroundColor: colors.lightGray, padding: 12, borderRadius: 8, height: 56, justifyContent: 'center', alignItems: 'center' },
+    dueTxt:        { fontSize: 15, color: colors.primaryBlack },
+    overlay:       { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(255,255,255,0.8)', justifyContent: 'center', alignItems: 'center', zIndex: 10, paddingHorizontal: 20 },
+    overlayTxt:    { textAlign: 'center', fontSize: 16, fontWeight: '600', color: colors.primaryBlack },
 });

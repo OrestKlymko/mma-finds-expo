@@ -1,121 +1,130 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Alert} from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Alert } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 
-
-import {ExclusiveOfferInfo, MultiContractFullInfo, PublicOfferInfo} from '@/service/response';
-import {docCfg, OfferKind} from "@/models/documentTailoringConfig";
-import {RequiredDocumentsSection} from "@/components/RequiredDocumentsSection";
+import { docCfg, OfferKind } from '@/models/documentTailoringConfig';
+import { RequiredDocumentsSection, DocumentRow } from '@/components/RequiredDocumentsSection';
+import {
+    ExclusiveOfferInfo,
+    MultiContractFullInfo,
+    PublicOfferInfo,
+} from '@/service/response';
 
 type Props = {
-    kind: OfferKind;
-    offer: PublicOfferInfo|ExclusiveOfferInfo|MultiContractFullInfo | null | undefined;
+    kind:  OfferKind;
+    offer: PublicOfferInfo | ExclusiveOfferInfo | MultiContractFullInfo | null | undefined;
 };
 
-export const DocumentTailoring: React.FC<Props> = ({kind, offer}) => {
-    const cfg = docCfg[kind];
+export const DocumentTailoring: React.FC<Props> = ({ kind, offer }) => {
+    const cfg      = docCfg[kind];
     const [docs, setDocs] = useState<any[]>([]);
 
+    /* ----------------------------------------------------------- */
     useEffect(() => {
         if (!offer) return;
+
         cfg.loadDocs(offer.offerId).then((arr: any[]) =>
             setDocs(
-                arr.map(d => ({
+                arr.map((d) => ({
                     ...d,
                     originalValue: d.response || '',
-                    response: d.response || '',
-                    isLoading: false,
-                    hasSuccess: false,
-                })),
-            ),
+                    response:      d.response || '',
+                    isLoading:     false,
+                    hasSuccess:    false,
+                }))
+            )
         );
     }, [offer, cfg]);
 
-    const handleTextChange = useCallback((i: number, text: string) => {
-        setDocs(p => p.map((d, idx) => (idx === i ? {...d, response: text} : d)));
-    }, []);
+    /* ---------------- helpers ---------------------------------- */
+    const updateRow = (idx: number, patch: Partial<any>) =>
+        setDocs((prev) =>
+            prev.map((row, i) => (i === idx ? { ...row, ...patch } : row))
+        );
 
-    const handleFileUpload = async (i: number) => {
+    const pickFileAndUpload = async (idx: number) => {
+        console.log(idx);
         try {
-            setDocs(p => p.map((d, idx) => (idx === i ? {...d, isLoading: true} : d)));
+            updateRow(idx, { isLoading: true });
 
             const res = await DocumentPicker.getDocumentAsync({
                 type: '*/*',
                 copyToCacheDirectory: true,
-                multiple: false,
             });
-
-            if (res.type !== 'success') {
-                setDocs(p => p.map((d, idx) => (idx === i ? {...d, isLoading: false} : d)));
+            if (res.canceled) {
+                updateRow(idx, { isLoading: false });
                 return;
             }
-
             const fd = new FormData();
-            fd.append('offerId', offer?.offerId);
-            fd.append('documentId', docs[i].documentId);
+            fd.append('offerId',     String(offer!.offerId));
+            fd.append('documentId',  String(docs[idx].documentId));
             fd.append('file', {
-                uri: res.uri,
-                name: res.name || 'document',
-                type: res.mimeType || 'application/octet-stream',
-            } as any); // 👈 для FormData в Expo потрібен каст
+                uri:  res.assets[0].uri,
+                name: res.assets[0].name ?? 'document',
+                type: res.assets[0].mimeType ?? 'application/octet-stream',
+            } as any);
 
             await cfg.upload(fd);
 
-            setDocs(p =>
-                p.map((d, idx) =>
-                    idx === i
-                        ? {...d, response: 'Uploaded', isLoading: false, hasSuccess: true}
-                        : d,
-                ),
-            );
+            updateRow(idx, {
+                response:   'file://uploaded',  // or the URL you get back
+                isLoading:  false,
+                hasSuccess: true,
+            });
         } catch (e) {
+            console.error(e);
             Alert.alert('Error', 'Upload failed');
-            setDocs(p => p.map((d, idx) => (idx === i ? {...d, isLoading: false} : d)));
+            updateRow(idx, { isLoading: false });
         }
     };
 
-
-    const confirmTextUpload = async (i: number) => {
+    const confirmText = async (idx: number) => {
         try {
-            setDocs(p => p.map((d, idx) => (idx === i ? {...d, isLoading: true} : d)));
-            const d = docs[i];
-            const fd = new FormData();
-            fd.append('offerId', offer?.offerId);
-            fd.append('documentId', d.documentId);
-            fd.append('response', d.response);
+            updateRow(idx, { isLoading: true });
+
+            const row = docs[idx];
+            const fd  = new FormData();
+            fd.append('offerId',    String(offer!.offerId));
+            fd.append('documentId', String(row.documentId));
+            fd.append('response',   row.response);
+
             await cfg.upload(fd);
-            setDocs(p =>
-                p.map((doc, idx) =>
-                    idx === i
-                        ? {...doc, originalValue: doc.response, isLoading: false, hasSuccess: true}
-                        : doc,
-                ),
-            );
+
+            updateRow(idx, {
+                originalValue: row.response,
+                isLoading:     false,
+                hasSuccess:    true,
+            });
         } catch (e) {
+            console.error(e);
             Alert.alert('Error', 'Upload failed');
-            setDocs(p => p.map((d, idx) => (idx === i ? {...d, isLoading: false} : d)));
+            updateRow(idx, { isLoading: false });
         }
     };
 
-    const memoDocs = useMemo(
+    /* ---------------- map to presentation rows ----------------- */
+    const rows: DocumentRow[] = useMemo(
         () =>
-            docs.map((d, i) => ({
+            docs.map((d, idx) => ({
+                documentId:   d.documentId,
                 documentName: d.documentName,
                 documentType: d.documentType,
                 response:     d.response,
                 originalValue:d.originalValue,
-                onUploadPress: () => handleFileUpload(i),
-                onChangeText : (t: string) => handleTextChange(i, t),
-                onConfirm    : () => confirmTextUpload(i),
+                isLoading:    d.isLoading,
+                hasSuccess:   d.hasSuccess,
+                onUpload:     () => pickFileAndUpload(idx),
+                onChangeText: (t: string) => updateRow(idx, { response: t }),
+                onConfirm:    () => confirmText(idx),
             })),
-        [docs, handleTextChange],
+        [docs]
     );
 
     if (!offer) return null;
 
     return (
         <RequiredDocumentsSection
-            documents={memoDocs}
+            rows={rows}
             dueDate={cfg.dueField(offer)}
         />
     );

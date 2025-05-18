@@ -231,7 +231,6 @@ const CreateFightersProfileScreen = () => {
                 router.push('/profile/my-fighters');
             })
             .catch((e) => {
-                console.log(e.message);
                 Alert.alert('Failed to create fighter profile');
             })
             .finally(() => {

@@ -1,49 +1,30 @@
-import {
-    initPaymentSheet,
-    presentPaymentSheet,
-} from '@stripe/stripe-react-native';
-import {
-    chargeDefault,
-     createPaymentIntentForStripe,
-     setDefaultPaymentMethodStripe,
-} from '@/service/service';
+import {createPaymentIntentForStripe, setDefaultPaymentMethodStripe} from "@/service/service";
+import {initPaymentSheet, presentPaymentSheet} from "@stripe/stripe-react-native";
+import {Alert} from "react-native";
 
 export const payWithStripe = async (
     amountStr: string,
-    currency: string = 'EUR',
+    currency = 'EUR'
 ): Promise<boolean> => {
-
-    const cents = Math.round(parseFloat(amountStr) * 100); // €19.99 → 1999
-
-    const chargeRes = await chargeDefault({
-        amount: cents.toString(),
-        currency: currency.toLowerCase(),
-    });
-
-    if (chargeRes.paid) return true;
-
+    const cents = Math.round(parseFloat(amountStr) * 100);
 
     const { clientSecret } = await createPaymentIntentForStripe({
-        amount: cents.toString(),
+        amount:   cents.toString(),
         currency: currency.toLowerCase(),
     });
 
     const { error: initErr } = await initPaymentSheet({
         paymentIntentClientSecret: clientSecret,
         merchantDisplayName: 'MMA Finds',
-        style: 'automatic',
     });
     if (initErr) throw new Error(initErr.message);
 
     const { error: presentErr } = await presentPaymentSheet();
     if (presentErr) return false;
 
-    await setDefaultPaymentMethodStripe({clientSecret});
+    await setDefaultPaymentMethodStripe({ clientSecret });
 
-    const secondTry = await chargeDefault({
-        amount: cents.toString(),
-        currency: currency.toLowerCase(),
-    });
+    Alert.alert("Great!","We also save your card for future payments. You can remove it in the settings.");
 
-    return secondTry.paid;
+    return true;
 };

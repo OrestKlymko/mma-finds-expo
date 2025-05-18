@@ -82,7 +82,6 @@ export const ManagerSubmissionDetailScreen = () => {
         }
 
         if (submittedInformation?.statusResponded === 'REJECTED' || fighters[0]?.contractStatus === 'REJECTED') {
-            console.log(submittedInformation?.statusResponded);
             return <RejectedReasonSection rejectionReason={fighters[0]?.rejectedReason}/>
         }
         return <ManagerOfferDetailFooter
