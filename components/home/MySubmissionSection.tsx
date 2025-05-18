@@ -27,7 +27,8 @@ export const MySubmissionSection = ({
                 </TouchableOpacity>
             </View>
 
-            <SubmissionList horizontal filteredSubmission={submissions}/>
+            <SubmissionList horizontal
+                            filteredSubmission={submissions.filter(submission => submission.fighterStateApprove === 'ACTIVE')}/>
         </View>
     );
 };
