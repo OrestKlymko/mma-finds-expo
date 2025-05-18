@@ -44,6 +44,7 @@ export type OfferData = {
   opponentNationality?: NationalityResponse;
   opponentCountry?: string;
   opponentContinent?: string;
+  showToAllManagers: boolean;
 };
 
 const initialState: OfferData = {
@@ -61,6 +62,7 @@ const initialState: OfferData = {
   addMoreInfo: '',
   event: undefined,
   sportType: undefined,
+  showToAllManagers: false,
   fightLength: {minutes: 5, rounds: 3},
 
 };
@@ -165,6 +167,9 @@ const createPublicOfferSlice = createSlice({
     setOpponentContinent: (state, action: PayloadAction<string>) => {
       state.opponentContinent = action.payload;
     },
+    setShowToAllManagers: (state, action: PayloadAction<boolean>) => {
+      state.showToAllManagers = action.payload;
+    },
     resetPublicOffer: () => {
       return initialState;
     },
@@ -200,6 +205,7 @@ export const {
   setOpponentGender,
   setOpponentAge,
   setOpponentNationality,
+  setShowToAllManagers,
   resetPublicOffer,
 } = createPublicOfferSlice.actions;
 

@@ -25,7 +25,7 @@ import {
     setIsTitleFight,
     setMmaRule,
     setPurseType,
-    setPurseValues,
+    setPurseValues, setShowToAllManagers,
     setSportType,
 } from '@/store/createPublicOfferSlice';
 import {EventName} from "@/components/EventName";
@@ -36,6 +36,7 @@ import FightLengthPicker from "@/components/FightLengthPicker";
 import PursePublicOfferComponent from "@/components/PursePublicOfferComponent";
 import BenefitBottomSheet from "@/components/BenefitBottomSheet";
 import {useLocalSearchParams, useRouter} from "expo-router";
+import OfferVisibilityToggle from "@/components/offers/public/OfferVisibilityToggle";
 
 const CreatePublicOfferFirstStepScreen = () => {
     const {
@@ -47,6 +48,7 @@ const CreatePublicOfferFirstStepScreen = () => {
         sportType,
         isTitleFight,
         benefits,
+        showToAllManagers
     } = useSelector((state: RootState) => state.createPublicOffer);
     const dispatch = useDispatch();
     const router = useRouter();
@@ -99,7 +101,7 @@ const CreatePublicOfferFirstStepScreen = () => {
                     keyboardShouldPersistTaps="handled"
                     contentContainerStyle={styles.container}>
                     <Text style={styles.title}>Create Public Fight Offer</Text>
-
+                    <OfferVisibilityToggle onChange={setShowToAllManagers} visibleToAll={showToAllManagers}/>
                     <Text style={styles.label}>Event*</Text>
                     <EventName event={event}/>
                     <SportTypeSingleSelectDropdown

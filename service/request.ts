@@ -164,6 +164,7 @@ export type UpdateOfferRequest = {
   opponentAge?: string | number | undefined;
   opponentGender?: string | undefined;
   opponentNationality?: string | null | undefined;
+  showToAllManagers: boolean;
 };
 
 export type CreateExclusiveOfferRequest = {
