@@ -63,7 +63,14 @@ const MultiFightOfferFlow = ({fighterId}: MultiFightOfferFlowProps) => {
     }, [fighterId]);
 
     const handleContinue = (shouldSaveDocumentToProfile: boolean) => {
+        const state = useSelector((state: RootState) => state.createMultiContractOffer);
+
+        if (!state.fighterId) {
+            Alert.alert('Please select a fighter.');
+            return;
+        }
         setHasSubmit(true);
+
         setErrorWeightClass(!weightClass);
         if (documents.length === 0) {
             Alert.alert('Please select at least one document.');

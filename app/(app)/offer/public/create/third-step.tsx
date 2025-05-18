@@ -49,6 +49,7 @@ const PromotionSetDueDatePublicOffer = () => {
         opponentAge,
         opponentGender,
         opponentNationality,
+        showToAllManagers
     } = useSelector((state: RootState) => state.createPublicOffer);
 
     const handleDateChange = (event: any, selectedDate?: Date) => {
@@ -109,6 +110,7 @@ const PromotionSetDueDatePublicOffer = () => {
             opponentAge: opponentAge,
             opponentGender: opponentGender,
             opponentNationality: opponentNationality?.id,
+            showToAllManagers: showToAllManagers,
         };
         createPublicOffer(dataToSend)
             .then(_ => {

@@ -122,6 +122,12 @@ export function SingleBoutOfferFlow({
     }, [eventId, fighterId, dispatch]);
 
     const handleContinue = (shouldSaveDocumentToProfile: boolean) => {
+        const state = useSelector((state: RootState) => state.createExclusiveOffer);
+
+        if (!state.fighterId) {
+            Alert.alert('Please select a fighter.');
+            return;
+        }
         if (documents.length === 0) {
             Alert.alert('Please select at least one document.');
             return;
