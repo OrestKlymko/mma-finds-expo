@@ -290,6 +290,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
         padding: 16,
         borderRadius: 8,
+        marginHorizontal: 20,
     },
     modalItem: {
         paddingVertical: 12,
