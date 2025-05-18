@@ -48,16 +48,16 @@ export const ManagerTailoringContent = ({
                     {submittedInformation?.statusResponded !== 'REJECTED' && (
                         <ChatOfferComponent
                             avatar={
-                                fighters.filter(f => f.id === offer?.chooseFighterId)[0]
+                                fighters.filter(f => f.id === submittedInformation?.fighterId)[0]
                                     .managerAvatar
                             }
                             offer={offer}
                             receiverUserId={
-                                fighters.filter(f => f.id === offer?.chooseFighterId)[0]
+                                fighters.filter(f => f.id === submittedInformation?.fighterId)[0]
                                     .managerId
                             }
                             senderName={
-                                fighters.filter(f => f.id === offer?.chooseFighterId)[0]
+                                fighters.filter(f => f.id === submittedInformation?.fighterId)[0]
                                     .managerName
                             }
                             typeOffer={'Public'}
@@ -86,15 +86,15 @@ export const ManagerTailoringContent = ({
                     />
                     <ChatOfferComponent
                         avatar={
-                            fighters.filter(f => f.id === offer?.chooseFighterId)[0]
+                            fighters.filter(f => f.id === submittedInformation?.fighterId)[0]
                                 .managerAvatar
                         }
                         offer={offer}
                         receiverUserId={
-                            fighters.filter(f => f.id === offer?.chooseFighterId)[0].managerId
+                            fighters.filter(f => f.id === submittedInformation?.fighterId)[0].managerId
                         }
                         senderName={
-                            fighters.filter(f => f.id === offer?.chooseFighterId)[0]
+                            fighters.filter(f => f.id === submittedInformation?.fighterId)[0]
                                 .managerName
                         }
                         typeOffer={'Public'}

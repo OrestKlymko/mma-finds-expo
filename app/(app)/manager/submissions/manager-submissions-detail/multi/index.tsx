@@ -34,7 +34,7 @@ export const ManagerMultiFightOfferDetailsScreen = () => {
     const [previousSubmission, setPreviousSubmission] = useState<
         SubmittedInformationOffer[]
     >([]);
-    const {offerId}=useLocalSearchParams<{offerId:string}>();
+    const {offerId} = useLocalSearchParams<{ offerId: string }>();
 
     useFocusEffect(
         React.useCallback(() => {
@@ -56,7 +56,7 @@ export const ManagerMultiFightOfferDetailsScreen = () => {
     };
 
     if (contentLoader) {
-        return <ContentLoader />;
+        return <ContentLoader/>;
     }
 
     return (
@@ -71,10 +71,10 @@ export const ManagerMultiFightOfferDetailsScreen = () => {
                     styles.container,
                     {paddingBottom: insets.bottom},
                 ]}>
-                <EventPosterImage eventImageLink={offer?.promotionAvatar} />
+                <EventPosterImage eventImageLink={offer?.promotionAvatar}/>
                 <View style={styles.eventDetailsContainer}>
-                    <TitleWithAction title={'Multi-Fight Offer'} />
-                    <MainOfferDetails offer={offer} />
+                    <TitleWithAction title={'Multi-Fight Offer'}/>
+                    <MainOfferDetails offer={offer}/>
                     {fighter && offer && submissionInformations && (
                         <MultiFightOfferManagerTailoringCandidates
                             fighter={fighter}

@@ -32,8 +32,9 @@ export const ManagerExclusiveOfferDetailsScreen = () => {
     const [previousInfo, setPreviousInfo] = useState<
         SubmittedInformationOffer | undefined
     >();
-    const {offerId} = route.params as {
+    const {offerId,fighterId} = route.params as {
         offerId: string;
+        fighterId: string;
     };
     const [benefits, setBenefits] = useState<Benefit | null>(null);
     const [contentLoading, setContentLoading] = useState(false);
@@ -49,7 +50,7 @@ export const ManagerExclusiveOfferDetailsScreen = () => {
 
     const getExclusiveOfferInfo = () => {
         setContentLoading(true);
-        getExclusiveOfferInfoById(offerId)
+        getExclusiveOfferInfoById(offerId,fighterId)
             .then(res => {
                 setOffer(res.offer);
                 setFighter(res.fighter);

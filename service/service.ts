@@ -76,8 +76,9 @@ import {
 } from './response';
 
 // export const API_BASE_URL = 'https://api.mmafinds.com/api';
-// export const API_BASE_URL = 'http://localhost:8080/api';
-export const API_BASE_URL = 'https://api.dev.mmafinds.com/api';
+export const API_BASE_URL = 'http://localhost:8080/api';
+
+// export const API_BASE_URL = 'https://api.dev.mmafinds.com/api';
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     const token = await AsyncStorage.getItem('authToken');
@@ -351,8 +352,8 @@ export const submitOfferByFighterWithoutFeaturing = (offerId: string, fighterId:
 export const renewSubmissionOffer = (offerId: string, fighterId: string): Promise<void> =>
     jsonRequest<void>(`/public-offers/renew-submission/${offerId}/${fighterId}`, 'POST', {});
 
-export const getExclusiveOfferInfoById = (offerId: string): Promise<FullInfoAboutExclusiveOffer> =>
-    request<FullInfoAboutExclusiveOffer>(`/exclusive-offers/${offerId}`, {method: 'GET'});
+export const getExclusiveOfferInfoById = (offerId: string, fighterId: string | null): Promise<FullInfoAboutExclusiveOffer> =>
+    request<FullInfoAboutExclusiveOffer>(`/exclusive-offers/${offerId}/${fighterId}`, {method: 'GET'});
 
 export const chooseFighterForExclusiveOffer = (fighterId: string, offerId: string): Promise<void> =>
     request<void>(`/exclusive-offers/choose-fighter/${fighterId}/${offerId}`, {method: 'POST'});
