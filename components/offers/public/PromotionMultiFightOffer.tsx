@@ -47,8 +47,7 @@ export const PromotionMultiFightOffer = () => {
     if (contentLoader) {
         return <ContentLoader/>;
     }
-// offer: 5e437aa0-ecd8-4579-a043-cef21fb387ad
-//     fighter :f4ac2e48-03cc-4b76-919c-83b493109f03
+
     return (
         <KeyboardAvoidingView
             style={{flex: 1, backgroundColor: colors.background}}
@@ -65,7 +64,7 @@ export const PromotionMultiFightOffer = () => {
 
                 <View style={styles.eventDetailsContainer}>
                     <TitleWithAction title={'Multi-Fight Offer'}/>
-                    <ShareOffer offer={offer} typeOffer={'Multi-fight contract'} fighter={fighter}/>
+                    {/*<ShareOffer offer={offer} typeOffer={'Multi-fight contract'} fighter={fighter}/>*/}
                     <MainOfferDetails offer={offer}/>
 
                     {offer&&submissionInformations&&<MultiFightPromotionTailoringProcess

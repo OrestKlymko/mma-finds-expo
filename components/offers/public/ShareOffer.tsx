@@ -26,12 +26,6 @@ export const ShareOffer: React.FC<Props> = ({offer, typeOffer, fighter}) => {
             case 'Public':
                 await sharePublicOffer(offer as PublicOfferInfo, makeLink);
                 break;
-            // case 'Exclusive':
-            //     await shareExclusiveOffer(offer as ExclusiveOfferInfo);
-            //     break;
-            // case 'Multi-fight contract':
-            //     await shareMultiFightOffer(offer as MultiContractFullInfo);
-            //     break;
         }
     };
 

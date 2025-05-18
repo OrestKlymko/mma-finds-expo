@@ -101,7 +101,6 @@ export const PromotionSingleOffer = () => {
                     </View>
                 )}
                 <TitleWithAction title={offer?.eventName || 'Event Name'}/>
-                <ShareOffer offer={offer} typeOffer={'Exclusive'}/>
                 <ExclusiveOfferState offer={offer}/>
                 <LocationAndDateEvent offer={offer}/>
                 {offer?.eventDescription && (
