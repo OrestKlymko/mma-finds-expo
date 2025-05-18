@@ -22,7 +22,6 @@ export const EventPosterImage = ({eventImageLink}: Props) => {
       <GoBackButton
         color={'white'}
         style={{position: 'absolute', left: 10}}
-        onPress={() => router.replace('/feed')}
       />
     </View>
   );
