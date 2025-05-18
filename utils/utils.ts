@@ -11,7 +11,6 @@ export const countDaysForAcceptance = (date: string | null | undefined) => {
 };
 
 export const formatDate = (date: Date | null) => {
-  console.log(date);
   if (!date) return '';
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 };

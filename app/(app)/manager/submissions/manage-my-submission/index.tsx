@@ -26,7 +26,6 @@ const MyOffersScreen = () => {
             setContentLoading(true);
             getSubmissionManager()
                 .then(res => {
-                    console.log(res);
                     setSubmissions(res);
                 })
                 .finally(() => {

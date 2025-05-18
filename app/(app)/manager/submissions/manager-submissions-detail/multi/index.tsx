@@ -7,7 +7,7 @@ import {
     KeyboardAvoidingView,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {getMultiFightOfferById} from '@/service/service';
+import {getMultiFightOfferById, getMultiFightOfferByIdAndFighterId} from '@/service/service';
 import colors from '@/styles/colors';
 import ContentLoader from '@/components/ContentLoader';
 import {
@@ -34,7 +34,7 @@ export const ManagerMultiFightOfferDetailsScreen = () => {
     const [previousSubmission, setPreviousSubmission] = useState<
         SubmittedInformationOffer[]
     >([]);
-    const {offerId} = useLocalSearchParams<{ offerId: string }>();
+    const {offerId,fighterId} = useLocalSearchParams<{ offerId: string,fighterId:string}>();
 
     useFocusEffect(
         React.useCallback(() => {
@@ -45,8 +45,9 @@ export const ManagerMultiFightOfferDetailsScreen = () => {
 
     const getMultiFightOffer = () => {
         setContentLoader(true);
-        getMultiFightOfferById(offerId)
+        getMultiFightOfferByIdAndFighterId(offerId,fighterId)
             .then(res => {
+                console.log(res.submittedInformation);
                 setOffer(res.offer);
                 setFighter(res.fighter);
                 setSubmissionInformations(res.submittedInformation);

@@ -41,7 +41,6 @@ export const MessageSection = () => {
                             data.unreadCounts && data.unreadCounts[entityId] !== undefined
                                 ? data.unreadCounts[entityId]
                                 : 0;
-                        console.log(res);
                         convList.push({
                             id: docSnap.id,
                             conversationId: data.conversationId,

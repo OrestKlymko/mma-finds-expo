@@ -33,13 +33,13 @@ export const MultiFightOfferManagerTailoringCandidates = ({
                 }
                 }
             />
-            <ChatOfferComponent
+            {submittedInformation && submittedInformation[0].statusResponded === 'REJECTED' && <ChatOfferComponent
                 offer={offer}
                 avatar={offer.promotionAvatar}
                 receiverUserId={offer.promotionId}
                 senderName={offer.promotionName}
                 typeOffer={'Multi-fight contract'}
-            />
+            />}
             <MultiFightManagerTailoringStatus
                 offer={offer}
                 submittedInformation={submittedInformation}

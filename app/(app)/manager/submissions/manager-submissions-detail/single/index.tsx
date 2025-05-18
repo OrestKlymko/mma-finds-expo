@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {StyleSheet, ScrollView, View, Text} from 'react-native';
 import {useRoute, useFocusEffect} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {getExclusiveOfferInfoById} from '@/service/service';
+import {getExclusiveOfferInfoById, getExclusiveOfferInfoByIdAndFighterId} from '@/service/service';
 import colors from '@/styles/colors';
 
 import {
@@ -50,7 +50,7 @@ export const ManagerExclusiveOfferDetailsScreen = () => {
 
     const getExclusiveOfferInfo = () => {
         setContentLoading(true);
-        getExclusiveOfferInfoById(offerId,fighterId)
+        getExclusiveOfferInfoByIdAndFighterId(offerId,fighterId)
             .then(res => {
                 setOffer(res.offer);
                 setFighter(res.fighter);
