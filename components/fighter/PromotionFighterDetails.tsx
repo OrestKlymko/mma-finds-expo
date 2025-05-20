@@ -13,6 +13,7 @@ import {FighterManageButtonWithSendExclusiveOffer} from "@/components/fighter/Fi
 import {FighterLookingState} from "@/components/fighter/FighterLookingState";
 import {FighterCharacters} from "@/components/fighter/FighterCharacters";
 import {FighterDescription} from "@/components/fighter/FighterDescription";
+import {FighterSportScores} from "@/components/fighter/FighterSportScores";
 
 const PromotionFighterDetails = () => {
     const route = useRoute();
@@ -54,6 +55,7 @@ const PromotionFighterDetails = () => {
                 />
                 <FighterDescription description={fighter?.description} />
                 <FighterCharacters fighter={fighter} />
+                <FighterSportScores sportScore={fighter?.sportScore}/>
             </ScrollView>
         </KeyboardAvoidingView>
     );

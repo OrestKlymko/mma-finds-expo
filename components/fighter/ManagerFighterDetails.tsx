@@ -1,24 +1,23 @@
 import {KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View} from 'react-native'
 import React, {useCallback, useState} from 'react'
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import { FighterInfoResponse } from '@/service/response';
+import {FighterInfoResponse} from '@/service/response';
 import {useFocusEffect, useLocalSearchParams} from "expo-router";
-import { getFullInfoAboutFighter } from '@/service/service';
+import {getFullInfoAboutFighter} from '@/service/service';
 import ContentLoader from '../ContentLoader';
 import colors from "@/styles/colors";
 import GoBackButton from '../GoBackButton';
-import { FighterDescription } from './FighterDescription';
+import {FighterDescription} from './FighterDescription';
 import {FighterCharacters} from "@/components/fighter/FighterCharacters";
 import {ManageFighterHeaderAndButtons} from "@/components/fighter/ManageFighterHeaderAndButtons";
 import {ViewSubmissionButton} from "@/components/fighter/ViewSubmissionButton";
 import {SwitchLookingFight} from "@/components/fighter/SwitchLookingFight";
+import {FighterSportScores} from "@/components/fighter/FighterSportScores";
 
 const ManagerFighterDetails = () => {
-    // const route = useRoute();
     const insets = useSafeAreaInsets();
     const [fighter, setFighter] = useState<FighterInfoResponse | null>(null);
-    const { id } = useLocalSearchParams<{id: string}>()
-    // const {fighterId} = route.params as {fighterId: string};
+    const {id} = useLocalSearchParams<{ id: string }>()
     const [isFighterLookingFight, setIsFighterLookingFight] = useState(false);
     const [contentLoading, setContentLoading] = useState(false);
 
@@ -37,13 +36,13 @@ const ManagerFighterDetails = () => {
     );
 
     if (contentLoading) {
-        return <ContentLoader />;
+        return <ContentLoader/>;
     }
     return (
         <KeyboardAvoidingView
             style={{flex: 1, backgroundColor: colors.background}}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <GoBackButton />
+            <GoBackButton/>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -52,15 +51,16 @@ const ManagerFighterDetails = () => {
                     styles.container,
                     {paddingBottom: insets.bottom},
                 ]}>
-                <ManageFighterHeaderAndButtons fighter={fighter} />
-                <ViewSubmissionButton fighterId={id} />
+                <ManageFighterHeaderAndButtons fighter={fighter}/>
+                <ViewSubmissionButton fighterId={id}/>
                 <SwitchLookingFight
                     fighterId={id}
                     isFighterLookingFight={isFighterLookingFight}
                     setIsFighterLookingFight={setIsFighterLookingFight}
                 />
-                <FighterDescription description={fighter?.description} />
-                <FighterCharacters fighter={fighter} />
+                <FighterDescription description={fighter?.description}/>
+                <FighterCharacters fighter={fighter}/>
+                <FighterSportScores sportScore={fighter?.sportScore}/>
             </ScrollView>
         </KeyboardAvoidingView>
     );

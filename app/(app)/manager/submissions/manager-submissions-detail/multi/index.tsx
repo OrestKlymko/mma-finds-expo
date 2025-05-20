@@ -47,7 +47,6 @@ export const ManagerMultiFightOfferDetailsScreen = () => {
         setContentLoader(true);
         getMultiFightOfferByIdAndFighterId(offerId,fighterId)
             .then(res => {
-                console.log(res.submittedInformation);
                 setOffer(res.offer);
                 setFighter(res.fighter);
                 setSubmissionInformations(res.submittedInformation);

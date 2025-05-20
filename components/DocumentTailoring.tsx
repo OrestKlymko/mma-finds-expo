@@ -43,7 +43,6 @@ export const DocumentTailoring: React.FC<Props> = ({ kind, offer }) => {
         );
 
     const pickFileAndUpload = async (idx: number) => {
-        console.log(idx);
         try {
             updateRow(idx, { isLoading: true });
 

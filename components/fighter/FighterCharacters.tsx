@@ -20,9 +20,7 @@ export const FighterCharacters = ({fighter}: {fighter: FighterInfoResponse | nul
         },
         {label: 'Gym Name', value: fighter?.gymName},
         {label: 'Nationality', value: fighter?.nationality},
-        {label: 'Based In', value: fighter?.basedIn},
-        {label: 'Professional MMA Record', value: fighter?.proRecord},
-        {label: 'Amateur MMA Record', value: fighter?.amateurRecord},
+        {label: 'Based In', value: fighter?.countryName},
         {label: 'Foundation Style', value: fighter?.foundationStyle},
         {
           label: 'Tapology Link',

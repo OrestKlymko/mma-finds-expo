@@ -23,8 +23,8 @@ import OpponentDetailsSection from "@/components/offers/public/OpponentDetailsSe
 import colors from "@/styles/colors";
 import {ManagerOfferDetailFooter} from "@/components/submissions/ManagerOfferDetailFooter";
 import {useLocalSearchParams} from "expo-router";
-import {SuccessFeePaymentSection} from "@/components/offers/SuccessFeePaymentSection";
 import {RejectedReasonSection} from "@/components/submissions/RejectedReasonSection";
+import SuccessFeePaymentSection from "@/components/offers/SuccessFeePaymentSection";
 
 
 export const ManagerSubmissionDetailScreen = () => {

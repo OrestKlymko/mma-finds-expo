@@ -41,6 +41,7 @@ import SocialMediaModal from "@/components/SocialMediaModal";
 import {TapologyLinkInput} from '@/components/fighter/TapologyLinkInput';
 import MissingFieldsModal from "@/components/offers/MissingFieldsModal";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
+import {MultiSportRecordInputs, RecordsBySport} from "@/components/fighter/MultiSportRecordInputs";
 
 
 const CreateFightersProfileScreen = () => {
@@ -48,6 +49,7 @@ const CreateFightersProfileScreen = () => {
     const insets = useSafeAreaInsets();
     const [minWeight, setMinWeight] = useState('');
     const [maxWeight, setMaxWeight] = useState('');
+    const [sportRecords, setSportRecords] = useState<RecordsBySport>({});
 
     // Фото бійця
     const [profileImage, setProfileImage] = useState<Photo | null>(null);
@@ -85,15 +87,6 @@ const CreateFightersProfileScreen = () => {
     const [selectedSportTypes, setSelectedSportTypes] = useState<
         SportTypeResponse[]
     >([]);
-
-    // Records
-    const [proWins, setProWins] = useState('');
-    const [proLoss, setProLoss] = useState('');
-    const [proDraw, setProDraw] = useState('');
-    const [amWins, setAmWins] = useState('');
-    const [amLoss, setAmLoss] = useState('');
-    const [amDraw, setAmDraw] = useState('');
-
     // Foundation Style
     const [foundationStyle, setFoundationStyle] =
         useState<FoundationStyleResponse>();
@@ -133,9 +126,13 @@ const CreateFightersProfileScreen = () => {
         if (!nationality) missing.push('Nationality');
         if (!foundationStyle) missing.push('Foundation Style');
         if (!selectedSportTypes.length) missing.push('Sport Types');
+        selectedSportTypes.forEach(st => {
+            const r = sportRecords[st.id];
+            if (!r || !r.proWins || !r.proLoss || !r.proDraw) missing.push(`${st.name} – professional record`);
+            if (!r || !r.amWins || !r.amLoss || !r.amDraw) missing.push(`${st.name} – amateur record`);
+        });
+
         if (!minWeight || !maxWeight) missing.push('Min/Max Weight');
-        if (!proWins || !proLoss || !proDraw)
-            missing.push('Professional Record');
         if (noTapologyLink && !tapologyLink)
             missing.push('Tapology Link');
         return missing;
@@ -190,12 +187,6 @@ const CreateFightersProfileScreen = () => {
         formData.append('heightMetrics', heightUnit);
         formData.append('reachMetrics', reachUnit);
         formData.append('gymName', gymName);
-        formData.append('professionalMmaRecordWin', proWins);
-        formData.append('professionalMmaRecordLoss', proLoss);
-        formData.append('professionalMmaRecordDraw', proDraw);
-        formData.append('amateurMmaRecordWin', amWins === '' ? '0' : amWins);
-        formData.append('amateurMmaRecordLoss', amLoss === '' ? '0' : amLoss);
-        formData.append('amateurMmaRecordDraw', amDraw === '' ? '0' : amDraw);
         formData.append('tapologyLink', noTapologyLink ? '' : tapologyLink);
         formData.append('sherdogLink', sherdogLink);
         formData.append('description', aboutFighter);
@@ -225,6 +216,17 @@ const CreateFightersProfileScreen = () => {
         formData.append('minWeight', minWeight);
         formData.append('maxWeight', maxWeight);
         formData.append('fighterEmail', emailFighter.toLowerCase());
+        Object.entries(sportRecords).forEach(([sportId, rec]) => {
+            formData.append('sportsScore', JSON.stringify({
+                sportTypeId: sportId,
+                proWins:  rec.proWins,
+                proLoss:  rec.proLoss,
+                proDraw:  rec.proDraw,
+                amWins:   rec.amWins,
+                amLoss:   rec.amLoss,
+                amDraw:   rec.amDraw,
+            }));
+        });
 
         createFighter(formData)
             .then(() => {
@@ -410,27 +412,23 @@ const CreateFightersProfileScreen = () => {
                     error={basedIn === ''}
                 />
 
+                {/* Sport Style* */}
+                <SportTypeMultiSelectDropdown
+                    selectedSportTypes={selectedSportTypes}
+                    setSelectedSportTypes={setSelectedSportTypes}
+                    hasSubmitted={hasSubmitted}
+                />
                 {/* Professional MMA Record* */}
-                <ProfessionalRecordInputs
-                    proWins={proWins}
-                    setProWins={setProWins}
-                    proLoss={proLoss}
-                    setProLoss={setProLoss}
-                    proDraw={proDraw}
-                    setProDraw={setProDraw}
+                <MultiSportRecordInputs
+                    selectedSportTypes={selectedSportTypes}
+                    records={sportRecords}
+                    setRecords={setSportRecords}
                     hasSubmitted={hasSubmitted}
                 />
 
-                <AmateurRecordInputs
-                    amWins={amWins}
-                    setAmWins={setAmWins}
-                    amLoss={amLoss}
-                    setAmLoss={setAmLoss}
-                    amDraw={amDraw}
-                    setAmDraw={setAmDraw}
-                />
 
                 {/* Foundation Style* */}
+
 
                 <FoundationStyleDropdown
                     foundationStyle={foundationStyle}
@@ -438,12 +436,6 @@ const CreateFightersProfileScreen = () => {
                     hasSubmitted={hasSubmitted}
                 />
 
-                {/* Sport Style* */}
-                <SportTypeMultiSelectDropdown
-                    selectedSportTypes={selectedSportTypes}
-                    setSelectedSportTypes={setSelectedSportTypes}
-                    hasSubmitted={hasSubmitted}
-                />
 
                 <TapologyLinkInput
                     tapologyLink={tapologyLink}

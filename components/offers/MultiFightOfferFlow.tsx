@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Alert, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {getFullInfoAboutFighter} from '@/service/service';
 import colors from '@/styles/colors';
 import FloatingLabelInput from '@/components/FloatingLabelInput';
@@ -47,6 +47,7 @@ const MultiFightOfferFlow = ({fighterId}: MultiFightOfferFlowProps) => {
         isExclusive,
     } = useSelector((state: RootState) => state.createMultiContractOffer);
     const [hasSubmit, setHasSubmit] = useState(false);
+    const state = useSelector((state: RootState) => state.createMultiContractOffer);
     const [errorWeightClass, setErrorWeightClass] = useState(false);
     const [isDatePickerVisible, setDatePickerVisible] = useState(false);
     const [isSaveDocumentModalVisible, setSaveDocumentModalVisible] =
@@ -63,7 +64,6 @@ const MultiFightOfferFlow = ({fighterId}: MultiFightOfferFlowProps) => {
     }, [fighterId]);
 
     const handleContinue = (shouldSaveDocumentToProfile: boolean) => {
-        const state = useSelector((state: RootState) => state.createMultiContractOffer);
 
         if (!state.fighterId) {
             Alert.alert('Please select a fighter.');

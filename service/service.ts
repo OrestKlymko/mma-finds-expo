@@ -41,9 +41,7 @@ import {
     EventCreationResponse,
     EventDetailsResponse,
     EventTaskResponse,
-    FeatureResponse,
-    FighterFullProfile,
-    FighterInfoResponse,
+    FeatureResponse, FighterInfoResponse,
     FilterPublicOfferManagerResponse,
     FilterPublicOfferPromotionResponse,
     FoundationStyleResponse,
@@ -489,9 +487,6 @@ export const getMultiFightOfferByIdAndFighterId = (offerId: string, fighterId: s
 
 export const getAllPromotionName = (): Promise<PromotionNameResponse[]> =>
     request<PromotionNameResponse[]>('/promotion/all-name', {method: 'GET'});
-
-export const getUpdateFighter = (fighterId: string): Promise<FighterFullProfile> =>
-    request<FighterFullProfile>(`/fighter/edit/${fighterId}`, {method: 'GET'});
 
 export const updateFighter = (fighterId: string, data: FormData): Promise<any> =>
     request<any>(`/fighter/${fighterId}`, {method: 'PUT', body: data});
