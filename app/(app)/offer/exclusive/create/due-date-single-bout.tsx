@@ -138,7 +138,7 @@ const ExclusiveOfferDueDateScreen = () => {
                 <Text style={styles.title}>Set a Due Date!</Text>
 
                 <Text style={styles.subtitle}>
-                    Choose a deadline for the fighter or their team to confirm or reject
+                    Choose a deadline for fighters’ representative to confirm or reject
                     your exclusive offer.
                 </Text>
 

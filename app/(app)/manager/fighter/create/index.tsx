@@ -256,7 +256,7 @@ const CreateFightersProfileScreen = () => {
             setEmailAvailable(null);
             return;
         }
-        checkExistFighterByEmail({criteria: emailFighter})
+        checkExistFighterByEmail({criteria: emailFighter.toLowerCase()})
             .then((data: CheckCriteriaExistResponse) => {
                 setEmailAvailable(!data.existEntity);
             })

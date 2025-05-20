@@ -192,6 +192,7 @@ export type ShortInfoFighter = {
   rejectedReason?: string;
   feePayment: string;
   fighterStateApprove?: 'ACTIVE'|'INACTIVE';
+  verificationState: VerificationState;
 };
 
 export type CreatePaymentIntentResponse = {

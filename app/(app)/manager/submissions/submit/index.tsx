@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import {
     View,
     Text,
@@ -20,7 +20,13 @@ import {useLocalSearchParams} from "expo-router";
 const SubmitFighterOfferScreen: React.FC = () => {
     const params = useLocalSearchParams();
     const offer = JSON.parse(params.offer as string) as PublicOfferInfo;
-    const submittedFighters = JSON.parse(params.submittedFighters as string) as ShortInfoFighter[];
+    const submittedFighters = useMemo<ShortInfoFighter[]>(() => {
+        return JSON.parse(params.submittedFighters as string);
+    }, [params.submittedFighters]);
+
+    const submittedIds = useMemo<string[]>(() => {
+        return submittedFighters.map(f => f.id);
+    }, [submittedFighters]);
     const [offerToSubmit, setOfferToSubmit] = useState<PublicOfferInfo | null>(
         null,
     );
@@ -30,20 +36,16 @@ const SubmitFighterOfferScreen: React.FC = () => {
     const [isMainVisible, setIsMainVisible] = useState(true);
     const [isFeatureModalVisible, setFeatureModalVisible] = useState(false);
     const [isFightersModalVisible, setFightersModalVisible] = useState(false);
-    const [fighters, setFighters] = useState<any[]>([]); // or a typed array if you have a Fighter interface
+    const [fighters, setFighters] = useState<ShortInfoFighter[]>([]); // or a typed array if you have a Fighter interface
 
 
     useEffect(() => {
         getShortInfoFightersByManager().then(response => {
-            const alreadySubmittedId = submittedFighters.map(
-                (fighter: any) => fighter.id,
-            );
-            response = response.filter(
-                (fighter: any) => !alreadySubmittedId.includes(fighter.id),
-            );
-            setFighters(response);
+            const filtered = response.filter(f => !submittedIds.includes(f.id));
+            setFighters(filtered);
         });
-    }, [submittedFighters]);
+    }, [submittedIds]);
+
 
     const openFightersModal = () => {
         setFightersModalVisible(true);
@@ -53,7 +55,14 @@ const SubmitFighterOfferScreen: React.FC = () => {
         setFightersModalVisible(false);
     };
 
-    const selectFighter = (fighter: any) => {
+    const selectFighter = (fighter: ShortInfoFighter) => {
+        if (fighter.verificationState !== 'APPROVED') {
+            Alert.alert(
+                'Fighter not approved',
+                'This fighter is not approved yet. Please choose another one.',
+            );
+            return;
+        }
         setFighterId(fighter.id);
         setFighterName(fighter.name);
         closeFightersModal();
