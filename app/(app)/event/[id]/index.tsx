@@ -142,7 +142,7 @@ export const EventFullInfoScreen = () => {
                         <TouchableOpacity
                             onPress={() =>
                                 Alert.alert(
-                                    'Create and send public fight offers to attract fighters worldwide. The offer is visible to all managers in our database.',
+                                    'Create and send public fight offers to attract fighters worldwide.',
                                 )
                             }>
                             <Icon name="information-outline" size={20} color={colors.white}/>
@@ -159,7 +159,7 @@ export const EventFullInfoScreen = () => {
                         <TouchableOpacity
                             onPress={() =>
                                 Alert.alert(
-                                    'Create and send an exclusive fight offer tailored to a specific fighter, whether for a single bout or a multi-fight contract. The offer is visible only to the fighter’s manager.',
+                                    'Create and send an exclusive fight offer tailored to a specific fighter, whether for a single bout or a multi-fight contract. The offer is visible only to the fighters’ representative.',
                                 )
                             }>
                             <Icon name="information-outline" size={20} color={colors.white}/>

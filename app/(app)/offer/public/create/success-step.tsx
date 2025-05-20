@@ -20,7 +20,7 @@ const SuccessCreatePublicOfferScreen: React.FC = () => {
             </Text>
 
             <Text style={styles.description}>
-                Your fight offer has been successfully published. Get ready to receive submissions from the best fighters around!
+                Your fight offer has been successfully published. Get ready to receive submissions from fighter representatives!
             </Text>
 
             <TouchableOpacity

@@ -12,13 +12,16 @@ interface FighterCardProps {
 
 const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress}) => {
     const isRejected = fighter?.contractStatus === 'REJECTED';
-    const shortCountry = ()=>{
-        if(fighter?.country?.length>25){
-            return fighter?.country?.slice(0, 25) + '...'
-        }else {
-            return fighter?.country
+    const isUnverified = fighter?.verificationState !== 'APPROVED';
+
+    const shortCountry = () => {
+        if (fighter?.country?.length > 25) {
+            return fighter.country.slice(0, 25) + '...';
+        } else {
+            return fighter.country;
         }
-    }
+    };
+
     return (
         <View style={{position: 'relative'}}>
             <TouchableOpacity
@@ -27,9 +30,12 @@ const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress}) => {
                         onPress(fighter);
                     }
                 }}
-                activeOpacity={isRejected ? 1 : 0.7}
+                activeOpacity={isRejected || (isUnverified && fighter.verificationState) ? 1 : 0.7}
                 disabled={isRejected}
-                style={[styles.fighterCard, isRejected && {opacity: 0.5}]}>
+                style={[
+                    styles.fighterCard,
+                    (isRejected || (isUnverified && fighter.verificationState)) && {opacity: 0.5}
+                ]}>
                 <Ionicons
                     name="chevron-forward"
                     size={30}
@@ -73,9 +79,19 @@ const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress}) => {
                 </View>
             </TouchableOpacity>
 
+            {/* Show overlay for rejected */}
             {isRejected && fighter?.rejectedReason && (
                 <View style={styles.rejectedOverlay}>
-                    <Text style={styles.rejectedText}>{fighter?.rejectedReason}</Text>
+                    <Text style={styles.rejectedText}>{fighter.rejectedReason}</Text>
+                </View>
+            )}
+
+            {/* Show overlay for unverified */}
+            {fighter.verificationState && isUnverified && !isRejected && (
+                <View style={styles.unverifiedOverlay}>
+                    <Text style={styles.unverifiedText}>
+                        Not verified yet. Please contact him for verification.
+                    </Text>
                 </View>
             )}
         </View>
@@ -144,6 +160,21 @@ const styles = StyleSheet.create({
         color: colors.darkError,
         fontSize: 12,
         fontWeight: '600',
+    },
+    unverifiedOverlay: {
+        position: 'absolute',
+        top: '25%',
+        left: '5%',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        borderRadius: 6,
+        maxWidth: '100%',
+    },
+    unverifiedText: {
+        color: colors.darkError,
+        fontSize: 12,
+        fontWeight: '500',
     },
     arrowIcon: {
         position: 'absolute',
