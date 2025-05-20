@@ -67,10 +67,6 @@ const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress}) => {
                         <Text style={styles.fighterInfoValue}>{shortCountry()}</Text>
                     </View>
                     <View style={{flexDirection: 'row'}}>
-                        <Text style={styles.fighterInfo}>Professional MMA Record: </Text>
-                        <Text style={styles.fighterInfoValue}>{fighter?.statistics}</Text>
-                    </View>
-                    <View style={{flexDirection: 'row'}}>
                         <Text style={styles.fighterInfo}>Foundation Style: </Text>
                         <Text style={styles.fighterInfoValue}>
                             {fighter?.foundationStyle}

@@ -21,7 +21,14 @@ import {
     WeightClassResponse
 } from '@/service/response';
 import {Photo} from "@/models/model";
-import {getFoundationStyles, getNationalities, getSportTypes, getUpdateFighter, getWeightClasses, updateFighter } from '@/service/service';
+import {
+    getFoundationStyles,
+    getFullInfoAboutFighter,
+    getNationalities,
+    getSportTypes,
+    getWeightClasses,
+    updateFighter
+} from '@/service/service';
 import colors from '@/styles/colors';
 import GoBackButton from '@/components/GoBackButton';
 import { ImageSelectorComponent } from '@/components/ImageSelectorComponent';
@@ -144,7 +151,7 @@ const EditFightersProfileScreen = () => {
     // --- 2) Load the fighter to update
     useEffect(() => {
         if (id) {
-            getUpdateFighter(id)
+            getFullInfoAboutFighter(id)
                 .then(data => {
                     setFighter(data);
                 })

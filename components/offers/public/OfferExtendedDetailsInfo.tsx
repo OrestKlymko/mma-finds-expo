@@ -15,6 +15,7 @@ const OfferExtendedDetailsInfo = ({offer, benefits}: Prop) => {
     const [moreInfoVisible, setMoreInfoVisible] = useState(false);
 
     const details = [
+        {label: 'Sport', value: offer?.sportType},
         {
             label: 'Rules',
             value: offer?.mmaRules === 'PROFESSIONAL' ? 'Professional' : 'Amateur',
@@ -81,6 +82,7 @@ const OfferExtendedDetailsInfo = ({offer, benefits}: Prop) => {
                         {label: 'Minimum Fights', value: offer?.minFights},
                         {label: 'Maximum Fights', value: offer?.maxFights},
                         {label: 'Minimum Win/Loss Ratio', value: offer?.winLoseCount},
+                        {label: 'Fight Length', value: offer?.rounds+' Rounds '+": "+offer.minutes+' Minutes'},
                         {label: 'Additional Information', value: offer?.description},
                     ]
                         .filter(

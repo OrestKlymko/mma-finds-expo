@@ -1,5 +1,5 @@
-import {useEffect, useState} from 'react';
-import React, {Alert, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import colors from '@/styles/colors';
 import {getEventById, getFullInfoAboutFighter} from '@/service/service';
 import {useDispatch, useSelector} from 'react-redux';
@@ -84,6 +84,7 @@ export function SingleBoutOfferFlow({
     } = useSelector((state: RootState) => state.createExclusiveOffer);
     const dispatch = useDispatch();
     const [noTapologyLink, setNoTapologyLink] = useState(false);
+    const state = useSelector((state: RootState) => state.createExclusiveOffer);
     const [hasSubmit, setHasSubmit] = useState(false);
     const [errorWeightClass, setErrorWeightClass] = useState(false);
     const [errorTapologyLink, setErrorTapologyLink] = useState(false);
@@ -122,7 +123,7 @@ export function SingleBoutOfferFlow({
     }, [eventId, fighterId, dispatch]);
 
     const handleContinue = (shouldSaveDocumentToProfile: boolean) => {
-        const state = useSelector((state: RootState) => state.createExclusiveOffer);
+
 
         if (!state.fighterId) {
             Alert.alert('Please select a fighter.');

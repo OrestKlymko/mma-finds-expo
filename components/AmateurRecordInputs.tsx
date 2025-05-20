@@ -11,6 +11,7 @@ interface Props {
     amDraw: string;
     setAmDraw: (val: string) => void;
     sportType?: string;
+    hasSubmitted: boolean;
 }
 
 export const AmateurRecordInputs = ({
@@ -21,14 +22,17 @@ export const AmateurRecordInputs = ({
                                         amDraw,
                                         setAmDraw,
                                         sportType,
+                                        hasSubmitted
                                     }: Props) => {
     return (
         <>
-            <Text style={styles.sectionTitle}>Amateur {sportType} Record</Text>
+            <Text style={styles.sectionTitle}>Amateur {sportType} Record*</Text>
             <View style={styles.recordRow}>
                 <FloatingLabelInput
                     label="Win"
                     value={amWins}
+                    isRequired={true}
+                    hasSubmitted={hasSubmitted}
                     onChangeText={setAmWins}
                     containerStyle={styles.recordInput}
                     keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
@@ -36,6 +40,8 @@ export const AmateurRecordInputs = ({
                 <FloatingLabelInput
                     label="Loss"
                     value={amLoss}
+                    isRequired={true}
+                    hasSubmitted={hasSubmitted}
                     onChangeText={setAmLoss}
                     containerStyle={styles.recordInput}
                     keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
@@ -43,6 +49,8 @@ export const AmateurRecordInputs = ({
                 <FloatingLabelInput
                     label="Draw"
                     value={amDraw}
+                    isRequired={true}
+                    hasSubmitted={hasSubmitted}
                     onChangeText={setAmDraw}
                     containerStyle={styles.recordInput}
                     keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
