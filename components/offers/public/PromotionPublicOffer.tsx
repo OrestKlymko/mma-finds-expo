@@ -18,6 +18,7 @@ import OfferExtendedDetailsInfo from "@/components/offers/public/OfferExtendedDe
 import OpponentDetailsSection from "@/components/offers/public/OpponentDetailsSection";
 import {PromotionTailoringProcess} from "@/components/offers/public/PromotionTailoringProcess";
 import {useFocusEffect, useLocalSearchParams, useRouter} from "expo-router";
+import SuccessFeePaymentSection from "@/components/offers/SuccessFeePaymentSection";
 
 
 export const PromotionOfferDetailsScreen = () => {
@@ -63,6 +64,23 @@ export const PromotionOfferDetailsScreen = () => {
         }
     };
 
+    const renderFooter = () => {
+        if(submittedInformation&&submittedInformation.statusResponded === 'ACCEPTED'&&offer){
+            return  <SuccessFeePaymentSection offerId={offer.offerId} submittedInformation={submittedInformation}/>
+        }
+        if(fighters &&
+        offer &&
+        submittedInformation &&
+        submittedInformation?.statusResponded !== 'REJECTED') {
+            return <PromotionTailoringProcess
+                fighters={fighters}
+                offer={offer}
+                submittedInformation={submittedInformation}
+                previousInfo={previousInfo}
+            />
+        }
+        return <SubmittedFightersSection offer={offer} fighters={fighters}/>
+    }
     if (contentLoading) {
         return <ContentLoader/>;
     }
@@ -92,19 +110,7 @@ export const PromotionOfferDetailsScreen = () => {
                 )}
                 <OfferExtendedDetailsInfo offer={offer} benefits={benefits}/>
                 <OpponentDetailsSection offer={offer}/>
-                {fighters &&
-                offer &&
-                submittedInformation &&
-                submittedInformation?.statusResponded !== 'REJECTED' ? (
-                    <PromotionTailoringProcess
-                        fighters={fighters}
-                        offer={offer}
-                        submittedInformation={submittedInformation}
-                        previousInfo={previousInfo}
-                    />
-                ) : (
-                    <SubmittedFightersSection offer={offer} fighters={fighters}/>
-                )}
+                {renderFooter()}
             </View>
         </ScrollView>
     );
