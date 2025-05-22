@@ -1,8 +1,8 @@
 import React, {useCallback, useState} from 'react';
-import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import colors from '@/styles/colors';
 import GoBackButton from '@/components/GoBackButton';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
 import {getExclusiveOffers, getMultiFightOffers, getPublicOffers,} from '@/service/service';
 import {useFilter} from '@/context/FilterContext';
@@ -74,17 +74,9 @@ const PromotionMyOfferList = () => {
         return <ContentLoader />;
     }
     return (
-        <SafeAreaView
-            style={[
-                styles.safeArea,
-                {
-                    paddingTop: insets.top,
-                    paddingBottom: insets.bottom,
-                },
-            ]}>
-        <ScrollView style={{flex: 1, backgroundColor: colors.white, marginBottom: insets.bottom}}>
+        <View style={{flex: 1, backgroundColor: colors.white}}>
             <GoBackButton/>
-            <View style={[styles.container]}>
+            <View style={[styles.container, {marginBottom: insets.bottom + 200}]}>
                 <Text style={styles.title}>My Offers</Text>
                 <Text style={styles.subtitle}>
                     View all of your fight offers in one place.
@@ -108,17 +100,13 @@ const PromotionMyOfferList = () => {
                     setFilteredMultiContractOffers={setFilteredMultiContractOffers}
                 />
             </View>
-        </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 };
 
 export default PromotionMyOfferList;
 
 const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-    },
     container: {
         flex: 1,
         backgroundColor: colors.white,

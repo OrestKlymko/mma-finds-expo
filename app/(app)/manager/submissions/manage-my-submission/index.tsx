@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
 import {SubmissionTabType} from "@/types/submission";
 import {OfferSubmissionResponse} from "@/service/request";
@@ -38,15 +38,6 @@ const MyOffersScreen = () => {
         return <ContentLoader />;
     }
     return (
-        <SafeAreaView
-            style={[
-                styles.safeArea,
-                {
-                    paddingTop: insets.top,
-                    paddingBottom: insets.bottom,
-                    marginBottom: 65,
-                },
-            ]}>
         <View style={{flex: 1, backgroundColor: colors.background}}>
             <GoBackButton />
             <View style={[styles.container, {paddingBottom: insets.bottom}]}>
@@ -64,14 +55,12 @@ const MyOffersScreen = () => {
                 <SubmissionList filteredSubmission={filteredSubmissions} />
             </View>
         </View>
-        </SafeAreaView>
     );
 };
 
 export default MyOffersScreen;
 
 const styles = StyleSheet.create({
-    safeArea: {flex:1},
     container: {
         flex: 1,
         backgroundColor: colors.white,

@@ -7,7 +7,7 @@ import {
     StyleSheet,
     ScrollView,
 } from 'react-native';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
 import {PublicOfferInfo} from '@/service/response';
 import {useRouter} from 'expo-router';
@@ -127,15 +127,6 @@ const FighterOfferFeedScreen = () => {
     };
 
     return (
-        <SafeAreaView
-            style={[
-                styles.safeArea,
-                {
-                    paddingTop: insets.top,
-                    paddingBottom: insets.bottom,
-                    marginBottom: 65,
-                },
-            ]}>
         <View style={{flex: 1, backgroundColor: colors.background}}>
             <GoBackButton specificScreen={'/(app)/(tabs)'}/>
             <View style={[styles.container, {paddingBottom: insets.bottom}]}>
@@ -170,16 +161,12 @@ const FighterOfferFeedScreen = () => {
                 {renderContent()}
             </View>
         </View>
-        </SafeAreaView>
     );
 };
 
 export default FighterOfferFeedScreen;
 
 const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-    },
     container: {
         flex: 1,
         backgroundColor: colors.white,
