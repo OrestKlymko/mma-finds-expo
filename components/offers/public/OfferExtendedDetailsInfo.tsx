@@ -81,7 +81,7 @@ const OfferExtendedDetailsInfo = ({offer, benefits}: Prop) => {
                         {label: 'Based In', value: offer?.country},
                         {label: 'Minimum Fights', value: offer?.minFights},
                         {label: 'Maximum Fights', value: offer?.maxFights},
-                        {label: 'Minimum Win/Loss Ratio', value: offer?.winLoseCount},
+                        {label: 'Minimum Win/Loss Ratio', value: offer?.winLoseCount.replace(' - ', ' : ')},
                         {label: 'Fight Length', value: offer?.rounds+' Rounds '+": "+offer.minutes+' Minutes'},
                         {label: 'Additional Information', value: offer?.description},
                     ]

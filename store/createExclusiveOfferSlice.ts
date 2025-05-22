@@ -57,7 +57,7 @@ type Event = {
 };
 
 const initialState: OfferData = {
-  mmaRule: 'Amateur',
+  mmaRule: 'Professional',
   isTitleFight: false,
   currency: 'EUR',
   purseValues: {
