@@ -166,10 +166,6 @@ export const EventFullInfoScreen = () => {
                         </TouchableOpacity>
                     </TouchableOpacity>
                 </View>
-
-                <TouchableOpacity onPress={() => handleBack()}>
-                    <Text style={styles.maybeLaterText}>Maybe Later</Text>
-                </TouchableOpacity>
             </View>
         );
     };
