@@ -94,6 +94,7 @@ const CreatePublicOfferSecondStepScreen = () => {
             !weightClass ||
             !minFights ||
             !maxFights ||
+            !gender ||
             (!noTapologyLink && !opponentTapology)
         ) {
             Alert.alert('Please fill all required fields');
@@ -119,7 +120,7 @@ const CreatePublicOfferSecondStepScreen = () => {
                     <Text style={styles.headerRoboto}>Fighter Requirements</Text>
 
                     <Gender
-                        gender={gender || ''}
+                        gender={gender!}
                         hasSubmitted={hasSubmit}
                         setGender={g => dispatch(setGender(g))}
                     />
@@ -192,7 +193,7 @@ const CreatePublicOfferSecondStepScreen = () => {
                         noTapologyLink={noTapologyLink}
                         opponentName={opponentName ?? ''}
                         opponentAge={opponentAge ?? ''}
-                        opponentGender={opponentGender ?? ''}
+                        opponentGender={opponentGender}
                         nationality={opponentNationality ?? null}
                         proDraw={proDraw ?? ''}
                         proLoss={proLoss ?? ''}

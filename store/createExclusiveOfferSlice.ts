@@ -38,7 +38,7 @@ export type OfferData = {
   amateurWin?: string;
   amateurLoss?: string;
   amateurDraw?: string;
-  opponentGender?: string;
+  opponentGender: string;
   opponentAge?: string;
   opponentNationality?: NationalityResponse;
   opponentCountry?: string;
@@ -70,6 +70,7 @@ const initialState: OfferData = {
     rounds: 3,
   },
   opponentName: '',
+  opponentGender: '',
   fighterId: '',
   fighterName: '',
   event: {
