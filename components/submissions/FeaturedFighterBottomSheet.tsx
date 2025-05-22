@@ -223,7 +223,7 @@ export const FeatureFighterBottomSheet = ({
                                     router.navigate(`/manager/fighter/${fighterId}`);
                                 }}>
                                 <Text style={styles.modalSecondaryButtonText}>
-                                    Show info about fighter
+                                    Show Fighter's Profile
                                 </Text>
                             </TouchableOpacity>
                             {renderChangeStateSubmission()}
