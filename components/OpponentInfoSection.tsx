@@ -147,11 +147,12 @@ const OpponentInfoSection: React.FC<OpponentInfoSectionProps> = ({
                             setAmWins={setAmWins}
                             setAmLoss={setAmLoss}
                             setAmDraw={setAmDraw}
+                            hasSubmitted={hasSubmitted}
                         />
                     )}
 
                     <Gender
-                        title="Opponent's gender"
+                        title="Opponent's gender*"
                         gender={opponentGender}
                         hasSubmitted={hasSubmitted}
                         setGender={g => setOpponentGender(g)}

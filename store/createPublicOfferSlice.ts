@@ -39,7 +39,7 @@ export type OfferData = {
   amateurWin?: string;
   amateurLoss?: string;
   amateurDraw?: string;
-  opponentGender?: string;
+  opponentGender: string;
   opponentAge?: string;
   opponentNationality?: NationalityResponse;
   opponentCountry?: string;
@@ -64,7 +64,7 @@ const initialState: OfferData = {
   sportType: undefined,
   showToAllManagers: false,
   fightLength: {minutes: 5, rounds: 3},
-
+  opponentGender: ''
 };
 
 const createPublicOfferSlice = createSlice({
