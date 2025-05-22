@@ -48,7 +48,7 @@ export type OfferData = {
 };
 
 const initialState: OfferData = {
-  mmaRule: 'Amateur',
+  mmaRule: 'Professional',
   isTitleFight: false,
   purseType: 'Between',
   purseValues: {from: '', to: ''},

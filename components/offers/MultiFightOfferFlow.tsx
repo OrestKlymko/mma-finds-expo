@@ -136,7 +136,7 @@ const MultiFightOfferFlow = ({fighterId}: MultiFightOfferFlowProps) => {
             />
 
             <FloatingLabelInput
-                label="Months*"
+                label="Contract Duration (Months)*"
                 value={months ?? ''}
                 hasSubmitted={hasSubmit}
                 isRequired={true}

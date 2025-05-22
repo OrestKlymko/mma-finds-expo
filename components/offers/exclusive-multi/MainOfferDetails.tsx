@@ -17,7 +17,7 @@ export const MainOfferDetails = ({offer}: Props) => {
                 <View style={styles.offerDetailsCard}>
                     {/* Активність пропозиції */}
                     <View style={styles.infoRow}>
-                        <Text style={styles.infoLabel}>Duration:</Text>
+                        <Text style={styles.infoLabel}>Contact Duration (Months):</Text>
                         <Text style={styles.infoValue}>
                             {offer?.durationContractMonth} Months
                         </Text>
