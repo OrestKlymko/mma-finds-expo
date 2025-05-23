@@ -69,10 +69,11 @@ export const OfferList =
                 scrollEnabled={!blockScroll}
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={!horizontal ? {paddingBottom: 100} : {}}
+                contentContainerStyle={!horizontal ? {paddingBottom: 150} : {}}
+                ItemSeparatorComponent={!horizontal ? () => <View style={{ height: 15 }} /> : () => <></>}
                 ListFooterComponent={
                     footerButton ? (
-                        <View style={{marginTop: 5}}>{footerButton}</View>
+                        <View style={{marginTop: 15}}>{footerButton}</View>
                     ) : null
                 }
             />

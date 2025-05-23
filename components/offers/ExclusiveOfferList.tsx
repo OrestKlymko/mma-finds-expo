@@ -50,7 +50,8 @@ export const ExclusiveOfferList: React.FC<OfferListProps> =
                 renderItem={renderItem}
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={!horizontal ? {paddingBottom: 100} : {}}
+                contentContainerStyle={!horizontal ? {paddingBottom: 150} : {}}
+                ItemSeparatorComponent={!horizontal ? () => <View style={{ height: 15 }} /> : () => <></>}
                 ListFooterComponent={
                     footerButton ? (
                         <View style={{marginTop: 5}}>{footerButton}</View>
