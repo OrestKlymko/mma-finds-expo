@@ -462,6 +462,7 @@ const CreateFightersProfileScreen = () => {
                     value={aboutFighter}
                     onChangeText={setAboutFighter}
                     containerStyle={styles.inputContainer}
+                    multiline={true}
                 />
                 <Text style={styles.sectionTitle}>
                     Preferred Weight Range for Offers*

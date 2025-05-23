@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Animated, StyleSheet, Text, TextInput, TextInputProps, View,} from 'react-native';
+import {Animated, StyleSheet, Text, TextInput, TextInputProps, TouchableOpacity, View, TextInput as RNTextInput} from 'react-native';
 import colors from "@/styles/colors";
 
 
@@ -25,11 +25,11 @@ const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
                                                                  isRequired = false,
                                                                  hasSubmitted = false,
                                                                  maxLength,
+                                                                  multiline = false,
                                                                  ...props
                                                                }) => {
   const [isFocused, setIsFocused] = useState(false);
   const labelPosition = useRef(new Animated.Value(value ? 1 : 0)).current;
-
   const hasError = isRequired && hasSubmitted && !value.trim();
 
   useEffect(() => {
@@ -39,6 +39,14 @@ const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
       useNativeDriver: false,
     }).start();
   }, [isFocused, value]);
+
+  const inputRef = useRef<RNTextInput>(null);
+
+  useEffect(() => {
+    if (isFocused && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isFocused]);
 
   const animatedLabelStyle = {
     top: labelPosition.interpolate({
@@ -63,18 +71,28 @@ const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
       <Animated.Text style={[styles.label, animatedLabelStyle, labelStyle]}>
         {label}
       </Animated.Text>
-
-      <TextInput
-        style={[styles.input, hasError && styles.errorText]}
-        value={value}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        multiline={!secureTextEntry}
-        onChangeText={handleChange}
-        secureTextEntry={secureTextEntry}
-        {...props}
-      />
-
+      { isFocused ?
+        <TextInput
+            ref={inputRef}
+            style={[styles.input, hasError && styles.errorText]}
+            value={value}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            multiline={multiline && !secureTextEntry}
+            onChangeText={handleChange}
+            secureTextEntry={secureTextEntry}
+            {...props}
+        /> :  <TouchableOpacity onPress={() => setIsFocused(true)}>
+            {!multiline ?
+              <Text style={[styles.input, hasError && styles.errorText]} numberOfLines={1} ellipsizeMode="tail">
+                {value}
+              </Text> :
+                <Text style={[styles.input, hasError && styles.errorText]} ellipsizeMode="tail">
+                  {value}
+                </Text>
+            }
+          </TouchableOpacity>
+      }
       {maxLength !== undefined && (
         <Text style={styles.charCount}>
           {value.length} / {maxLength}

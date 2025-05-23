@@ -1105,6 +1105,7 @@ const BenefitBottomSheet = ({
                                     value={customOption}
                                     onChangeText={setCustomOption}
                                     onFocus={handleCustomOptionFocus}
+                                    multiline={true}
                                 />
                             </View>
 

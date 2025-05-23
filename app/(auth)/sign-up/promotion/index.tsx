@@ -178,6 +178,7 @@ const SignUpPromotionScreen = () => {
                     value={aboutMe}
                     onChangeText={setAboutMe}
                     containerStyle={styles.inputContainer}
+                    multiline={true}
                 />
                 <PhoneNumberComponent
                     isRequired={true}

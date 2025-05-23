@@ -257,6 +257,7 @@ export function SingleBoutOfferFlow({
                 value={addMoreInfo ?? ''}
                 onChangeText={info => dispatch(setAddMoreInfo(info))}
                 containerStyle={styles.inputContainer}
+                multiline={true}
                 maxLength={255}
             />
 

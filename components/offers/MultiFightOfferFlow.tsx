@@ -150,6 +150,7 @@ const MultiFightOfferFlow = ({fighterId}: MultiFightOfferFlowProps) => {
                 value={addMoreInfo ?? ''}
                 onChangeText={text => dispatch(setAddMoreInfo(text))}
                 containerStyle={styles.inputContainer}
+                multiline={true}
                 maxLength={255}
             />
             <ExclusivitySection exclusivity={exclusivity} isExclusive={isExclusive} />

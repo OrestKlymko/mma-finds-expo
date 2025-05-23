@@ -210,6 +210,7 @@ export default function Index() {
                     value={aboutMe}
                     onChangeText={setAboutMe}
                     containerStyle={styles.inputContainer}
+                    multiline={true}
                 />
                 <PhoneNumberComponent
                     hasSubmitted={hasSubmited}
