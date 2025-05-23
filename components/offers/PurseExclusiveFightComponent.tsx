@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: colors.gray,
         borderRadius: 8,
-        marginBottom: 20,
+        marginBottom: 10,
         height: 56,
     },
     purseOpenButtonText: {

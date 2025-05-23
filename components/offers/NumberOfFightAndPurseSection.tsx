@@ -50,7 +50,7 @@ export const NumberOfFightAndPurseSection = ({
             />
 
             {Array.from({length: count}, (_, i) => (
-                <View key={i} style={{marginBottom: 16}}>
+                <View key={i} style={{marginBottom: 0}}>
                     <Text style={styles.sectionLabel}>Purse for Fight {i + 1}</Text>
                     <PurseExclusiveFightComponent
                         currencyType={currency ?? 'EUR'}
@@ -65,7 +65,7 @@ export const NumberOfFightAndPurseSection = ({
 
 const styles = StyleSheet.create({
     inputContainer: {
-        marginBottom: 20,
+        marginBottom: 10,
         height: 56,
     },
     sectionLabel: {
