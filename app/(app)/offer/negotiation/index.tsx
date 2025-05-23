@@ -39,9 +39,9 @@ const NegotiationScreen = () => {
 
 
     const [newOffer, setNewOffer] = useState({
-        fightPurse: '',
-        winBonus: '',
-        finishBonus: '',
+        fightPurse: '0',
+        winBonus: '0',
+        finishBonus: '0',
     });
 
     const [editingField, setEditingField] = useState<string | null>(null);
