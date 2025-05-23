@@ -54,7 +54,7 @@ export const ExclusiveOfferList: React.FC<OfferListProps> =
                 ItemSeparatorComponent={!horizontal ? () => <View style={{ height: 15 }} /> : () => <></>}
                 ListFooterComponent={
                     footerButton ? (
-                        <View style={{marginTop: 5}}>{footerButton}</View>
+                        <View style={{marginTop: 15}}>{footerButton}</View>
                     ) : null
                 }
             />
