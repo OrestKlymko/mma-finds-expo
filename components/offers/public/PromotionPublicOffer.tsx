@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        marginTop: -50,
+        marginTop: -28,
     },
     eventDescription: {
         fontSize: 12,
