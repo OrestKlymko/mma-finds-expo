@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
         position: 'relative',
         borderRadius: 10,
         overflow: 'hidden', // важливо, щоб не обрізалося
-        marginBottom: 16,
         backgroundColor: colors.grayBackground,
     },
     inviteBanner: {

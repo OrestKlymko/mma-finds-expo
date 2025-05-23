@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
         backgroundColor: colors.lightGray,
         borderRadius: 8,
         height: 120,
-        marginBottom: 10,
     },
     submissionInfo: {
         flex: 1,

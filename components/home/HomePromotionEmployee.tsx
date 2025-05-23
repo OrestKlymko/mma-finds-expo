@@ -111,6 +111,9 @@ const styles = StyleSheet.create({
     },
     container: {
         paddingLeft: 20,
+        display: "flex",
+        flexDirection: "column",
+        rowGap: 10
     },
     section: {
         marginBottom: 10,

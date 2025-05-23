@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingHorizontal: 16,
         paddingVertical: 15,
-        marginBottom: 20,
         height: 56,
     },
     searchInput: {
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
         position: 'relative',
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 40,
+        marginBottom: 20,
         marginTop: 20,
     },
     iconButton: {

@@ -10,7 +10,7 @@ type NewFeatureSectionProps = {
 
 export const NewFeatureSection = ({newFeatures}: NewFeatureSectionProps) => {
     return (
-        <View style={[styles.section, {marginTop: 20}]}>
+        <View style={[styles.section]}>
             <Text style={styles.sectionTitle}>New Features</Text>
             <FlatList
                 showsHorizontalScrollIndicator={false}
