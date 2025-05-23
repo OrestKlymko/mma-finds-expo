@@ -9,7 +9,7 @@ interface Props {
 }
 
 const RuleSelector = ({mmaRule, setMmaRule, selectedSportType}: Props) => {
-    const isDisabled = selectedSportType?.name?.includes('MMA Gloves');
+    const isDisabled = selectedSportType?.name?.includes('MMA Gloves') ||  selectedSportType?.name?.includes('Bare Knuckle');
 
     useEffect(() => {
         if (isDisabled) {
