@@ -45,6 +45,7 @@ export const PromotionTailoringRequiredDocuments = ({
                     response.map((doc: DocumentRequiredResponse) => ({
                         ...doc,
                         isCustom: false,
+                        selected: true,
                     })),
                 );
             });
