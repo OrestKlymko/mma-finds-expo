@@ -1,6 +1,6 @@
 import {
     FlatList,
-    Text
+    Text, View
 } from 'react-native';
 import React from 'react';
 import {OfferSubmissionResponse} from "@/service/request";
@@ -31,6 +31,8 @@ export function SubmissionList({
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={!horizontal ? {paddingBottom: 100} : {}}
+            ItemSeparatorComponent={!horizontal ? () => <View style={{ height: 10 }} /> : () => <></>}
             renderItem={({item,index}) => {
                 return <SubmissionCard item={item} horizontal={horizontal} fighterId={fighterId} />;
             }}
