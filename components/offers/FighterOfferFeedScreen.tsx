@@ -33,7 +33,7 @@ const FighterOfferFeedScreen = () => {
     useFocusEffect(
         useCallback(() => {
             setContentLoading(true);
-            getAllPublicOffers()
+            getAllPublicOffers(null,null)
                 .then(res => {
                     const filteredOffers = res.filter(
                         (offer: PublicOfferInfo) =>

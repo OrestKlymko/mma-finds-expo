@@ -7,7 +7,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import GoBackButton from '@/components/GoBackButton';
 import ContentLoader from '@/components/ContentLoader';
 import colors from '@/styles/colors';
-import {getShortInfoPromotionForCard} from '@/service/service';
+import {getAllPromotions} from '@/service/service';
 import {PromotionResponse} from '@/service/response';
 import {PromotionList} from "@/components/PromotionList";
 
@@ -19,7 +19,7 @@ const AllPromotionsScreen = () => {
     useFocusEffect(
         React.useCallback(() => {
             setContentLoading(true);
-            getShortInfoPromotionForCard()
+            getAllPromotions()
                 .then(response => {
                     setPromotions(response);
                 })

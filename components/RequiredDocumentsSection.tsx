@@ -64,7 +64,7 @@ export const RequiredDocumentsSection: React.FC<Props> = ({
                 style={{ flex: 1 }}
             >
                 <View style={styles.container}>
-                    <Text style={styles.title}>Required Documents</Text>
+                    <Text style={styles.title}>Required documents</Text>
 
                     {deadlinePassed && (
                         <View style={styles.overlay}>

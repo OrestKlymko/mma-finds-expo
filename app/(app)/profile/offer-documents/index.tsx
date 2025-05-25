@@ -50,7 +50,7 @@ export default function Index() {
             name: newDocName,
             type: mapToBackendType(selectedType),
         };
-
+        console.log(newDocument);
         saveRequiredDocumentByPromotion(newDocument).then(() => {
             getRequiredDocuments();
             setNewDocName('');
@@ -78,9 +78,9 @@ export default function Index() {
                     keyboardShouldPersistTaps="handled">
                     <GoBackButton/>
                     <View style={[styles.container, {paddingBottom: insets.bottom}]}>
-                        <Text style={styles.title}>Required Documents</Text>
+                        <Text style={styles.title}>Required documents</Text>
                         <Text style={styles.subtitle}>
-                            Add documents fighters must submit {'\n'}if they&apos;`re chosen for the
+                            Add documents fighters must submit {'\n'}if they&apos;re chosen for the
                             fight.
                         </Text>
 

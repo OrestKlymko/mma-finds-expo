@@ -83,7 +83,7 @@ const SuccessFeePaymentScreen: React.FC = () => {
                         const body: ResponsorOfferRequest = {
                             offerId,
                             fighterId: submitted.fighterId,
-                            rejectedReason: 'Declined by fighter',
+                            rejectionReason: 'Declined by fighter',
                         };
                         await rejectPublicOffer(body);
                         router.push('/(app)/(tabs)');

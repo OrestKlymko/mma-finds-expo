@@ -81,15 +81,15 @@ type NegotiateRequest = {
 export type ResponsorOfferRequest = {
   offerId: string;
   fighterId: string;
-  rejectedReason?: string;
+  rejectionReason?: string;
   negotiateRequest?: NegotiateRequest;
 };
 
 export type PublicOfferToSelectedFighterRequest = {
   fighterId: string;
-  win: string;
-  fight: string;
-  bonus: string;
+  winPurse: string;
+  fightPurse: string;
+  bonusPurse: string;
   offerId: string;
   currency: string;
   newDocument: CreateDocumentOfferRequest[];

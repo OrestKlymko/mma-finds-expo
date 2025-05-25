@@ -7,7 +7,7 @@ import {getEvents} from '@/service/service';
 import {useDispatch} from 'react-redux';
 import {setEvent} from '@/store/createPublicOfferSlice';
 import {setEvent as setEventForExclusive} from '@/store/createExclusiveOfferSlice';
-import {EventDetailsResponse} from '@/service/response';
+import {EventShortInfo} from '@/service/response';
 import EventList from "@/components/EventList";
 import {useRouter} from "expo-router";
 
@@ -15,9 +15,9 @@ import {useRouter} from "expo-router";
 const AllMyEventsForChooseScreen = () => {
     const router = useRouter()
     const insets = useSafeAreaInsets();
-    const [events, setEvents] = useState<EventDetailsResponse[]>([]);
+    const [events, setEvents] = useState<EventShortInfo[]>([]);
     const dispatch = useDispatch();
-    const handleEventSelect = (item: EventDetailsResponse) => {
+    const handleEventSelect = (item: EventShortInfo) => {
         dispatch(setEvent(item));
         dispatch(setEventForExclusive(item));
         router.back();

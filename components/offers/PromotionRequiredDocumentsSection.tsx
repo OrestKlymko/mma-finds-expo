@@ -75,7 +75,7 @@ export const PromotionRequiredDocumentsSection: React.FC<Props> = ({
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 style={{flex: 1}}>
                 <View style={styles.container}>
-                    <Text style={styles.sectionTitle}>Required Documents</Text>
+                    <Text style={styles.sectionTitle}>Required documents</Text>
 
                     {documents.map(doc => (
                         <View key={doc.documentName} style={styles.documentContainer}>

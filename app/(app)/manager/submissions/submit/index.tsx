@@ -16,9 +16,11 @@ import {Image} from "expo-image";
 import FighterList from "@/app/(app)/manager/fighter";
 import {FeatureFighterModal} from "@/components/fighter/FeatureFighterModal";
 import {useLocalSearchParams} from "expo-router";
+import {useAuth} from "@/context/AuthContext";
 
 const SubmitFighterOfferScreen: React.FC = () => {
     const params = useLocalSearchParams();
+    const {entityId} = useAuth();
     const offer = JSON.parse(params.offer as string) as PublicOfferInfo;
     const submittedFighters = useMemo<ShortInfoFighter[]>(() => {
         return JSON.parse(params.submittedFighters as string);
@@ -40,11 +42,14 @@ const SubmitFighterOfferScreen: React.FC = () => {
 
 
     useEffect(() => {
-        getShortInfoFightersByManager().then(response => {
+        if (!entityId) {
+            return;
+        }
+        getShortInfoFightersByManager(entityId).then(response => {
             const filtered = response.filter(f => !submittedIds.includes(f.id));
             setFighters(filtered);
         });
-    }, [submittedIds]);
+    }, [submittedIds, entityId]);
 
 
     const openFightersModal = () => {

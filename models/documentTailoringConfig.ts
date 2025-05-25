@@ -1,5 +1,5 @@
 import {
-  addDocument, addDocumentExclusiveOffer, addDocumentMultiFightOffer,
+  addDocumentPublicOffer, addDocumentExclusiveOffer, addDocumentMultiFightOffer,
   getAllRequiredDocumentsForExclusiveOffer, getAllRequiredDocumentsForMultiFightOffer,
   getAllRequiredDocumentsForPublicOffer,
 } from '@/service/service';
@@ -10,7 +10,7 @@ export type OfferKind = 'public' | 'exclusive' | 'multi';
 export const docCfg = {
   public: {
     loadDocs : getAllRequiredDocumentsForPublicOffer,
-    upload   : addDocument,
+    upload   : addDocumentPublicOffer,
     dueField : (offer: any) => offer?.dueDateForDocument,
   },
   exclusive: {

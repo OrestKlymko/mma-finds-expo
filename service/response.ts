@@ -273,7 +273,7 @@ export type EventCreationResponse = {
     arenaName: string;
 };
 
-export type EventDetailsResponse = {
+export type EventShortInfo = {
     id: string;
     eventImageLink: string;
     eventName: string;
@@ -428,8 +428,14 @@ export type FighterInfoResponse = {
     gender: string;
     dateOfBirth: string;
     age: number;
-    height: string;
-    reach: string;
+    heightCm: number | null;
+    heightFeet: number | null;
+    heightInches: number | null;
+    reachCm: number | null;
+    reachFeet: number | null;
+    reachInches: number | null;
+    weightKg: number | null;
+    weightLbs: number | null;
     gymName: string;
     nationality: string;
     countryName: string;
@@ -651,3 +657,29 @@ export type CheckCriteriaExistResponse = {
     existEntity: boolean;
 
 }
+
+
+
+
+//NEW RESPONSES
+
+export type ManagerShortInfo = {
+    managerId: string;
+    promotionId: string | null;
+    isVerified: boolean;
+    name: string;
+    imageLink:string;
+    companyName: string;
+    country: string;
+}
+
+export type PromotionShortInfo = {
+    managerId: string | null;
+    promotionId: string;
+    isVerified: boolean;
+    name: string;
+    imageLink:string;
+    activeNumberOffer: number;
+    country: string;
+}
+

@@ -1,6 +1,10 @@
 import React, {useCallback, useState} from 'react';
 import {Alert, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
-import {getEvents, getFeatures, getPublicOffers,} from '@/service/service';
+import {
+    getAllPublicOffers,
+    getEvents,
+    getFeatures,
+} from '@/service/service';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ContentLoader from '@/components/ContentLoader';
@@ -13,9 +17,11 @@ import {HomeBanner} from "@/components/home/HomeBanner";
 import {MyOfferSection} from "@/components/home/MyOfferSection";
 import {MessageSection} from "@/components/home/MessageSection";
 import {NewFeatureSection} from "@/components/home/NewFeatureSection";
+import {useAuth} from "@/context/AuthContext";
 
 const HomeScreen = () => {
     const [publicOffers, setPublicOffers] = useState<PublicOfferInfo[]>([]);
+    const {entityId}=useAuth();
     const router =useRouter();
     const insets = useSafeAreaInsets();
     const [newFeatures, setNewFeatures] = useState<FeatureResponse[]>([]);
@@ -26,14 +32,16 @@ const HomeScreen = () => {
     useFocusEffect(
         useCallback(() => {
             let isActive = true;
-
+            if(!entityId) {
+                return;
+            }
             const loadData = async () => {
                 setContentLoading(true);
                 try {
                     const [storedValue, features, offers, events] = await Promise.all([
                         AsyncStorage.getItem('newNotification'),
                         getFeatures(),
-                        getPublicOffers(),
+                        getAllPublicOffers(entityId,null),
                         getEvents(),
                     ]);
 
@@ -56,7 +64,7 @@ const HomeScreen = () => {
             return () => {
                 isActive = false;
             };
-        }, []),
+        }, [entityId]),
     );
 
     if (contentLoading) {

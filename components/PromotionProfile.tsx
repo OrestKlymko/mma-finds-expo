@@ -1,33 +1,38 @@
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {UserInfoResponse} from "@/service/response";
+import {PromotionShortInfo, UserInfoResponse} from "@/service/response";
 import {getShortInfoPromotion} from "@/service/service";
 import {ProfileHeader} from "@/components/profile/ProfileHeader";
 import {SectionItem} from "@/components/profile/SectionItem";
 import {ShareFeedbackSection} from "@/components/profile/ShareFeedbackSection";
 import {useFocusEffect} from "expo-router";
 import ContentLoader from "@/components/ContentLoader";
+import {useAuth} from "@/context/AuthContext";
 
 export const PromotionProfile = () => {
-    const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
+    const [userInfo, setUserInfo] = useState<PromotionShortInfo | null>(null);
     const insets = useSafeAreaInsets();
+    const {entityId} = useAuth();
     const [contentLoading, setContentLoading] = useState(false);
     useFocusEffect(
         React.useCallback(() => {
+            if (!entityId) {
+                return;
+            }
             setContentLoading(true);
-            getShortInfoPromotion()
+            getShortInfoPromotion(entityId)
                 .then(res => {
                     setUserInfo(res);
                 })
                 .finally(() => {
                     setContentLoading(false);
                 });
-        }, []),
+        }, [entityId]),
     );
 
     if (contentLoading) {
-        return <ContentLoader />;
+        return <ContentLoader/>;
     }
     return (
         <ScrollView
@@ -45,7 +50,7 @@ export const PromotionProfile = () => {
                     },
                     {label: 'My Events', icon: 'calendar-outline', pathToScreen: '/event'},
                     {
-                        label: 'Required Documents',
+                        label: 'Required documents',
                         icon: 'file-document-multiple-outline',
                         pathToScreen: '/profile/offer-documents',
                     },

@@ -137,3 +137,10 @@ export const mapBenefitsToCreateBenefit = (
 };
 
 
+// utils/url.ts
+export function buildQueryString(params: Record<string, string | null | undefined>): string {
+  const entries = Object.entries(params)
+      .filter(([, v]) => v != null && v !== '')
+      .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v!)}`);
+  return entries.length ? `?${entries.join('&')}` : '';
+}

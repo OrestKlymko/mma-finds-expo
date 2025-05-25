@@ -1,25 +1,30 @@
 import {StyleSheet, Text, TextInput, View} from 'react-native'
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import colors from "@/styles/colors";
 import {useFocusEffect, useRouter} from "expo-router";
-import { ShortInfoFighter } from '@/service/response';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {ShortInfoFighter} from '@/service/response';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {getShortInfoFightersByManager} from "@/service/service";
 import ContentLoader from "@/components/ContentLoader";
 import GoBackButton from "@/components/GoBackButton";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FighterList from "@/app/(app)/manager/fighter";
+import {useAuth} from "@/context/AuthContext";
 
 const MyFighters = () => {
     const router = useRouter();
+    const {entityId} = useAuth();
     const [fighters, setFighters] = useState<ShortInfoFighter[]>([]);
     const insets = useSafeAreaInsets();
     const [searchQuery, setSearchQuery] = useState('');
     const [contentLoading, setContentLoading] = useState(false);
     useFocusEffect(
         React.useCallback(() => {
+            if (!entityId) {
+                return;
+            }
             setContentLoading(true);
-            getShortInfoFightersByManager()
+            getShortInfoFightersByManager(entityId)
                 .then(response => {
                     setFighters(response);
                 })
@@ -37,7 +42,7 @@ const MyFighters = () => {
     });
 
     if (contentLoading) {
-        return <ContentLoader />;
+        return <ContentLoader/>;
     }
     return (
         <View style={{flex: 1, backgroundColor: colors.background}}>
@@ -57,7 +62,7 @@ const MyFighters = () => {
                         value={searchQuery}
                         onChangeText={setSearchQuery}
                     />
-                    <Ionicons name="search" size={24} color={colors.gray} />
+                    <Ionicons name="search" size={24} color={colors.gray}/>
                 </View>
 
 

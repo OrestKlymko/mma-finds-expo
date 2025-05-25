@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {FightLength} from "@/models/model";
-import {BenefitsSelection, EventDetailsResponse, NationalityResponse, WeightClassResponse} from "@/service/response";
+import {BenefitsSelection, EventShortInfo, NationalityResponse, WeightClassResponse} from "@/service/response";
 
 
 interface PurseValues {
@@ -15,7 +15,7 @@ interface SportType {
 
 export type OfferData = {
   offerId?: string;
-  event?: EventDetailsResponse;
+  event?: EventShortInfo;
   sportType?: SportType;
   fightLength?: FightLength;
   mmaRule?: 'Amateur' | 'Professional';
@@ -71,7 +71,7 @@ const createPublicOfferSlice = createSlice({
   name: 'createPublicOffer',
   initialState,
   reducers: {
-    setEvent: (state, action: PayloadAction<EventDetailsResponse>) => {
+    setEvent: (state, action: PayloadAction<EventShortInfo>) => {
       state.event = action.payload;
     },
     setSportType: (state, action: PayloadAction<SportType>) => {

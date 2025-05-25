@@ -48,6 +48,7 @@ export const PromotionSingleOffer = () => {
             setContentLoading(true);
             getExclusiveOfferInfoById(id)
                 .then(res => {
+                    console.log(res.fighter);
                     setOffer(res.offer);
                     setFighters(res.fighter);
                     setBenefits(res.benefit);

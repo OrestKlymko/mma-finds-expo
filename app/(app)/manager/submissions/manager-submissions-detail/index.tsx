@@ -9,7 +9,10 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {PublicOfferInfo, ShortInfoFighter} from '@/service/response';
 import {SubmittedInformationPublicOffer} from '@/models/tailoring-model';
-import {getBenefitsInPublicOffer, getPublicOfferInfoByIdForManagerByFighter} from "@/service/service";
+import {
+    getBenefitsInPublicOffer,
+    getPublicOfferInfoById,
+} from "@/service/service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Benefit, Offer} from "@/models/model";
 import ContentLoader from "@/components/ContentLoader";
@@ -56,13 +59,13 @@ export const ManagerSubmissionDetailScreen = () => {
             if (!offerId) return;
             const [benefitsResponse, offerResponse] = await Promise.all([
                 getBenefitsInPublicOffer(offerId),
-                getPublicOfferInfoByIdForManagerByFighter(offerId, fighterId),
+                getPublicOfferInfoById(offerId, fighterId),
             ]);
             setBenefits(benefitsResponse);
             setOffer(offerResponse.offer);
             setFighters(offerResponse.fighters);
-            setSubmittedInformation(offerResponse.submittedInformation);
-            setPreviousInfo(offerResponse.previousOfferPrice);
+            setSubmittedInformation(offerResponse?.submittedInformation);
+            setPreviousInfo(offerResponse?.previousOfferPrice);
             const storedFavorites = await AsyncStorage.getItem('favoriteOffers');
             const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
             const isFavorited = favorites.some(

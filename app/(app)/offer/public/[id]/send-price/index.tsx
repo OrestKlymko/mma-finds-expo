@@ -100,9 +100,9 @@ const PromotionTailoringPriceAndDocumentScreen = () => {
         }
         const data: PublicOfferToSelectedFighterRequest = {
             fighterId: fighterId,
-            win: purseValues.win,
-            fight: purseValues.fight,
-            bonus: purseValues.bonus,
+            winPurse: purseValues.win,
+            fightPurse: purseValues.fight,
+            bonusPurse: purseValues.bonus,
             offerId:id,
             currency: currencyChoosen,
             newDocument: newDocument.map(doc => ({
@@ -121,7 +121,7 @@ const PromotionTailoringPriceAndDocumentScreen = () => {
                 router.push({pathname: '/offer/public/success/selected-fighter', params: {name: fighter?.name}});
             })
             .catch(() => {
-                Alert.alert('Error', 'Failed to save required documents.');
+                Alert.alert('Error', 'Failed to save cuments.');
             })
             .finally(() => {
                 setLoading(false);

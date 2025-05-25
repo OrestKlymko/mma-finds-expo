@@ -4,12 +4,12 @@ import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import React, {useState} from 'react';
 import {ProfileSwitcherBottomSheet} from './ProfileSwitcherBottomSheet';
 import {Image} from "expo-image";
-import {UserInfoResponse} from "@/service/response";
+import {ManagerInfo, ManagerShortInfo, PromotionShortInfo, UserInfoResponse} from "@/service/response";
 import colors from "@/styles/colors";
 import {useRouter} from "expo-router";
 
 type ProfileHeaderProps = {
-  userInfo: UserInfoResponse | null;
+  userInfo: ManagerShortInfo |PromotionShortInfo| null;
 };
 
 export const ProfileHeader = ({userInfo}: ProfileHeaderProps) => {

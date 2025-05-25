@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import {Image} from "expo-image";
-import {EventDetailsResponse} from "@/service/response";
+import {EventShortInfo} from "@/service/response";
 import {useLocalSearchParams, useRouter} from "expo-router";
 import colors from "@/styles/colors";
 import EventDescription from "@/components/EventDescription";
@@ -21,7 +21,7 @@ import GoBackButton from "@/components/GoBackButton";
 
 
 export const EventFullInfoScreen = () => {
-    const [event, setEvent] = useState<EventDetailsResponse | null>(null);
+    const [event, setEvent] = useState<EventShortInfo | null>(null);
     const params = useLocalSearchParams();
     const router = useRouter();
     const eventId = params.id as string | undefined;

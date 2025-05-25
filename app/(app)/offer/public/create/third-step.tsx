@@ -13,9 +13,11 @@ import {resetPublicOffer} from '@/store/createPublicOfferSlice';
 import {UpdateOfferRequest} from '@/service/request';
 import {formatDate, mapBenefitsToCreateBenefit} from "@/utils/utils";
 import {useRouter} from "expo-router";
+import {useAuth} from "@/context/AuthContext";
 
 const PromotionSetDueDatePublicOffer = () => {
     const router = useRouter();
+    const {entityId}=useAuth();
     const [dueDate, setDueDate] = useState<Date | null>(null);
     const [showPicker, setShowPicker] = useState(false);
     const [isDatePickerVisible, setDatePickerVisible] = useState(false);
@@ -71,6 +73,10 @@ const PromotionSetDueDatePublicOffer = () => {
     };
 
     const handleSubmit = () => {
+        if(!entityId){
+            Alert.alert('Error', 'Start a new offer from the beginning.');
+            return;
+        }
         if (!dueDate) {
             Alert.alert('Please select a due date.');
             return;
@@ -114,9 +120,8 @@ const PromotionSetDueDatePublicOffer = () => {
         };
         createPublicOffer(dataToSend)
             .then(_ => {
-                console.log('success');
                 dispatch(resetPublicOffer());
-                getShortInfoPromotion()
+                getShortInfoPromotion(entityId)
                     .then(res => {
                         if (!res.isVerified) {
                             Alert.alert(

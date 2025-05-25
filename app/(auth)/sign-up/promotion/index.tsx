@@ -14,9 +14,12 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Photo, SignUpDataPromotion} from '@/models/model';
 import {useAuth} from "@/context/AuthContext";
-import { LoginResponse } from '@/service/response';
-import { changeNotificationState, createPromotionSecond } from '@/service/service';
-import { createFormDataForPromotionAsSecondProfile } from '@/service/create-entity/formDataService';
+import {LoginResponse} from '@/service/response';
+import {changeNotificationState, createPromotion, createPromotionSecond} from '@/service/service';
+import {
+    createFormDataForPromotion,
+    createFormDataForPromotionAsSecondProfile
+} from '@/service/create-entity/formDataService';
 import {useLocalSearchParams, useRouter} from "expo-router";
 import colors from "@/styles/colors";
 import GoBackButton from '@/components/GoBackButton';
@@ -42,11 +45,11 @@ const SignUpPromotionScreen = () => {
     const [loading, setLoading] = useState(false);
     const [continent, setContinent] = useState('');
     const router = useRouter();
-    const {setToken, setMethodAuth, setRole,setEntityId} = useAuth();
+    const {setToken, setMethodAuth, setRole, setEntityId} = useAuth();
     const {secondProfile} = useLocalSearchParams<{ secondProfile?: string }>();
     const isSecondProfile = secondProfile === 'true';
     const [socialList, setSocialList] = useState<
-        {network: string; link: string}[]
+        { network: string; link: string }[]
     >([]);
     const handleSuccessAuth = async (res: LoginResponse) => {
         setToken(res.token);
@@ -64,7 +67,8 @@ const SignUpPromotionScreen = () => {
                 };
                 changeNotificationState(body);
             }
-        } catch (err) {}
+        } catch (err) {
+        }
     };
     const onSignUpPress = async () => {
         setHasSubmitted(true);
@@ -74,11 +78,11 @@ const SignUpPromotionScreen = () => {
             !nameSurname ||
             !phoneNumber ||
             !country ||
-            !continent ) {
+            !continent) {
             Alert.alert('Please fill all required fields correctly');
             return;
         }
-        if (!agreeTerms&&!isSecondProfile) {
+        if (!agreeTerms && !isSecondProfile) {
             Alert.alert(
                 'Please read and agree to the Terms and Conditions and Privacy Policy',
             );
@@ -103,11 +107,9 @@ const SignUpPromotionScreen = () => {
 
         if (isSecondProfile) {
             setLoading(true);
-            const formData = await createFormDataForPromotionAsSecondProfile(
-                dataToSend,
-            );
-
-            createPromotionSecond(formData)
+            const formData = await createFormDataForPromotion(dataToSend, "", "");
+            formData.append('secondProfile', 'true');
+            createPromotion(formData)
                 .then(async res => {
                     await handleSuccessAuth(res);
                     setTimeout(() => router.push('/(app)/(tabs)'), 1000);
@@ -120,7 +122,7 @@ const SignUpPromotionScreen = () => {
                     } else {
                         Alert.alert('Failed to create a profile.');
                     }
-                }).finally(()=>setLoading(false));
+                }).finally(() => setLoading(false));
         } else {
             router.push({
                 pathname: '/(auth)/sign-up/method',
@@ -136,7 +138,7 @@ const SignUpPromotionScreen = () => {
         <KeyboardAvoidingView
             style={{flex: 1, backgroundColor: colors.background}}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <GoBackButton />
+            <GoBackButton/>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -200,7 +202,7 @@ const SignUpPromotionScreen = () => {
                     disabled={loading}>
                     {isSecondProfile ? (
                         loading ? (
-                            <ActivityIndicator size="small" color={colors.white} />
+                            <ActivityIndicator size="small" color={colors.white}/>
                         ) : (
                             <Text style={styles.signUpButtonText}>Create Profile</Text>
                         )
@@ -208,7 +210,7 @@ const SignUpPromotionScreen = () => {
                         <Text style={styles.signUpButtonText}>Sign Up</Text>
                     )}
                 </TouchableOpacity>
-                {!isSecondProfile && <FooterSignIn />}
+                {!isSecondProfile && <FooterSignIn/>}
             </ScrollView>
         </KeyboardAvoidingView>
     );

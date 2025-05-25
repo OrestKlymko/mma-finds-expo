@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert, Dimensions, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import {ProfileCard} from './ProfileCard';
-import {USER_ROLE, UserInfoResponse} from "@/service/response";
+import {ManagerShortInfo, PromotionShortInfo, USER_ROLE, UserInfoResponse} from "@/service/response";
 import {useAuth} from "@/context/AuthContext";
 import {ChangeProfileRequest} from "@/service/request";
 import {changeProfile} from "@/service/service";
@@ -13,7 +13,7 @@ const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 type Props = {
   visible: boolean;
   onClose: () => void;
-  userInfo?: UserInfoResponse | null;
+  userInfo?: ManagerShortInfo |PromotionShortInfo | null;
 };
 
 export const ProfileSwitcherBottomSheet: React.FC<Props> = ({

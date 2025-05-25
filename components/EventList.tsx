@@ -2,15 +2,15 @@ import {Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View,} from 'r
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import React from 'react';
 import {Image} from "expo-image";
-import {EventDetailsResponse} from "@/service/response";
+import {EventShortInfo} from "@/service/response";
 import {useRouter} from "expo-router";
 import colors from "@/styles/colors";
 
 interface EventListProps {
     horizontal?: boolean;
     fighterId?: any;
-    events?: EventDetailsResponse[];
-    eventSelect?: (item: EventDetailsResponse) => void;
+    events?: EventShortInfo[];
+    eventSelect?: (item: EventShortInfo) => void;
 }
 
 
@@ -20,7 +20,7 @@ export const EventList = ({horizontal, fighterId, events, eventSelect}: EventLis
     }, []);
     const router = useRouter();
 
-    const handleEventSelect = (item: EventDetailsResponse) => {
+    const handleEventSelect = (item: EventShortInfo) => {
         if (eventSelect) {
             eventSelect(item);
             return;

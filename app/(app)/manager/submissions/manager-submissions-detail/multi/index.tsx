@@ -7,7 +7,7 @@ import {
     KeyboardAvoidingView,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {getMultiFightOfferById, getMultiFightOfferByIdAndFighterId} from '@/service/service';
+import {getMultiFightOfferById} from '@/service/service';
 import colors from '@/styles/colors';
 import ContentLoader from '@/components/ContentLoader';
 import {
@@ -45,7 +45,7 @@ export const ManagerMultiFightOfferDetailsScreen = () => {
 
     const getMultiFightOffer = () => {
         setContentLoader(true);
-        getMultiFightOfferByIdAndFighterId(offerId,fighterId)
+        getMultiFightOfferById(offerId,fighterId)
             .then(res => {
                 setOffer(res.offer);
                 setFighter(res.fighter);

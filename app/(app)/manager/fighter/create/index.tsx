@@ -21,7 +21,7 @@ import {
     SportTypeResponse,
     WeightClassResponse
 } from '@/service/response';
-import {checkExistFighterByEmail, checkExistFighterByName, createFighter, getShortInfoManager} from '@/service/service';
+import {checkExistFighterByEmail, checkExistFighterByName, createFighter} from '@/service/service';
 import colors from '@/styles/colors';
 import GoBackButton from '@/components/GoBackButton';
 import {ImageSelectorComponent} from "@/components/ImageSelectorComponent";
@@ -33,8 +33,6 @@ import {HeightInput} from '@/components/fighter/HeightInput';
 import {ReachInput} from '@/components/fighter/ReachInput';
 import {NationalityDropdown} from '@/components/NationalityDropdown';
 import {CountryAutocompleteInput} from "@/components/CityAutocompleteInput";
-import {ProfessionalRecordInputs} from '@/components/ProfessionalRecordInputs';
-import {AmateurRecordInputs} from '@/components/AmateurRecordInputs';
 import {FoundationStyleDropdown} from "@/components/fighter/FoundationStyleDropdown";
 import {SportTypeMultiSelectDropdown} from "@/components/fighter/SportTypeMultiSelectDropdown";
 import SocialMediaModal from "@/components/SocialMediaModal";
@@ -42,6 +40,7 @@ import {TapologyLinkInput} from '@/components/fighter/TapologyLinkInput';
 import MissingFieldsModal from "@/components/offers/MissingFieldsModal";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {MultiSportRecordInputs, RecordsBySport} from "@/components/fighter/MultiSportRecordInputs";
+import {cmToFeetInches, feetInchesToCm, kgToLbs} from "@/utils/unitConversions";
 
 
 const CreateFightersProfileScreen = () => {
@@ -103,16 +102,8 @@ const CreateFightersProfileScreen = () => {
 
     const [continent, setContinent] = useState<string>('');
     const [country, setCountry] = useState<string>('');
-    const [managerName, setManagerName] = useState('');
     const [emailFighter, setEmailFighter] = useState('');
     const [agreeDisclaimer, setAgreeDisclaimer] = useState(false);
-
-    useEffect(() => {
-        getShortInfoManager().then(data => {
-            setManagerName(data.name);
-        });
-    }, []);
-    // Соцмережі
 
 
     const getMissingRequiredFields = () => {
@@ -167,25 +158,52 @@ const CreateFightersProfileScreen = () => {
                 name: profileImage.name || `profile_${Date.now()}.jpg`,
             });
         }
+        let heightCm: number;
+        let heightF: number;
+        let heightIn: number;
 
+        if (heightUnit === 'cm') {
+            heightCm = parseFloat(heightValue) || 0;
+            ({ feet: heightF, inches: heightIn } = cmToFeetInches(heightCm));
+        } else {
+            heightF = parseFloat(heightFeet) || 0;
+            heightIn = parseFloat(heightInches) || 0;
+            heightCm = feetInchesToCm(heightF, heightIn);
+        }
+
+        formData.append('heightCm', heightCm.toFixed(2));
+        formData.append('heightFeet', heightF.toString());
+        formData.append('heightInches', heightIn.toString());
+
+        // ————— REACH —————
+        let reachCm: number;
+        let reachF: number;
+        let reachIn: number;
+
+        if (reachUnit === 'cm') {
+            reachCm = parseFloat(reachValue) || 0;
+            ({ feet: reachF, inches: reachIn } = cmToFeetInches(reachCm));
+        } else {
+            reachF = parseFloat(reachFeet) || 0;
+            reachIn = parseFloat(reachInches) || 0;
+            reachCm = feetInchesToCm(reachF, reachIn);
+        }
+
+        formData.append('reachCm', reachCm.toFixed(2));
+        formData.append('reachFeet', reachF.toString());
+        formData.append('reachInches', reachIn.toString());
+
+        // // ————— WEIGHT RANGE —————)
+        // const minKg = parseFloat() || 0;
+        // const maxKg = parseFloat(maxWeight) || 0;
+        // const minLbs = kgToLbs(minKg);
+        // const maxLbs = kgToLbs(maxKg);
+
+        formData.append('minWeight', minWeight);
+        formData.append('maxWeight', maxWeight);
         formData.append('gender', gender);
         formData.append('dateOfBirth', formattedDate || '');
         formData.append('age', age);
-        if (heightUnit === 'cm') {
-            formData.append('height', heightValue.trim() === '' ? '0' : heightValue);
-        } else {
-            const heightFormatted = `${heightFeet || '0'} ${heightInches || '0'}`;
-            formData.append('height', heightFormatted);
-        }
-
-        if (reachUnit === 'cm') {
-            formData.append('reach', reachValue.trim() === '' ? '0' : reachValue);
-        } else {
-            const reachFormatted = `${reachFeet || '0'} ${reachInches || '0'}`;
-            formData.append('reach', reachFormatted);
-        }
-        formData.append('heightMetrics', heightUnit);
-        formData.append('reachMetrics', reachUnit);
         formData.append('gymName', gymName);
         formData.append('tapologyLink', noTapologyLink ? '' : tapologyLink);
         formData.append('sherdogLink', sherdogLink);
@@ -293,11 +311,6 @@ const CreateFightersProfileScreen = () => {
                     />
                 </View>
 
-                {/* Manager name (gray background) */}
-                <Text style={styles.titleProfile}>Manager*</Text>
-                <View style={styles.grayField}>
-                    <Text style={styles.grayFieldTextManager}>{managerName}</Text>
-                </View>
                 <FloatingLabelInput
                     label="Fighter's Email*"
                     value={emailFighter}

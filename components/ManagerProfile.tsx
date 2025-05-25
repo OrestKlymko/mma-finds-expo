@@ -1,32 +1,37 @@
 import {ScrollView, StyleSheet} from 'react-native'
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import { UserInfoResponse } from '@/service/response';
+import {ManagerShortInfo} from '@/service/response';
 import {useFocusEffect} from "expo-router";
 import {getShortInfoManager} from "@/service/service";
 import ContentLoader from "@/components/ContentLoader";
-import { ProfileHeader } from '@/components/profile/ProfileHeader';
+import {ProfileHeader} from '@/components/profile/ProfileHeader';
 import {SectionItem} from "@/components/profile/SectionItem";
 import {ShareFeedbackSection} from "@/components/profile/ShareFeedbackSection";
+import {useAuth} from "@/context/AuthContext";
 
 const ManagerProfile = () => {
-    const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
+    const [userInfo, setUserInfo] = useState<ManagerShortInfo | null>(null);
     const insets = useSafeAreaInsets();
+    const {entityId} = useAuth();
     const [contentLoading, setContentLoading] = useState(false);
 
     useFocusEffect(
         React.useCallback(() => {
             setContentLoading(true);
-            getShortInfoManager().then(res => {
+            if (!entityId) {
+                return;
+            }
+            getShortInfoManager(entityId).then(res => {
                 setUserInfo(res);
             })
                 .finally(() => {
                     setContentLoading(false);
                 });
-        }, []),
+        }, [entityId]),
     );
     if (contentLoading) {
-        return <ContentLoader />;
+        return <ContentLoader/>;
     }
 
     return (
@@ -35,9 +40,9 @@ const ManagerProfile = () => {
             showsHorizontalScrollIndicator={false}
             style={[
                 styles.container,
-                { paddingBottom: insets.bottom},
+                {paddingBottom: insets.bottom},
             ]}>
-            <ProfileHeader userInfo={userInfo} />
+            <ProfileHeader userInfo={userInfo}/>
             <SectionItem
                 title="MMA Finds Center"
                 items={[

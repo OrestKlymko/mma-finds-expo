@@ -22,12 +22,14 @@ import {EventTime} from "@/components/event/EventTime";
 import {EventPromotionName} from "@/components/event/EventPromotionName";
 import {EventDate} from "@/components/event/EventDate";
 import {EventPoster} from "@/components/event/EventPoster";
+import {useAuth} from "@/context/AuthContext";
 
 
 
 export function CreateEventScreen() {
     const insets = useSafeAreaInsets();
     const [profileImage, setProfileImage] = useState<any | null>(null);
+    const {entityId}=useAuth();
     const [loading, setLoading] = useState(false);
     const startTimeDefault = new Date();
     startTimeDefault.setHours(18, 0, 0, 0);
@@ -59,7 +61,10 @@ export function CreateEventScreen() {
     };
 
     useEffect(() => {
-        getShortInfoPromotion()
+        if(!entityId) {
+            return;
+        }
+        getShortInfoPromotion(entityId)
             .then(response => {
                 setOrganizerId(response.id);
                 setOrganizationName(response.name);

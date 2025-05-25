@@ -4,16 +4,18 @@ import colors from '@/styles/colors';
 import GoBackButton from '@/components/GoBackButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
-import {getExclusiveOffers, getMultiFightOffers, getPublicOffers,} from '@/service/service';
+import {getAllPublicOffers, getExclusiveOffers, getMultiFightOffers,} from '@/service/service';
 import {useFilter} from '@/context/FilterContext';
 import ContentLoader from '@/components/ContentLoader';
 import {ExclusiveOfferInfo, MultiContractShortInfo, PublicOfferInfo} from '@/service/response';
 import {OfferTab} from "@/components/offers/OfferTab";
 import {OfferContent} from "@/components/offers/OfferContent";
+import {useAuth} from "@/context/AuthContext";
 
 const PromotionMyOfferList = () => {
     const insets = useSafeAreaInsets();
     const {setSelectedFilters} = useFilter();
+    const {entityId} = useAuth();
     const [selectedTab, setSelectedTab] = useState<'Public' | 'Exclusive'>(
         'Public',
     );
@@ -37,7 +39,7 @@ const PromotionMyOfferList = () => {
                 try {
                     const [publicOffers, exclusiveOffers, multiOffers] =
                         await Promise.all([
-                            getPublicOffers(),
+                            getAllPublicOffers(entityId, null),
                             getExclusiveOffers(),
                             getMultiFightOffers(),
                         ]);

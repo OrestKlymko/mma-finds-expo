@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useRouter} from "expo-router";
 import {CardInfoFighterResponse, FeatureResponse, PublicOfferInfo} from '@/service/response';
 import {OfferSubmissionResponse } from '@/service/request';
-import {getFeatures, getFighterByManager, getSubmissionManager} from '@/service/service';
+import {getFeatures, getFighterByManagerId, getSubmissionManager} from '@/service/service';
 import ContentLoader from "@/components/ContentLoader";
 import { ManagerHomeHeaderSection } from './ManagerHomeHeaderSection';
 import {ManagerMyFighterSection} from "@/components/home/ManagerMyFighterSection";
@@ -16,9 +16,11 @@ import {MessageSection} from "@/components/home/MessageSection";
 import {NewFeatureSection} from "@/components/home/NewFeatureSection";
 import {MySubmissionSection} from "@/components/home/MySubmissionSection";
 import {RecentlySavedSection} from "@/components/home/RecentlySavedSection";
+import {useAuth} from "@/context/AuthContext";
 
 const HomeManagerScreen = () => {
     const router = useRouter();
+    const {entityId} =useAuth();
     const [fighters, setFighters] = useState<CardInfoFighterResponse[]>([]);
     const [favoriteOffers, setFavoriteOffers] = useState<PublicOfferInfo[]>([]);
     const insets = useSafeAreaInsets();
@@ -28,18 +30,21 @@ const HomeManagerScreen = () => {
 
     useFocusEffect(
         useCallback(() => {
-
+            if(!entityId) {
+                return;
+            }
             let isActive = true;
             setContentLoading(true);
 
             Promise.all([
                 getFeatures(),
-                getFighterByManager(),
+                getFighterByManagerId(entityId),
                 AsyncStorage.getItem('favoriteOffers'),
                 getSubmissionManager(),
             ])
                 .then(([features, fightersList, favs, subs]) => {
                     if (!isActive) return;
+                    console.log(fightersList);
                     setNewFeatures(features);
                     setFighters(fightersList);
                     if (favs) {
@@ -61,7 +66,7 @@ const HomeManagerScreen = () => {
             return () => {
                 isActive = false;
             };
-        }, []),
+        }, [entityId]),
     );
 
     const refreshFavorites = async () => {

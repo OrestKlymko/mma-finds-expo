@@ -12,7 +12,7 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import colors from '@/styles/colors';
 import GoBackButton from '@/components/GoBackButton';
-import {getFighterByManagerId, getManagerInfoById,} from '@/service/service';
+import {getFighterByManagerId, getManagerInfoById} from '@/service/service';
 import ContentLoader from '@/components/ContentLoader';
 import {ManagerInformationResponse, ShortInfoFighter} from '@/service/response';
 import {Image} from "expo-image";
