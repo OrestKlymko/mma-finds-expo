@@ -521,7 +521,7 @@ export const confirmExclusiveOffer = (data: ResponsorOfferRequest): Promise<void
     request<void>(`/negotiation/exclusive/confirm/${data.offerId}/${data.fighterId}`, {method: 'POST'});
 
 export const rejectPublicOffer = (data: ResponsorOfferRequest): Promise<void> =>
-    jsonRequest<void>(`/negotiation/public/reject/${data.offerId}/${data.fighterId}`, 'POST', {rejectedReason: data.rejectedReason});
+    jsonRequest<void>(`/negotiation/public/reject/${data.offerId}/${data.fighterId}`, 'POST', {rejectionReason: data.rejectionReason});
 
 export const negotiationPublicOffer = (data: ResponsorOfferRequest): Promise<any> =>
     jsonRequest<any>(`/negotiation/public/negotiate/${data.offerId}/${data.fighterId}`, 'POST', data.negotiateRequest);

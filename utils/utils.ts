@@ -2,13 +2,33 @@ import {CurrencyCode} from 'react-native-country-picker-modal';
 import {Benefit, BenefitsSelection} from "@/service/response";
 
 
-export const countDaysForAcceptance = (date: string | null | undefined) => {
+export const countDaysForAcceptance = (
+    date: string | number[] | null | undefined,
+): number => {
   if (!date) return 0;
-  const eventDate = new Date(date);
-  const currentDate = new Date();
-  const diffTime = Math.abs(eventDate.getTime() - currentDate.getTime());
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  let eventDate: Date;
+
+  if (Array.isArray(date)) {
+    const [year, month, day] = date;
+    eventDate = new Date(year, month - 1, day);
+  } else {
+    eventDate = new Date(date);
+
+    if (isNaN(eventDate.getTime())) {
+      eventDate = new Date(`${date}T00:00:00`);
+    }
+  }
+
+  const today = new Date();
+
+  eventDate.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+
+  const diffMs = eventDate.getTime() - today.getTime();
+  return Math.ceil(diffMs / 86_400_000);
 };
+
 
 export const formatDate = (date: Date | null) => {
   if (!date) return '';

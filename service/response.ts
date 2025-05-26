@@ -646,7 +646,9 @@ export interface FilterPublicOfferManagerResponse
 }
 
 export type PromotionResponse = {
-    id: string;
+    promotionId: string;
+    managerId:string;
+    isVerified:string;
     name: string;
     imageLink: string;
     country: string;

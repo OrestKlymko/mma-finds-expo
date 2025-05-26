@@ -5,8 +5,8 @@ import {
     PublicOfferInfo,
 } from '@/service/response';
 import {
+    getAllPublicOffers,
     getInformationPromotionById,
-    getPublicOffersByPromotion,
 } from '@/service/service';
 import {
     KeyboardAvoidingView,
@@ -27,20 +27,21 @@ import {OfferList} from "@/components/offers/OfferList";
 export const PromotionFinalScreen = () => {
     const insets = useSafeAreaInsets();
     const router = useRouter();
-    const [manager, setManager] = useState<PromotionInformationResponse | null>(
+    const [promotion, setPromotion] = useState<PromotionInformationResponse | null>(
         null,
     );
     const [publicOffers, setPublicOffers] = useState<PublicOfferInfo[]>([]);
     const {id} = useLocalSearchParams<{ id: string }>()
     const [contentLoading, setContentLoading] = useState(false);
     useEffect(() => {
+        console.log(id);
         setContentLoading(true);
         Promise.all([
             getInformationPromotionById(id),
-            getPublicOffersByPromotion(id),
+            getAllPublicOffers(id),
         ])
-            .then(([managerRes, fighterRes]) => {
-                setManager(managerRes);
+            .then(([promotionRes, fighterRes]) => {
+                setPromotion(promotionRes);
                 setPublicOffers(fighterRes);
             })
             .finally(() => {
@@ -51,27 +52,27 @@ export const PromotionFinalScreen = () => {
     const details = [
         {
             label: 'Facebook',
-            value: manager?.facebookUsername,
-            link: manager?.facebookUsername ? `${manager.facebookUsername}` : null,
+            value: promotion?.facebookUsername,
+            link: promotion?.facebookUsername ? `${promotion.facebookUsername}` : null,
         },
         {
             label: 'Snapchat',
-            value: manager?.snapchatUsername,
-            link: manager?.snapchatUsername ? `${manager.snapchatUsername}` : null,
+            value: promotion?.snapchatUsername,
+            link: promotion?.snapchatUsername ? `${promotion.snapchatUsername}` : null,
         },
         {
             label: 'Instagram',
-            value: manager?.instagramUsername,
-            link: manager?.instagramUsername ? `${manager.instagramUsername}` : null,
+            value: promotion?.instagramUsername,
+            link: promotion?.instagramUsername ? `${promotion.instagramUsername}` : null,
         },
         {
             label: 'Twitter',
-            value: manager?.twitterUsername,
-            link: manager?.twitterUsername ? `${manager.twitterUsername}` : null,
+            value: promotion?.twitterUsername,
+            link: promotion?.twitterUsername ? `${promotion.twitterUsername}` : null,
         },
         {
             label: 'Country',
-            value: manager?.countryName,
+            value: promotion?.countryName,
             link: null,
         },
     ];
@@ -98,18 +99,18 @@ export const PromotionFinalScreen = () => {
                     <View style={styles.imageContainer}>
                         <Image
                             source={{
-                                uri: manager?.imageLink || 'https://via.placeholder.com/80x80',
+                                uri: promotion?.imageLink || 'https://via.placeholder.com/80x80',
                             }}
                             style={styles.profileImage}
                         />
                     </View>
-                    <Text style={styles.fighterName}>{manager?.name || ''}</Text>
+                    <Text style={styles.fighterName}>{promotion?.name || ''}</Text>
                 </View>
 
                 {/* About the Manager */}
                 <Text style={styles.sectionTitle}>About the Promotion</Text>
                 <Text style={styles.fighterDescription}>
-                    {manager?.description || 'No description provided.'}
+                    {promotion?.description || 'No description provided.'}
                 </Text>
 
                 {/* Manager Details */}

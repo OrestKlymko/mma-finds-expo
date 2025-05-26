@@ -11,7 +11,7 @@ export const PromotionList = ({promotions}: PromotionListProps) => {
         <FlatList
             data={promotions}
             renderItem={item => <PromotionCard item={item.item} />}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.promotionId}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
         />
