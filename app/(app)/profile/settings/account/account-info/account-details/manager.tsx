@@ -4,7 +4,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {getAccountInfo, updateAccountInfo} from "@/service/service";
+import {getManagerInfoById, updateAccountInfo} from "@/service/service";
 import GoBackButton from "@/components/GoBackButton";
 import FloatingLabelInput from "@/components/FloatingLabelInput";
 import SocialMediaModal from "@/components/SocialMediaModal";
@@ -13,9 +13,11 @@ import colors from "@/styles/colors";
 import {PhoneNumberComponent} from "@/components/PhoneNumberComponent";
 import {Photo} from "@/models/model";
 import ImageProfileSection from "@/components/ImageProfileSection";
+import {useAuth} from "@/context/AuthContext";
 
 const Manager = () => {
     const navigation = useNavigation();
+    const {entityId}=useAuth();
     const insets = useSafeAreaInsets();
     // Змінні стану
     const [profileImage, setProfileImage] = useState<any>({
@@ -131,8 +133,12 @@ const Manager = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            getAccountInfo()
+            if(!entityId){
+                return;
+            }
+            getManagerInfoById(entityId)
                 .then(res => {
+                    console.log(res);
                     setMethodRegistered(res.methodRegistered);
                     setProfileImage({
                         uri: `${res.imageLink}` || '',
@@ -168,7 +174,7 @@ const Manager = () => {
                     console.error('Failed to fetch account info:', err);
                     Alert.alert('Failed to load account info');
                 });
-        }, []),
+        }, [entityId]),
     );
 
     return (

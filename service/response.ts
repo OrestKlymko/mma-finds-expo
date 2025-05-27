@@ -16,13 +16,6 @@ export enum MmaRules {
     PROFESSIONAL = 'PROFESSIONAL',
 }
 
-export enum PurseCondition {
-    FROM = 'FROM',
-    TO = 'TO',
-    EQUALS = 'EQUALS',
-    BETWEEN = 'BETWEEN',
-}
-
 export type BenefitsSelection = {
     peopleCovered: 'Fighter+1' | 'Fighter+2' | 'Fighter+3' | null;
     additionalTeamMembers: number;
@@ -74,33 +67,6 @@ export type CountryResponse = {
     continent: string;
 };
 
-export type EditPublicOfferResponse = {
-    offerId: string;
-    mmaRules: MmaRules;
-    isFightTitled: boolean;
-    purseFrom: string;
-    purseTo: string;
-    purseCondition: PurseCondition;
-    description?: string;
-    gender: string;
-    weightKg?: string;
-    weightLbs?: string;
-    minFights?: number;
-    maxFights?: number;
-    minWinCount?: number;
-    minLoseCount?: number;
-    professionalMmaWin: number;
-    professionalMmaLose: number;
-    professionalMmaDraw: number;
-    opponentTapologyLink?: string;
-    dueDate: string;
-    country: string;
-    weightClassId: string;
-    weightClass: string;
-    rounds: number;
-    minutes: number;
-    sportTypeId: string;
-};
 
 export type WeightClassResponse = {
     id: string;
@@ -199,22 +165,9 @@ export type CreatePaymentIntentResponse = {
     clientSecret: string;
 };
 
-export type ShortLinkResponse = {
-    shortLink: string;
-}
-
-export type ShortLinkRequest = {
-    path: string;
-    entityId: string;
-};
-
 export type InvitationLinkResponse = {
     link: string;
 };
-
-export type StripePaymentResponse = {
-    paid: boolean;
-}
 
 export type DecodeTokenInvitationResponse = {
     organization: string;
@@ -309,7 +262,6 @@ export type PublicOfferInfo = {
     eventImageLink: string;
     weightClass: string;
     isFightTitled: boolean;
-    purseCondition: PurseCondition;
     closedReason?: string | null;
     country: string;
     purse: string;

@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-    CancelEventRequest,
     ChangeNotificationStatusRequest,
     ChangePasswordRequest,
     ChangeProfileRequest,
@@ -17,7 +16,7 @@ import {
     LoginRequest,
     OfferSubmissionResponse,
     PayCreditRequest,
-    PayForCreditRequestStripe, PaySuccessFeeRequest,
+     PaySuccessFeeRequest,
     PublicOfferToSelectedFighterRequest,
     RecoveryPasswordRequest,
     ResponseExclusiveOfferRequest,
@@ -27,7 +26,6 @@ import {
 } from './request';
 import {
     Benefit,
-    CardInfoFighterResponse,
     CardInfoResponse, CheckCriteriaExistResponse,
     CountryResponse,
     CreatePaymentIntentResponse,
@@ -35,7 +33,6 @@ import {
     DecodeTokenFromEmailResponse,
     DecodeTokenInvitationResponse,
     DocumentRequiredResponse,
-    EditPublicOfferResponse,
     EmployeeInfo,
     EmployeeTaskResponse,
     EventCreationResponse,
@@ -61,10 +58,7 @@ import {
     PromotionResponse, PromotionShortInfo,
     PublicOfferInfo,
     ShortInfoFighter,
-    ShortLinkRequest,
-    ShortLinkResponse,
     SportTypeResponse,
-    StripePaymentResponse,
     SubAccountResponse,
     TicketResponse,
     USER_ROLE,
@@ -225,9 +219,6 @@ export const getShortInfoPromotionEmployee = (): Promise<UserInfoResponse> =>
 export const getAllPromotions = (): Promise<PromotionResponse[]> =>
     request<PromotionResponse[]>('/promotion', {method: 'GET'}); // CHECKED
 
-export const getInformationPromotion = (): Promise<PromotionInformationResponse> =>
-    request<PromotionInformationResponse>('/promotion', {method: 'GET'});
-
 export const getInformationPromotionById = (promotionId: string): Promise<PromotionInformationResponse> =>
     request<PromotionInformationResponse>(`/promotion/${promotionId}`, {method: 'GET'});
 
@@ -245,9 +236,6 @@ export const createPaymentIntentForCharge = (data: CreatePaymentIntentRequest): 
 
 export const createPaymentIntentForStripe = (data: CreatePaymentIntentStripeRequest): Promise<CreatePaymentIntentResponse> =>
     jsonRequest<CreatePaymentIntentResponse>('/stripe/payment-intent', 'POST', data);
-
-export const chargeDefault = (pay: PayForCreditRequestStripe): Promise<StripePaymentResponse> =>
-    jsonRequest<StripePaymentResponse>('/stripe/charge-default', 'POST', pay);
 
 export const setDefaultPaymentMethod = (): Promise<void> =>
     request<void>('/payment/default', {method: 'POST'});
@@ -269,9 +257,6 @@ export const createSubAccount = (data: FormData): Promise<void> =>
 
 export const changePassword = (data: ChangePasswordRequest): Promise<void> =>
     jsonRequest<void>('/auth/change-password', 'POST', data);
-
-export const getAccountInfo = (): Promise<ManagerInformationResponse> =>
-    request<ManagerInformationResponse>('/manager', {method: 'GET'});
 
 export const getManagerInfoById = (id: string): Promise<ManagerInformationResponse> =>
     request<ManagerInformationResponse>(`/manager/${id}`, {method: 'GET'}); // CHECKED
@@ -355,7 +340,7 @@ export const getAllPublicOffers = (
 export const getExclusiveOffers = (): Promise<any> =>
     request<any>('/offer/exclusive', {method: 'GET'});// CHECKED
 
-export const getPublicOfferInfoById = (offerId: string,fighterId:string|null|undefined): Promise<FullInfoAboutPublicOffer> => {
+export const getPublicOfferInfoById = (offerId: string, fighterId: string | null | undefined): Promise<FullInfoAboutPublicOffer> => {
     const qs = buildQueryString({fighterId});
     return request<FullInfoAboutPublicOffer>(`/offer/public/${offerId}${qs}`, {method: 'GET'});
 } // CHECKED
@@ -462,7 +447,7 @@ export const getSubmissionManager = (): Promise<OfferSubmissionResponse[]> =>
     request<OfferSubmissionResponse[]>('/submission', {method: 'GET'});// CHECKED
 
 export const declineOffer = (offerId: string, fighterId: string): Promise<void> =>
-    request<void>(`/public-offers/decline/${offerId}/${fighterId}`, {method: 'DELETE'});
+    request<void>(`/submission/${offerId}/${fighterId}/decline`, {method: 'DELETE'});
 
 export const getMultiFightOfferById = (offerId: string, fighterId: string | undefined | null): Promise<MultiContractResponse> => {
     const qs = buildQueryString({fighterId});

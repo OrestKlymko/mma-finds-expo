@@ -65,7 +65,6 @@ const RejectOffer: React.FC = () => {
                     fighterId: fighterId,
                     rejectionReason: reason,
                 };
-                console.log(data);
                 rejectPublicOffer(data).then(
                     () => {
                         router.push('/(app)/(tabs)')

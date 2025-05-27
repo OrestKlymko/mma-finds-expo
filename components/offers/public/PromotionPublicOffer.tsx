@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import colors from '@/styles/colors';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -49,7 +49,7 @@ export const PromotionOfferDetailsScreen = () => {
     const loadingContent = async (offerIdentifier: string) => {
         try {
             const [offerInfo, benefitFromBe] = await Promise.all([
-                getPublicOfferInfoById(offerIdentifier),
+                getPublicOfferInfoById(offerIdentifier,null),
                 getBenefitsInPublicOffer(offerIdentifier),
             ]);
             setOffer(offerInfo.offer);

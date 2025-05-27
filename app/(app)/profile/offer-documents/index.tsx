@@ -50,7 +50,6 @@ export default function Index() {
             name: newDocName,
             type: mapToBackendType(selectedType),
         };
-        console.log(newDocument);
         saveRequiredDocumentByPromotion(newDocument).then(() => {
             getRequiredDocuments();
             setNewDocName('');

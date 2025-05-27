@@ -13,7 +13,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useAuth} from "@/context/AuthContext";
 import {Photo} from "@/models/model";
-import {getInformationPromotion, updateAccountInfoPromotion} from "@/service/service";
+import {getInformationPromotionById, updateAccountInfoPromotion} from "@/service/service";
 import GoBackButton from "@/components/GoBackButton";
 import ImageProfileSection from "@/components/ImageProfileSection";
 import FloatingLabelInput from "@/components/FloatingLabelInput";
@@ -26,7 +26,7 @@ import {PhoneNumberComponent} from "@/components/PhoneNumberComponent";
 const ChangeDetailAccountPromotionScreen = () => {
     const navigation = useNavigation();
     const insets = useSafeAreaInsets();
-    const {methodAuth} = useAuth();
+    const {methodAuth,entityId} = useAuth();
     const [errorPhone, setErrorPhone] = useState<string | null>('');
     // Змінні стану
     const [profileImage, setProfileImage] = useState<Photo | null>(null);
@@ -64,7 +64,10 @@ const ChangeDetailAccountPromotionScreen = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            getInformationPromotion().then(res => {
+            if(!entityId) {
+                return;
+            }
+            getInformationPromotionById(entityId).then(res => {
                 setBasedIn(res.countryName + ', ' + res.continent);
                 setContinent(res.continent);
                 setCountry(res.countryName);
@@ -89,7 +92,7 @@ const ChangeDetailAccountPromotionScreen = () => {
                 );
                 setHasSubmitted(false); // Скидаємо помилки
             });
-        }, []),
+        }, [entityId]),
     );
 
     // Приклад обробки кнопки Sign Up

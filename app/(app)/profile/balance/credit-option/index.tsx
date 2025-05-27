@@ -81,8 +81,6 @@ const ChooseCreditOptionScreen = () => {
             if (!paid) return; // юзер передумав
 
             // успішна оплата → начисляємо кредити/фічеримо
-            console.log(selected.label);
-            console.log(amount.toString());
             await payForCredit({ credit: selected.label, valueToPay: amount.toString() });
             if (offerId && fighterId) {
                 await featureFighterOnOffer(offerId, fighterId);

@@ -44,7 +44,6 @@ const HomeManagerScreen = () => {
             ])
                 .then(([features, fightersList, favs, subs]) => {
                     if (!isActive) return;
-                    console.log(fightersList);
                     setNewFeatures(features);
                     setFighters(fightersList);
                     if (favs) {

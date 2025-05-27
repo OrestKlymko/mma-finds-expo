@@ -137,7 +137,6 @@ export function SearchForManagerFlow() {
                 <ManagerList
                     fighters={filteredFighters}
                     handleChooseFighter={item => {
-                        console.log(item);
                         router.push(`/(app)/manager/${item.managerId}`)
                     }}
                 />

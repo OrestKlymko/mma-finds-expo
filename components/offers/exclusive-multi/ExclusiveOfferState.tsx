@@ -2,20 +2,13 @@ import {StyleSheet, Text, View} from 'react-native';
 
 import React from 'react';
 import colors from '@/styles/colors';
+import {countDaysForAcceptance} from "@/utils/utils";
 
 type Props = {
     offer: any;
 };
 
 export const ExclusiveOfferState = ({offer}: Props) => {
-    const daysLeft = React.useMemo(() => {
-        return offer
-            ? Math.floor(
-            (new Date(offer.dueDate).getTime() - new Date().getTime()) /
-            (1000 * 60 * 60 * 24),
-        ) + 1
-            : 0;
-    }, [offer]);
 
     return (
         <>
@@ -26,9 +19,9 @@ export const ExclusiveOfferState = ({offer}: Props) => {
                         {' '}
                         {offer?.closedReason && offer?.closedReason !== ''
                             ? 'Closed'
-                            : daysLeft === 0
+                            : countDaysForAcceptance(offer?.dueDate) === 0
                                 ? 'Today'
-                                : daysLeft + ' Days'}
+                                : countDaysForAcceptance(offer?.dueDate) + ' Days'}
                     </Text>
                 </View>
             </View>

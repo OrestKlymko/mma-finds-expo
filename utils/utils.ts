@@ -48,11 +48,24 @@ export const getCurrencySymbol = (currencyCode: CurrencyCode | undefined) => {
     .replace('.', '');
 };
 
-export const formatDateFromLocalDate = (date: string | undefined) => {
+export const formatDateFromLocalDate = (date: string | number[] | undefined) => {
   if (!date) return '';
-  const localDate = new Date(date);
-  return localDate.toLocaleDateString().replace(/\//g, '.');
+
+  let parsedDate: Date;
+
+  if (Array.isArray(date)) {
+    const [year, month, day] = date;
+    parsedDate = new Date(year, month - 1, day);
+  } else {
+    parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      parsedDate = new Date(`${date}T00:00:00`);
+    }
+  }
+
+  return parsedDate.toLocaleDateString('en-GB').replace(/\//g, '.'); // e.g., 25.05.2026
 };
+
 
 export const formatDateForBackend = (date: string): string => {
   const [day, month, year] = date.split(/[.\-/]/);

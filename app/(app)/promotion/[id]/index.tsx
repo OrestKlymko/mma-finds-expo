@@ -34,7 +34,6 @@ export const PromotionFinalScreen = () => {
     const {id} = useLocalSearchParams<{ id: string }>()
     const [contentLoading, setContentLoading] = useState(false);
     useEffect(() => {
-        console.log(id);
         setContentLoading(true);
         Promise.all([
             getInformationPromotionById(id),

@@ -13,7 +13,6 @@ type PromotionCardProps = {
 export const PromotionCard = ({item}: PromotionCardProps) => {
     const router = useRouter();
     const handleChoosePromotion = (item: PromotionResponse) => {
-        console.log(item);
         router.push(`/promotion/${item.promotionId}`)
     };
 
