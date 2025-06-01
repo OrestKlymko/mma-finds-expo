@@ -53,7 +53,6 @@ const RenewDocumentDueDateScreen = () => {
             return;
         }
         setLoading(true);
-        console.log(typeOffer);
         switch (typeOffer) {
             case 'Exclusive':
                 renewDocumentExclusiveOfferDueDate(offerId, formatDateForBackend(formatDate(dueDate)))

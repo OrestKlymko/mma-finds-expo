@@ -7,14 +7,18 @@ import {
     SubmittedFighterPrivateOfferSection
 } from "@/components/offers/exclusive-single/SubmittedFighterPrivateOfferSection";
 import {PrivateOfferManagerCandidates} from "@/components/offers/exclusive-single/PrivateOfferManagerCandidates";
+import {Text, TouchableOpacity} from "react-native";
+import colors from "@/styles/colors";
+import {useRouter} from "expo-router";
 
 interface ExclusivePromotionTailoringProcessProps {
-    submittedFighters: ShortInfoFighter[];
-    chosenFighter?: ShortInfoFighter | null;
-    offer: ExclusiveOfferInfo | null;
-    submittedInformation?: SubmittedInformationOffer;
-    previousInfo?: SubmittedInformationOffer;
-    onRefresh: () => void;
+    submittedFighters: ShortInfoFighter[],
+    chosenFighter?: ShortInfoFighter | null,
+    offer: ExclusiveOfferInfo | null,
+    submittedInformation?: SubmittedInformationOffer,
+    previousInfo?: SubmittedInformationOffer,
+    onRefresh: () => void,
+    role?: "MANAGER" | "PROMOTION" | "PROMOTION_EMPLOYEE" | "ANONYMOUS" | null | undefined
 }
 
 export const PrivateManagerTailoringProcess = ({
@@ -23,9 +27,11 @@ export const PrivateManagerTailoringProcess = ({
                                                    offer,
                                                    submittedInformation,
                                                    previousInfo,
-                                                   onRefresh
+                                                   onRefresh,
+                                                   role
                                                }: ExclusivePromotionTailoringProcessProps) => {
     const [docs, setDocs] = React.useState<any[]>([]);
+    const router = useRouter();
     const [selectedTab, setSelectedTab] = React.useState<
         'Preselected Fighter' | 'Submitted Fighters' | 'Selected Fighter'
     >('Preselected Fighter');
@@ -49,6 +55,23 @@ export const PrivateManagerTailoringProcess = ({
             );
         }
     }, [offer, submittedInformation]);
+
+    if (!role || role === 'ANONYMOUS') {
+        return <TouchableOpacity
+            onPress={()=>router.push('/sign-up/manager')}
+            style={{
+                backgroundColor: colors.primaryGreen,
+                padding: 10,
+                borderRadius: 20,
+                height: 56,
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+            <Text style={{color: colors.white, fontSize: 14, fontWeight: '500'}}>
+                Log in to submit your fighter
+            </Text>
+        </TouchableOpacity>
+    }
 
     return chosenFighter ? (
         <>

@@ -6,6 +6,7 @@ import colors from "@/styles/colors";
 import GoBackButton from "@/components/GoBackButton";
 import {useAuth} from "@/context/AuthContext";
 import {useRouter} from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AccountScreen = () => {
     const insets = useSafeAreaInsets();
@@ -18,6 +19,7 @@ const AccountScreen = () => {
         setToken(null);
         setMethodAuth(null);
         setSignOutVisible(false);
+        await AsyncStorage.removeItem('authRole');
         router.push('/login');
     };
 

@@ -6,13 +6,15 @@ import {countDaysForAcceptance} from "@/utils/utils";
 import {publishPrivateOffer} from "@/service/service";
 import {ExclusiveOfferInfo, PublicOfferInfo} from "@/service/response";
 import {useRouter} from "expo-router";
+import {ShareOffer} from "@/components/offers/public/ShareOffer";
+import {OfferTypeEnum} from "@/models/model";
 
 type Props = {
     offer: any;
 };
 
 export const ExclusiveOfferState = ({offer}: Props) => {
-    const router =useRouter();
+    const router = useRouter();
     const publishOffer = () => {
         Alert.alert("Show your offer to the world!", "Are you sure you want to publish this offer?",
             [
@@ -39,6 +41,7 @@ export const ExclusiveOfferState = ({offer}: Props) => {
     return (
         <>
             <View style={styles.eventSummaryContainer}>
+                <ShareOffer offer={offer} typeOffer={OfferTypeEnum.EXCLUSIVE}/>
                 <View style={styles.summaryRowCentered}>
                     <Text style={styles.summaryLabel}>Time left to apply:</Text>
                     <Text style={styles.summaryValue}>
@@ -50,11 +53,11 @@ export const ExclusiveOfferState = ({offer}: Props) => {
                                 : countDaysForAcceptance(offer?.dueDate) + ' Days'}
                     </Text>
                 </View>
-                {(offer?.showToAllManagers===false)?<View style={styles.button}>
+                {(offer?.showToAllManagers === false) ? <View style={styles.button}>
                     <TouchableOpacity onPress={publishOffer}>
                         <Text style={styles.buttonText}>Publish Offer</Text>
                     </TouchableOpacity>
-                </View>:(
+                </View> : (
                     <View style={styles.summaryRowCentered}>
                         <Text style={styles.summaryLabel}>Offer already published</Text>
                     </View>

@@ -7,7 +7,6 @@ import ContentLoader from '@/components/ContentLoader';
 import {MultiContractFullInfo, ShortInfoFighter, SubmittedInformationOffer,} from '@/service/response';
 import {EventPosterImage} from "@/components/offers/public/EventPosterImage";
 import {TitleWithAction} from "@/components/offers/public/TitleWithAction";
-import {ShareOffer} from "@/components/offers/public/ShareOffer";
 import {MainOfferDetails} from "@/components/offers/exclusive-multi/MainOfferDetails";
 import {useFocusEffect, useLocalSearchParams} from "expo-router";
 import {MultiFightPurseGrid} from "@/components/offers/exclusive-multi/MultiFightPurseGrid";

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View,} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect, useLocalSearchParams} from "expo-router";
@@ -35,9 +35,9 @@ export const PromotionSingleOffer = () => {
         SubmittedInformationOffer | undefined
     >();
 
-
     useFocusEffect(
         React.useCallback(() => {
+
             if (!id) {
                 return;
             }

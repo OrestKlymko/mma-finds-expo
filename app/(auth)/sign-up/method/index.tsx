@@ -4,7 +4,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuth} from "@/context/AuthContext";
 import {SignUpDataManager, SignUpDataPromotion} from "@/models/model";
 import {LoginResponse} from "@/service/response";
-import {changeNotificationState, createManager, createPromotion} from "@/service/service";
+import {
+    changeNotificationState,
+    createManager,
+    createPromotion,
+    submitFighterOnExclusiveOffer
+} from "@/service/service";
 import colors from "@/styles/colors";
 import {TraditionalMethod} from '@/components/method-auth/TraditionalMethod';
 import {Divider} from "@/components/method-auth/Divider";
@@ -14,6 +19,7 @@ import {AppleMethod} from "@/components/method-auth/AppleMethod";
 import GoBackButton from "@/components/GoBackButton";
 import {useLocalSearchParams, useRouter} from "expo-router";
 import {createFormDataForManager, createFormDataForPromotion} from "@/service/create-entity/formDataService";
+import {FighterInfoRequest} from "@/service/request";
 
 
 export default function Index() {
@@ -25,7 +31,25 @@ export default function Index() {
     const [appleLoading, setAppleLoading] = useState(false);
     const {setToken, setMethodAuth, setRole, setEntityId} = useAuth();
 
+    const createSubmitOnOffer = async (managerId: string | undefined) => {
+        if (!managerId) {
+            return;
+        }
+        const typeOffer = await AsyncStorage.getItem("typeOffer");
+        const offerId = await AsyncStorage.getItem("offerIdToSubmit");
+        if (!offerId || !typeOffer) {
+            return;
+        }
+        const data: FighterInfoRequest = {
+            managerId: managerId,
+            response: 'PENDING',
+            fighterId: null,
+        }
+        if (typeOffer === 'private') {
+            await submitFighterOnExclusiveOffer(offerId, data)
+        }
 
+    }
     const createProfile = async (email: string) => {
         try {
             if (role === 'PROMOTION') {
@@ -39,6 +63,7 @@ export default function Index() {
                 const formData = await createFormDataForManager(data as SignUpDataManager, email, 'oauth');
                 const res = await createManager(formData);
                 await handleSuccessAuth(res);
+                await createSubmitOnOffer(res.entityId);
                 setGoogleLoading(false);
                 setAppleLoading(false);
                 router.push('/manager/fighter/create');

@@ -36,7 +36,7 @@ export const ExclusiveCardOffer: React.FC<ExclusiveCardOfferProps> = ({
             router.push('/profile/settings/account/account-info/verification')
         } else {
             if (item.typeOffer === 'EXCLUSIVE') {
-                router.push(`/offer/exclusive/single/${item.offerId}`)
+                router.push(`/offers/private/${item.offerId}`)
             } else {
                 router.push(`/offer/exclusive/multi/${item.offerId}`)
             }

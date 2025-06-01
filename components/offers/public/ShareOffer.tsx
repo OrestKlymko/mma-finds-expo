@@ -6,6 +6,8 @@ import appsFlyer from "react-native-appsflyer";
 import colors from '@/styles/colors';
 import {ExclusiveOfferInfo, MultiContractFullInfo, PublicOfferInfo, ShortInfoFighter,} from '@/service/response';
 import {formatDateFromLocalDate} from "@/utils/utils";
+import {OfferTypeEnum} from "@/models/model";
+import {useAuth} from "@/context/AuthContext";
 
 type Props = {
     offer:
@@ -14,33 +16,46 @@ type Props = {
         | MultiContractFullInfo
         | null
         | undefined;
-    typeOffer: 'Public' | 'Exclusive' | 'Multi-fight contract';
+    typeOffer: OfferTypeEnum;
     fighter?: ShortInfoFighter | null | undefined;
 };
 
 
-export const ShareOffer: React.FC<Props> = ({offer, typeOffer, fighter}) => {
+export const ShareOffer: React.FC<Props> = ({offer, typeOffer}) => {
+    const {entityId}=useAuth()
     const shareOffer = async () => {
         if (!offer) return;
         switch (typeOffer) {
-            case 'Public':
+            case OfferTypeEnum.PUBLIC:
                 await sharePublicOffer(offer as PublicOfferInfo, makeLink);
+                break;
+            case OfferTypeEnum.EXCLUSIVE:
+                await sharePrivateOffer(offer as ExclusiveOfferInfo, makeLink);
                 break;
         }
     };
 
-    const makeLink = (customParams: Record<string, any>) =>
+    const makeLink = (custom: Record<string, any>) =>
         new Promise<string>((resolve, reject) => {
             appsFlyer.generateInviteLink(
                 {
-                    channel: 'share',
-                    campaign: 'offer_share',
-                    userParams: customParams,
+                    brandDomain: 'links.mmafinds.com',   // your custom domain
+                    deeplinkPath : `com.mmafinds.app://offers/private/${offer?.offerId}`,
+                    channel    : 'share',
+                    campaign   : 'offer_share',
+                    userParams : {
+                        ...custom,
+                        entityInvite : entityId,
+                        af_dp        : `com.mmafinds.app://offers/private/${offer?.offerId}`,
+                        af_force_deeplink: 'true'
+                    }
                 },
-                (url) => resolve(url),
-                (e) => reject(e),
+                url => resolve(url),
+                err => reject(err)
             );
         });
+
+
 
     const formatOpponentDetails = (o: PublicOfferInfo | ExclusiveOfferInfo) => {
         if (o.opponentName) {
@@ -103,7 +118,7 @@ export const ShareOffer: React.FC<Props> = ({offer, typeOffer, fighter}) => {
         };
         const shortUrl = await makeLink(params);
 
-        const message = `
+        const message = ` 
 Event: ${o.eventName}
 Date: ${formatDateFromLocalDate(o.eventDate)}
 Location: ${o.eventLocation}
@@ -116,6 +131,29 @@ Click here: ${shortUrl}
     `.trim();
 
         await Share.share({message, title: 'New Fight Offer!'});
+    };
+
+    const sharePrivateOffer = async (
+        o: ExclusiveOfferInfo,
+        makeLink: (p: Record<string, any>) => Promise<string>
+    ) => {
+        const params = {
+            offerId: o.offerId,
+            type: 'private',
+        };
+        const shortUrl = await makeLink(params);
+
+        const message = `Event - ${o.eventName}
+Date - ${formatDateFromLocalDate(o.eventDate)}
+Location - ${o.eventLocation}
+Sport - ${o.mmaRules === 'PROFESSIONAL' ? 'Professional' : 'Amateur'} ${o.sportType}
+Opponent - ${o.opponentName}
+Weight Class - ${o.weightClass}
+
+Full fight details in MMA Finds app.
+    `.trim();
+
+        await Share.share({message, title: 'New Fight Offer!',url: shortUrl});
     };
     // const shareExclusiveOffer = async (o: ExclusiveOfferInfo) => {
     //     const control = {

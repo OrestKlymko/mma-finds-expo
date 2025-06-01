@@ -74,7 +74,6 @@ const SubmitFighterOfferScreen: React.FC = () => {
 
     const convertDateToNormalView = (date: string[] | null | undefined) => {
         if (!date) return '';
-        console.log(date);
         return `${date[2]}.${date[1]}.${date[0]}`;
     };
 

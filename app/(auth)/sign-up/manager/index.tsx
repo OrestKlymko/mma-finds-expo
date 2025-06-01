@@ -25,10 +25,11 @@ import {PhoneNumberComponent} from "@/components/PhoneNumberComponent";
 import FooterSignIn from "@/context/FooterSignIn";
 import SocialMediaModal from "@/components/SocialMediaModal";
 import {SignUpDataManager} from "@/models/model";
-import {changeNotificationState, createManagerSecond} from "@/service/service";
+import {changeNotificationState, createManagerSecond, submitFighterOnExclusiveOffer} from "@/service/service";
 import {LoginResponse} from "@/service/response";
 import {createFormDataForManagerAsSecondProfile} from "@/service/create-entity/formDataService";
 import GoBackButton from "@/components/GoBackButton";
+import {FighterInfoRequest} from "@/service/request";
 
 export default function Index() {
     const {setToken, setMethodAuth, setRole, setEntityId} = useAuth();
@@ -74,6 +75,7 @@ export default function Index() {
         } catch (err) {
         }
     };
+
 
     const onSignUpPress = async () => {
         setHasSubmited(true);
@@ -135,7 +137,7 @@ export default function Index() {
             router.push({
                 pathname: '/(auth)/sign-up/method',
                 params: {
-                    data: JSON.stringify({...dataToSend,secondProfile: 'false'}),
+                    data: JSON.stringify({...dataToSend, secondProfile: 'false'}),
                     role: 'MANAGER'
                 }
             });

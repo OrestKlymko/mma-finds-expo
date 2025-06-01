@@ -32,7 +32,7 @@ export function ReferralInputComponent({
     const createReferralLink = async (userId: string) => {
         return new Promise<string>((resolve, reject) => {
             // OneLink template ID з дашборду
-            appsFlyer.setAppInviteOneLinkID('CACT', () => {
+            appsFlyer.setAppInviteOneLinkID('sfst', () => {
                 const params: GenerateInviteLinkParams = {
                     channel     : 'referral',
                     campaign    : 'user_invite',

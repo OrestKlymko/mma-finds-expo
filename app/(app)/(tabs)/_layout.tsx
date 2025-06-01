@@ -1,5 +1,5 @@
-import {Tabs} from "expo-router";
-import {View, StyleSheet} from "react-native";
+import {Redirect, Tabs} from "expo-router";
+import {View, StyleSheet, Text} from "react-native";
 import Home from "@/assets/home.svg"
 import SearchLogo from "@/assets/searchlogo.svg";
 import Profile from "@/assets/profile.svg";

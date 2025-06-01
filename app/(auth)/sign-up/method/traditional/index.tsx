@@ -15,13 +15,15 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useLocalSearchParams, useRouter} from "expo-router";
 import {SignUpDataManager, SignUpDataPromotion} from "@/models/model";
 import {useAuth} from "@/context/AuthContext";
-import {createManager, createPromotion} from "@/service/service";
+import {createManager, createPromotion, submitFighterOnExclusiveOffer} from "@/service/service";
 import {createFormDataForManager, createFormDataForPromotion} from "@/service/create-entity/formDataService";
 import FloatingLabelInput from "@/components/FloatingLabelInput";
 import colors from "@/styles/colors";
 import FooterSignIn from "@/context/FooterSignIn";
 import PasswordInputSection from "@/components/method-auth/PasswordInputSection";
 import GoBackButton from "@/components/GoBackButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {FighterInfoRequest} from "@/service/request";
 
 export default function Index() {
     const insets = useSafeAreaInsets();
@@ -40,6 +42,26 @@ export default function Index() {
     const [isPasswordValid, setIsPasswordValid] = useState(false);
     const [agreeTerms, setAgreeTerms] = useState(false);
     const {setToken, setMethodAuth, setRole} = useAuth();
+
+    const createSubmitOnOffer = async (managerId: string | undefined) => {
+        if (!managerId) {
+            return;
+        }
+        const typeOffer = await AsyncStorage.getItem("typeOffer");
+        const offerId = await AsyncStorage.getItem("offerIdToSubmit");
+        if (!offerId || !typeOffer) {
+            return;
+        }
+        const data: FighterInfoRequest = {
+            managerId: managerId,
+            response: 'PENDING',
+            fighterId: null,
+        }
+        if (typeOffer === 'private') {
+            await submitFighterOnExclusiveOffer(offerId, data)
+        }
+
+    }
 
     useEffect(() => {
         if (confirmEmail.trim().length === 0) {
@@ -117,10 +139,11 @@ export default function Index() {
             );
             formData.append('password', password);
             createManager(formData)
-                .then(res => {
+                .then(async (res) => {
                     setToken(res.token);
                     setMethodAuth(res.methodAuth);
                     setRole(res.role);
+                    await createSubmitOnOffer(res.entityId);
                     setTimeout(() => {
                         router.push('/manager/fighter/create');
                     }, 1000);
@@ -149,7 +172,7 @@ export default function Index() {
                     styles.container,
                     {paddingBottom: insets.bottom},
                 ]}>
-                <GoBackButton />
+                <GoBackButton/>
 
                 <View style={{marginTop: 50}}>
                     {/* Поле Email */}

@@ -93,7 +93,7 @@ const NotificationsScreen = () => {
         switch (type) {
             case 'EXCLUSIVE_OFFER':
                 router.push({
-                    pathname: `/offer/exclusive/single/${notif.data.offerId}`,
+                    pathname: `/offers/private/${notif.data.offerId}`,
                     params: {fighterId: notif.data.fighterId}
                 });
                 break;

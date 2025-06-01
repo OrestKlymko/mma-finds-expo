@@ -13,16 +13,12 @@ import OpponentDetailsSection from "@/components/offers/public/OpponentDetailsSe
 import OfferExtendedDetailsInfo from "@/components/offers/public/OfferExtendedDetailsInfo";
 import EventDescription from "@/components/EventDescription";
 import colors from "@/styles/colors";
-import {
-    SubmittedFighterPrivateOfferSection
-} from "@/components/offers/exclusive-single/SubmittedFighterPrivateOfferSection";
-import {
-    PrivatePromotionTailoringProcess
-} from "@/components/offers/exclusive-single/PrivatePromotionTailoringProcess";
 import {PrivateManagerTailoringProcess} from "@/components/offers/exclusive-single/PrivateManagerTailoringProcess";
+import {useAuth} from "@/context/AuthContext";
 
 export const ManagerSingleOffer = () => {
     const insets = useSafeAreaInsets();
+    const {role}=useAuth();
     const [submittedFighters, setSubmittedFighters] = useState<ShortInfoFighter[]>([]);
     const [fightersChosen, setFightersChosen] = useState<ShortInfoFighter | null>(null);
     const [offer, setOffer] = useState<ExclusiveOfferInfo | null>(null);
@@ -38,6 +34,7 @@ export const ManagerSingleOffer = () => {
 
     useFocusEffect(
         React.useCallback(() => {
+            console.log(role);
             if (!id) return;
             getData();
         }, [id])
@@ -53,7 +50,9 @@ export const ManagerSingleOffer = () => {
                 setBenefits(res.benefit);
                 setSubmittedInformation(res?.submittedInformation);
                 setPreviousInfo(res?.previousOfferPrice);
-            })
+            }).catch((e)=>{
+                console.log(e);
+        })
             .finally(() => setContentLoading(false));
     }
     if (contentLoading) {
@@ -68,7 +67,7 @@ export const ManagerSingleOffer = () => {
                 styles.container,
                 {paddingBottom: insets.bottom},
             ]}>
-            <EventPosterImage eventImageLink={offer?.eventImageLink}/>
+            <EventPosterImage eventImageLink={offer?.eventImageLink} role={role}/>
 
             <View style={styles.eventDetailsContainer}>
                 {offer?.isFightTitled && (
@@ -88,7 +87,7 @@ export const ManagerSingleOffer = () => {
                 <PrivateManagerTailoringProcess offer={offer} submittedFighters={submittedFighters}
                                                   onRefresh={getData} chosenFighter={fightersChosen}
                                                   submittedInformation={submittedInformation}
-                                                  previousInfo={previousInfo}/>
+                                                  previousInfo={previousInfo} role={role}/>
                 {/*<ExclusiveMyFighterList offerType={'Exclusive Offer'} fighter={fighters} offerId={offer?.offerId}/>*/}
             </View>
         </ScrollView>
