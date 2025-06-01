@@ -20,6 +20,7 @@ export const createFormDataForPromotion = async (
     formData.append('facebook', data.facebook);
     formData.append('twitter', data.twitter);
     formData.append('snapchat', data.snapchat);
+    formData.append('secondProfile', 'false');
     formData.append('email', email.toLowerCase());
     formData.append('method', method);
     if(method==='standard'&&data.password){
@@ -46,6 +47,7 @@ export const createFormDataForPromotionAsSecondProfile = async (
     formData.append('instagram', data.instagram);
     formData.append('facebook', data.facebook);
     formData.append('twitter', data.twitter);
+    formData.append('secondProfile', 'true');
     formData.append('snapchat', data.snapchat);
     return formData;
 };
@@ -69,6 +71,7 @@ export const createFormDataForManager = async (
     formData.append('country', data.country);
     formData.append('continent', data.continent);
     formData.append('email', email.toLowerCase());
+    formData.append('secondProfile', 'false');
     formData.append('method', method);
     if(method==='standard'&&data.password){
         formData.append('password', data.password);
@@ -100,6 +103,7 @@ export const createFormDataForManagerAsSecondProfile = async (
     formData.append('description', data.about);
     formData.append('phone', data.phoneNumber);
     formData.append('country', data.country);
+    formData.append('secondProfile', 'true');
     formData.append('continent', data.continent);
 
     if (data.profileImage) {

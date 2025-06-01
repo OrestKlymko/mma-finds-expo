@@ -16,7 +16,7 @@ import {useRouter} from "expo-router";
 
 
 interface ExclusiveMyFighterListProps {
-    offerType: 'Multi-Fight Offer' | 'Exclusive Offer',
+    offerType: 'Multi-Fight Offer' | 'Private Offer',
     fighter?: ShortInfoFighter | null,
     offerId?: string | undefined
 }

@@ -3,31 +3,27 @@ import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import React from "react";
 import colors from "@/styles/colors";
 import {useRouter} from "expo-router";
+import {FighterChosen} from "@/store/createExclusiveOfferSlice";
 
-interface FighterForOfferProps {
-    fighterName: string |undefined | null;
-    type: string;
+
+interface FighterForExclusiveOfferProps {
+    fighterChosen?: FighterChosen[] | undefined
 }
 
-export const FighterForOffer = ({fighterName,type}: FighterForOfferProps) => {
+export const FighterForExclusiveOffer = ({fighterChosen}: FighterForExclusiveOfferProps) => {
     const router = useRouter();
+
     return <>
-        <Text style={styles.label}>Fighter*</Text>
-        {/*<TouchableOpacity*/}
-        {/*    style={[styles.inputRow]}*/}
-        {/*    onPress={() => {*/}
-        {/*        router.push({pathname:'/offer/exclusive/create/fighter',params:{type}});*/}
-        {/*    }}>*/}
-        {/*    <Text style={[styles.inputText]}>{fighterName || 'Fighter*'}</Text>*/}
-        {/*    <Icon name="chevron-right" size={24} color={colors.primaryBlack} />*/}
-        {/*</TouchableOpacity>*/}
+        <Text style={styles.label}>Fighters*</Text>
         <TouchableOpacity
             style={[styles.inputRow]}
             onPress={() => {
-                router.push({pathname:'/offer/exclusive/create/fighter',params:{type}});
+                router.push({pathname: '/offer/exclusive/create/fighter/manager'});
             }}>
-            <Text style={[styles.inputText]}>{fighterName || 'Fighter*'}</Text>
-            <Icon name="chevron-right" size={24} color={colors.primaryBlack} />
+            <Text style={[styles.inputText]}>{fighterChosen && fighterChosen.length > 0
+                ? 'You have chosen ' + fighterChosen.length + ' fighters'
+                : 'Choose Fighters'}</Text>
+            <Icon name="chevron-right" size={24} color={colors.primaryBlack}/>
         </TouchableOpacity>
     </>;
 };

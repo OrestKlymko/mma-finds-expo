@@ -16,7 +16,7 @@ const PromotionMyOfferList = () => {
     const insets = useSafeAreaInsets();
     const {setSelectedFilters} = useFilter();
     const {entityId} = useAuth();
-    const [selectedTab, setSelectedTab] = useState<'Public' | 'Exclusive'>(
+    const [selectedTab, setSelectedTab] = useState<'Public' | 'Private'>(
         'Public',
     );
     const [publicOffers, setPublicOffers] = useState<PublicOfferInfo[]>([]);

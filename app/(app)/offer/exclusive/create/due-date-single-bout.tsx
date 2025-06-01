@@ -30,7 +30,7 @@ const ExclusiveOfferDueDateScreen = () => {
         mmaRule,
         isTitleFight,
         event,
-        fighterId,
+        fightersChosen,
         benefits,
         fightLength,
         currency,
@@ -91,7 +91,7 @@ const ExclusiveOfferDueDateScreen = () => {
             mmaRule: mmaRule?.toUpperCase(),
             isTitleFight: isTitleFight,
             eventId: event?.id,
-            fighterId: fighterId,
+            managerSubmitRequest: fightersChosen || [],
             benefit: mapBenefitsToCreateBenefit(benefits),
             rounds: fightLength?.rounds,
             minutes: fightLength?.minutes,
@@ -129,23 +129,23 @@ const ExclusiveOfferDueDateScreen = () => {
 
     return (
         <View style={{flex: 1, backgroundColor: colors.background}}>
-            <GoBackButton />
+            <GoBackButton/>
             <View style={[styles.container, {paddingBottom: insets.bottom}]}>
                 <View style={styles.illustrationContainer}>
-                    <Icon name="calendar-clock" size={80} color={colors.primaryBlack} />
+                    <Icon name="calendar-clock" size={80} color={colors.primaryBlack}/>
                 </View>
 
                 <Text style={styles.title}>Set a Due Date!</Text>
 
                 <Text style={styles.subtitle}>
                     Choose a deadline for fighters’ representative to confirm or reject
-                    your exclusive offer.
+                    your private offer.
                 </Text>
 
                 <TouchableOpacity
                     style={styles.selectFieldButton}
                     onPress={() => setDatePickerVisible(true)}>
-                    <Icon name="calendar-outline" size={24} color={colors.primaryBlack} />
+                    <Icon name="calendar-outline" size={24} color={colors.primaryBlack}/>
                     <Text style={styles.selectFieldText}>
                         {dueDate ? `Due Date: ${formatDate(dueDate)}` : 'Set a Due Date'}
                     </Text>
@@ -153,7 +153,7 @@ const ExclusiveOfferDueDateScreen = () => {
                 <DateTimePickerModal
                     isVisible={isDatePickerVisible}
                     mode="date"
-                    pickerContainerStyleIOS={{alignSelf:'center'}}
+                    pickerContainerStyleIOS={{alignSelf: 'center'}}
                     display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                     locale="en-GB"
                     minimumDate={new Date()}
@@ -166,10 +166,10 @@ const ExclusiveOfferDueDateScreen = () => {
                     onPress={handleSubmit}
                     disabled={loading}>
                     {loading ? (
-                        <ActivityIndicator size="small" color={colors.white} />
+                        <ActivityIndicator size="small" color={colors.white}/>
                     ) : (
                         <Text style={styles.submitButtonText}>
-                            Send Exclusive Fight Offer
+                            Send Private Fight Offer
                         </Text>
                     )}
                 </TouchableOpacity>

@@ -64,7 +64,7 @@ export const PromotionTailoringProcess = ({
     ) : (
         <>
             <PromotionTailoringSubmittedFighters
-                fighters={fighters}
+                submittedFighters={fighters}
                 offer={offer}
                 submittedInformation={submittedInformation}
             />

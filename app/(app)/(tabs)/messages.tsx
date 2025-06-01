@@ -1,7 +1,7 @@
 import React, {useRef, useState} from 'react';
 import {Alert, Animated, Modal, Pressable, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import {useRouter, useFocusEffect, useNavigation} from 'expo-router'; // navigation — тільки якщо треба setOptions
+import {useRouter, useFocusEffect, useNavigation} from 'expo-router';
 import {firestore} from '@/firebase/firebase';
 import {useAuth} from '@/context/AuthContext';
 import {getMessageInfo} from '@/service/service';

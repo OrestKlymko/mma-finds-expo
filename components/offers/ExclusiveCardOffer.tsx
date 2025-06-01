@@ -67,7 +67,7 @@ export const ExclusiveCardOffer: React.FC<ExclusiveCardOfferProps> = ({
                     <Text style={styles.eventValue}>
                         {item.typeOffer === 'MULTI'
                             ? 'Multi-Fight Contract'
-                            : 'Exclusive Offer'}
+                            : 'Private Offer'}
                     </Text>
                 </Text>
 

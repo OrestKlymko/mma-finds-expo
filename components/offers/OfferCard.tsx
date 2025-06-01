@@ -15,7 +15,7 @@ interface OfferCardProps {
     isFavorite?: boolean;
     removeFavorite?: (offer: PublicOfferInfo) => void;
     horizontal?: boolean;
-    onClick?: () => void;
+    onClick?: (offerId:string) => void;
 }
 
 export const OfferCard: React.FC<OfferCardProps> = ({
@@ -33,13 +33,13 @@ export const OfferCard: React.FC<OfferCardProps> = ({
         return horizontal ? {width: CARD_WIDTH, marginRight: 13} : {};
     }, [CARD_WIDTH, horizontal]);
     const router = useRouter();
-
     const handleOfferDetail = useCallback(() => {
-        // if (onClick) {
-        //     onClick();
-        // } else {
+        if (onClick) {
+            onClick(item.offerId);
+            return;
+        } else {
             router.push(`/offer/public/${item.offerId}`)
-        // }
+        }
     }, [item.offerId, role]);
 
     return (
@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
         shadowOffset: {width: 0, height: 2},
         shadowRadius: 4,
         marginRight: 10,
+        marginBottom: 10
     },
     inactiveOffer: {
         opacity: 0.5,

@@ -1,5 +1,6 @@
 import {Benefit, DocumentType, USER_ROLE} from './response';
 import {PurseValuesMulti} from "@/store/createMultiContractOfferSlice";
+import {FighterChosen} from "@/store/createExclusiveOfferSlice";
 
 
 export type TaskStatus = 'TODO' | 'COMPLETED';
@@ -169,7 +170,7 @@ export type CreateExclusiveOfferRequest = {
     mmaRule?: string;
     isTitleFight?: boolean;
     eventId?: string;
-    fighterId?: string;
+    managerSubmitRequest?: FighterChosen[];
     benefit?: Benefit;
     rounds?: number;
     minutes?: number;
@@ -254,4 +255,19 @@ export type PaySuccessFeeRequest = {
 
 export type CheckEntityExistsRequest = {
     criteria: string;
+}
+
+export type FighterInfoRequest = {
+    fighterId:string | null | undefined;
+    managerId:string;
+    response: string;
+}
+
+export interface EntityIdResponse {
+    id: string;
+}
+
+export type FighterAndManagerIdsResponse={
+    fighterIdList: EntityIdResponse[];
+    managerIdList: EntityIdResponse[];
 }

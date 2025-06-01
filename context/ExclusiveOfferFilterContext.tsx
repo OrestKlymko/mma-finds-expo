@@ -17,7 +17,7 @@ export const ExclusiveOfferFilterProvider = ({
 }) => {
   const [selectedExOfferFilters, setSelectedExOfferFilters] =
       useState<ExclusiveOfferFilter>({
-        activeTab: 'Exclusive',
+        activeTab: 'Private',
         eventName: [],
         fighterName: [],
         offerType: [],

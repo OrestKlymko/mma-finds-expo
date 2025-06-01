@@ -104,7 +104,7 @@ export const PromotionOfferDetailsScreen = () => {
                     closedReason={offer?.closedReason}
                     type="Public"
                 />
-                <LocationAndDateEvent offer={offer}/>
+                {offer&&<LocationAndDateEvent offer={offer}/>}
                 {offer?.eventDescription && (
                     <EventDescription eventDescription={offer.eventDescription}/>
                 )}

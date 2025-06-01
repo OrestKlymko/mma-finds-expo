@@ -84,7 +84,7 @@ export const ManagerExclusiveOfferDetailsScreen = () => {
                 <TitleWithAction title={offer?.eventName || 'Event Name'} />
 
                 <ExclusiveOfferState offer={offer} />
-                <LocationAndDateEvent offer={offer} />
+                {offer&&<LocationAndDateEvent offer={offer}/>}
                 <EventDescription eventDescription={offer?.eventDescription} />
                 <OfferExtendedDetailsInfo offer={offer} benefits={benefits} />
                 <OpponentDetailsSection offer={offer}/>

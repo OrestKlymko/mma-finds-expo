@@ -26,7 +26,8 @@ export const FeatureOffer = ({offer}: Props) => {
         router.push('/offer/public/success/top');
       })
       .catch(error => {
-        if (error.response.status === 406) {
+        console.log(error.status);
+        if (error.status === 406) {
           if(role==='PROMOTION_EMPLOYEE'){
             Alert.alert(
               'Not Enough Credits',

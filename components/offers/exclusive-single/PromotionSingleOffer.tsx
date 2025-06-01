@@ -1,15 +1,11 @@
 import React, {useState} from 'react';
-import {Alert, ScrollView, StyleSheet, Text, View,} from 'react-native';
+import {ScrollView, StyleSheet, Text, View,} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '@/store/store';
-import {setFighterId} from '@/store/createExclusiveOfferSlice';
-import {useFocusEffect, useLocalSearchParams, useRouter} from "expo-router";
+import {useFocusEffect, useLocalSearchParams} from "expo-router";
 import {Benefit, ExclusiveOfferInfo, ShortInfoFighter, SubmittedInformationOffer} from "@/service/response";
-import {chooseFighterForExclusiveOffer, getExclusiveOfferInfoById} from "@/service/service";
+import {getExclusiveOfferInfoById} from "@/service/service";
 import {EventPosterImage} from "@/components/offers/public/EventPosterImage";
 import {TitleWithAction} from "@/components/offers/public/TitleWithAction";
-import {ShareOffer} from "@/components/offers/public/ShareOffer";
 import {ExclusiveOfferState} from "@/components/offers/exclusive-multi/ExclusiveOfferState";
 import {LocationAndDateEvent} from "@/components/offers/public/LocationAndDateEvent";
 import ContentLoader from "@/components/ContentLoader";
@@ -17,21 +13,17 @@ import OpponentDetailsSection from "@/components/offers/public/OpponentDetailsSe
 import OfferExtendedDetailsInfo from "@/components/offers/public/OfferExtendedDetailsInfo";
 import EventDescription from "@/components/EventDescription";
 import colors from "@/styles/colors";
+import {SubmittedFightersSection} from "@/components/offers/public/SubmittedFightersSection";
+import {OfferTypeEnum} from "@/models/model";
 import {
-    ExclusivePromotionTailoringProcess
-} from "@/components/offers/exclusive-single/ExclusivePromotionTailoringProcess";
+    PrivatePromotionTailoringProcess
+} from "@/components/offers/exclusive-single/PrivatePromotionTailoringProcess";
 
 export const PromotionSingleOffer = () => {
     const insets = useSafeAreaInsets();
-    const {fighterId} = useSelector(
-        (state: RootState) => state.createExclusiveOffer,
-    );
 
-    const router = useRouter();
-    const dispatch = useDispatch();
-    const [fighters, setFighters] = useState<ShortInfoFighter>(
-        {} as ShortInfoFighter,
-    );
+    const [fighters, setFighters] = useState<ShortInfoFighter[]>([]);
+    const [chosenFighter, setChosenFighter] = useState<ShortInfoFighter | null>(null);
     const [offer, setOffer] = useState<ExclusiveOfferInfo | null>(null);
     const {id} = useLocalSearchParams<{ id: string }>()
     const [benefits, setBenefits] = useState<Benefit | null>(null);
@@ -43,46 +35,50 @@ export const PromotionSingleOffer = () => {
         SubmittedInformationOffer | undefined
     >();
 
+
     useFocusEffect(
         React.useCallback(() => {
-            setContentLoading(true);
-            getExclusiveOfferInfoById(id,null)
-                .then(res => {
-                    setOffer(res.offer);
-                    setFighters(res.fighter);
-                    setBenefits(res.benefit);
-                    setSubmittedInformation(res?.submittedInformation);
-                    setPreviousInfo(res?.previousOfferPrice);
-                })
-                .finally(() => setContentLoading(false));
-
-            if (fighterId) {
-                setContentLoading(true);
-                chooseAnotherFighter();
+            if (!id) {
+                return;
             }
-        }, [fighterId, id]),
+            getData();
+        }, [id]),
     );
+    const getData = () => {
+        setContentLoading(true);
+        getExclusiveOfferInfoById(id, null)
+            .then(res => {
+                setOffer(res.offer);
+                setFighters(res.submittedFighters);
+                setBenefits(res.benefit);
+                setChosenFighter(res.chosenFighter);
+                setSubmittedInformation(res?.submittedInformation);
+                setPreviousInfo(res?.previousOfferPrice);
+            })
+            .finally(() => setContentLoading(false));
+    }
 
-    const chooseAnotherFighter = () => {
-        if (!fighterId) {
-            return;
+    const renderFooter = () => {
+        if (fighters &&
+            offer &&
+            submittedInformation &&
+            submittedInformation?.statusResponded !== 'REJECTED') {
+            return <PrivatePromotionTailoringProcess
+                submittedFighters={fighters}
+                chosenFighter={chosenFighter}
+                offer={offer}
+                submittedInformation={submittedInformation}
+                previousInfo={previousInfo}
+                onRefresh={getData}
+            />
         }
-        chooseFighterForExclusiveOffer(fighterId, id)
-            .then(() => {
-                dispatch(setFighterId(''));
-                router.back();
-            })
-            .catch(() => {
-                Alert.alert('Error', 'Something went wrong. Please try again.');
-            })
-            .finally(() => {
-                setContentLoading(false);
-            });
-    };
+        return <SubmittedFightersSection offer={offer} fighters={fighters} offerType={OfferTypeEnum.EXCLUSIVE}/>
+    }
 
     if (contentLoading) {
         return <ContentLoader/>;
     }
+
     return (
         <ScrollView
             showsVerticalScrollIndicator={false}
@@ -102,20 +98,13 @@ export const PromotionSingleOffer = () => {
                 )}
                 <TitleWithAction title={offer?.eventName || 'Event Name'}/>
                 <ExclusiveOfferState offer={offer}/>
-                <LocationAndDateEvent offer={offer}/>
+                {offer&&<LocationAndDateEvent offer={offer}/>}
                 {offer?.eventDescription && (
                     <EventDescription eventDescription={offer.eventDescription}/>
                 )}
                 <OfferExtendedDetailsInfo offer={offer} benefits={benefits}/>
                 <OpponentDetailsSection offer={offer}/>
-                {offer && (
-                    <ExclusivePromotionTailoringProcess
-                        fighter={fighters}
-                        offer={offer}
-                        submittedInformation={submittedInformation}
-                        previousInfo={previousInfo}
-                    />
-                )}
+                {renderFooter()}
             </View>
         </ScrollView>
     );

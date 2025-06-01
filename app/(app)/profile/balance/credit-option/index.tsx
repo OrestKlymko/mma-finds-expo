@@ -5,7 +5,6 @@ import GoBackButton from '@/components/GoBackButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useAuth} from '@/context/AuthContext';
 import {
-    createPaymentIntentForCharge,
     featureFighterOnOffer,
     featureYourOffer,
     getCredit,

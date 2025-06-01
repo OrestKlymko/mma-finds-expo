@@ -11,6 +11,7 @@ import colors from '@/styles/colors';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
 import { SubmittedInformationPublicOffer } from '@/models/tailoring-model';
+import {SubmittedInformationOffer} from "@/service/response";
 
 /*
   SuccessFeePaymentSection
@@ -23,7 +24,7 @@ import { SubmittedInformationPublicOffer } from '@/models/tailoring-model';
 
 interface Props {
     offerId: string;
-    submittedInformation: SubmittedInformationPublicOffer;
+    submittedInformation: SubmittedInformationOffer;
 }
 
 const SuccessFeePaymentSection: React.FC<Props> = ({ offerId, submittedInformation }) => {

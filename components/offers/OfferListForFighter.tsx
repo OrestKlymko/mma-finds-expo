@@ -4,8 +4,9 @@ import {
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PublicOfferInfo, PublicOfferShortInfo} from '@/service/response';
-import {Offer} from "@/models/model";
+import {Offer, OfferTypeEnum} from "@/models/model";
 import {OfferCard} from "@/components/offers/OfferCard";
+import {useRouter} from 'expo-router';
 
 // TODO: replace public offer info with publicoffershortinfo
 interface OfferListProps {
@@ -13,19 +14,17 @@ interface OfferListProps {
     horizontal?: boolean;
     isFavorite?: boolean;
     refreshFavorites?: () => void;
+    offerType?: OfferTypeEnum
 }
 
-
-
 export const OfferListForFighter = (({
-                                                   offers,
-                                                   horizontal,
-                                                   isFavorite,
-                                                   refreshFavorites,
-                                               }: OfferListProps) => {
-
-
-
+                                         offers,
+                                         horizontal,
+                                         isFavorite,
+                                         refreshFavorites,
+                                         offerType,
+                                     }: OfferListProps) => {
+    const router = useRouter();
     const removeFavorite = React.useCallback(async (offer: PublicOfferInfo) => {
         try {
             const storedFavorites = await AsyncStorage.getItem('favoriteOffers');
@@ -39,13 +38,6 @@ export const OfferListForFighter = (({
     }, [refreshFavorites]);
 
 
-
-
-
-    const renderContentWithVerificationState = (item: PublicOfferInfo) => {
-        return <OfferCard item={item} isFavorite={isFavorite} removeFavorite={removeFavorite} />;
-    };
-
     return (
         <FlatList
             data={offers}
@@ -54,8 +46,13 @@ export const OfferListForFighter = (({
             showsVerticalScrollIndicator={false}
             keyExtractor={item => item.offerId}
             renderItem={({item}) =>
-                renderContentWithVerificationState(item)
-            }
+                (<OfferCard onClick={(offerId) => {
+                    if (offerType === OfferTypeEnum.EXCLUSIVE) {
+                        router.push(`/offer/exclusive/single/${offerId}`);
+                    } else {
+                        router.push(`/offer/public/${item.offerId}`)
+                    }
+                }} item={item} isFavorite={isFavorite} removeFavorite={removeFavorite}/>)}
         />
     );
 });

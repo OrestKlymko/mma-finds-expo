@@ -8,7 +8,7 @@ import {ExclusiveOfferList} from "@/components/offers/ExclusiveOfferList";
 import {SearchAndFilterExclusiveOfferBar} from "@/components/offers/SearchAndFilterExclusiveOfferBar";
 
 interface Props {
-    selectedTab: 'Public' | 'Exclusive';
+    selectedTab: 'Public' | 'Private';
     publicOffers: PublicOfferInfo[];
     filteredOffers: PublicOfferInfo[];
     setFilteredOffers: (offers: PublicOfferInfo[]) => void;
@@ -51,7 +51,7 @@ export const OfferContent: React.FC<Props> = ({
         );
     }
 
-    if (selectedTab === 'Exclusive') {
+    if (selectedTab === 'Private') {
         return (
             <View>
                 <SearchAndFilterExclusiveOfferBar

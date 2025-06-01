@@ -135,7 +135,7 @@ export default function Index() {
             router.push({
                 pathname: '/(auth)/sign-up/method',
                 params: {
-                    data: JSON.stringify(dataToSend),
+                    data: JSON.stringify({...dataToSend,secondProfile: 'false'}),
                     role: 'MANAGER'
                 }
             });

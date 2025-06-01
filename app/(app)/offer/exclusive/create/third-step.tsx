@@ -14,11 +14,11 @@ const SuccessCreatePublicOfferScreen: React.FC = () => {
             </View>
 
             <Text style={styles.title}>
-                Exclusive Offer Sent!
+                Private Offer Sent!
             </Text>
 
             <Text style={styles.description}>
-                Your exclusive fight offer has been successfully sent. Await a response!
+                Your private fight offer has been successfully sent. Await a response!
             </Text>
 
             <TouchableOpacity

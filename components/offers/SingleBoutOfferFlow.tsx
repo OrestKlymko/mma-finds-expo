@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import colors from '@/styles/colors';
-import {getEventById, getFullInfoAboutFighter} from '@/service/service';
+import {getEventById} from '@/service/service';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store/store';
 import {
@@ -15,8 +15,6 @@ import {
     setCurrency,
     setDueDateDocument,
     setEvent,
-    setFighterId,
-    setFighterName,
     setFightLength,
     setIsTitleFight,
     setMmaRule,
@@ -45,9 +43,9 @@ import BenefitBottomSheet from "@/components/BenefitBottomSheet";
 import FloatingLabelInput from "@/components/FloatingLabelInput";
 import {PromotionTailoringRequiredDocuments} from "@/components/PromotionTailoringRequiredDocuments";
 import {SportTypeSingleSelectDropdown} from "@/components/SportTypeSingleSelectDropdown";
-import {FighterForOffer} from "@/components/FighterForOffer";
 import PurseExclusiveFightComponent from "@/components/offers/PurseExclusiveFightComponent";
 import {useRouter} from "expo-router";
+import {FighterForExclusiveOffer} from "@/components/fighter/FightersForExclusiveOffer";
 
 interface SingleBoutOfferFlowProps {
     eventId?: any;
@@ -66,7 +64,6 @@ export function SingleBoutOfferFlow({
         mmaRule,
         isTitleFight,
         event,
-        fighterName,
         benefits,
         fightLength,
         currency,
@@ -81,10 +78,10 @@ export function SingleBoutOfferFlow({
         opponentAge,
         opponentGender,
         opponentNationality,
+        fightersChosen
     } = useSelector((state: RootState) => state.createExclusiveOffer);
     const dispatch = useDispatch();
     const [noTapologyLink, setNoTapologyLink] = useState(false);
-    const state = useSelector((state: RootState) => state.createExclusiveOffer);
     const [hasSubmit, setHasSubmit] = useState(false);
     const [errorWeightClass, setErrorWeightClass] = useState(false);
     const [errorTapologyLink, setErrorTapologyLink] = useState(false);
@@ -114,21 +111,11 @@ export function SingleBoutOfferFlow({
                 dispatch(setEvent(res));
             });
         }
-        if (fighterId) {
-            getFullInfoAboutFighter(fighterId).then(res => {
-                dispatch(setFighterName(res.name));
-                dispatch(setFighterId(res.fighterId));
-            });
-        }
+
     }, [eventId, fighterId, dispatch]);
 
     const handleContinue = (shouldSaveDocumentToProfile: boolean) => {
 
-
-        if (!state.fighterId) {
-            Alert.alert('Please select a fighter.');
-            return;
-        }
         if (documents.length === 0) {
             Alert.alert('Please select at least one document.');
             return;
@@ -185,7 +172,7 @@ export function SingleBoutOfferFlow({
     return (
         <View style={styles.container}>
             <EventName event={event}/>
-            <FighterForOffer fighterName={fighterName} type="Exclusive"/>
+            <FighterForExclusiveOffer fighterChosen={fightersChosen}/>
             <RuleSelector
                 mmaRule={mmaRule ?? 'Amateur'}
                 setMmaRule={mmaRuleChoose => dispatch(setMmaRule(mmaRuleChoose))}

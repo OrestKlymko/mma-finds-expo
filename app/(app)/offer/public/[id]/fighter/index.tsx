@@ -3,17 +3,17 @@ import {StyleSheet, Text, View} from 'react-native';
 import colors from '@/styles/colors';
 import GoBackButton from '@/components/GoBackButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useRoute} from '@react-navigation/native';
 import {SearchForSubmittedFighterListFlow} from "@/components/offers/public/SearchForSubmittedFighterListFlow";
 import {useLocalSearchParams} from "expo-router";
+import {OfferTypeEnum} from "@/models/model";
 
 const MyListSubmittedFighterScreen = () => {
     const insets = useSafeAreaInsets();
-    const route = useRoute();
 
     const params = useLocalSearchParams();
-    const offerId = params.offerId as string;
+    const offerId = params.id as string;
     const currency = params.currency as string;
+    const offerType = JSON.parse(params.offerType as string) as OfferTypeEnum
     const excludeFighterId = params.excludeFighterId as string;
     const eligibleToSelect = params.eligibleToSelect as string;
 
@@ -29,6 +29,7 @@ const MyListSubmittedFighterScreen = () => {
                     currency={currency}
                     excludeFighterId={excludeFighterId}
                     eligibleToSelect={eligibleToSelect==='true'}
+                    offerType={offerType}
                 />
             </View>
         </View>

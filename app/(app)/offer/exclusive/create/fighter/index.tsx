@@ -5,34 +5,26 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import colors from '@/styles/colors';
 
 import GoBackButton from '@/components/GoBackButton';
-import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
-import {setFighterId, setFighterName,} from '@/store/createExclusiveOfferSlice';
 
 import {
     setFighterId as setMultiFighterId,
     setFighterName as setMultiFighterName,
 } from '@/store/createMultiContractOfferSlice';
 import {SearchForFighterFlow} from "@/components/fighter/SearchForFighterFlow";
-import {useLocalSearchParams} from "expo-router";
+import {useLocalSearchParams, useRouter} from "expo-router";
 
 const PromotionAllFighterExclusiveTypeOffersListScreen = () => {
     const insets = useSafeAreaInsets();
     const {type} = useLocalSearchParams<{type: string}>();
     const dispatch = useDispatch();
-    const navigation = useNavigation();
-
+    const router=useRouter();
     const handleChooseFighter = (fighter: any) => {
-
-        if (type === 'Exclusive') {
-            dispatch(setFighterId(fighter.id));
-            dispatch(setFighterName(fighter.name));
-        }
         if (type === 'Multi-Fight') {
             dispatch(setMultiFighterId(fighter.id));
             dispatch(setMultiFighterName(fighter.name));
         }
-        navigation.goBack();
+        router.back();
     };
 
     return (

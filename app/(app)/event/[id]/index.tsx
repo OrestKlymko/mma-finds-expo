@@ -155,11 +155,11 @@ export const EventFullInfoScreen = () => {
                         onPress={() => {
                             router.push({pathname: '/offer/exclusive/create', params: {eventId}});
                         }}>
-                        <Text style={styles.ctaButtonText}>Create Exclusive Offer</Text>
+                        <Text style={styles.ctaButtonText}>Create Private Offer</Text>
                         <TouchableOpacity
                             onPress={() =>
                                 Alert.alert(
-                                    'Create and send an exclusive fight offer tailored to a specific fighter, whether for a single bout or a multi-fight contract. The offer is visible only to the fighters’ representative.',
+                                    'Create and send an private fight offer tailored to a specific fighter, whether for a single bout or a multi-fight contract. The offer is visible only to the fighters’ representative.',
                                 )
                             }>
                             <Icon name="information-outline" size={20} color={colors.white}/>

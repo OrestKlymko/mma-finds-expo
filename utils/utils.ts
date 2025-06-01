@@ -80,7 +80,8 @@ export const formatTime = (
   endTime: string,
   date: string,
 ) => {
-  const day = new Date(date).toLocaleDateString('en-US', {weekday: 'long'});
+  const dateObj = new Date(date[0], date[1] - 1, date[2]);
+  const day = dateObj.toLocaleDateString('en-US', {weekday: 'long'});
   return `${day}, ${startTime} - ${endTime} CET`;
 };
 

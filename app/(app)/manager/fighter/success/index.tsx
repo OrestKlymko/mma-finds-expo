@@ -20,9 +20,7 @@ const SuccessFighterChosenForOfferScreen: React.FC = () => {
 
             {/* Опис */}
             <Text style={styles.description}>
-                Thank you for featuring your fighter&#39;s position!{'\n'}
-                As a result, your fighter secures a prime spot{'\n'}
-                on the list of submitted fighters.
+                You have successfully chosen a fighter for the offer. You can now proceed to the next step.
             </Text>
 
             {/* Кнопка */}

@@ -10,28 +10,27 @@ import {
 import colors from '@/styles/colors';
 import GoBackButton from '@/components/GoBackButton';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
-import {getShortInfoFightersByManager} from '@/service/service';
+import {getShortInfoFightersByManager, submitFighterOnExclusiveOffer} from '@/service/service';
 import {PublicOfferInfo, ShortInfoFighter} from "@/service/response";
 import {Image} from "expo-image";
 import FighterList from "@/app/(app)/manager/fighter";
 import {FeatureFighterModal} from "@/components/fighter/FeatureFighterModal";
-import {useLocalSearchParams} from "expo-router";
+import {useLocalSearchParams, useRouter} from "expo-router";
 import {useAuth} from "@/context/AuthContext";
+import {OfferTypeEnum} from "@/models/model";
 
 const SubmitFighterOfferScreen: React.FC = () => {
     const params = useLocalSearchParams();
+    const router = useRouter();
     const {entityId} = useAuth();
     const offer = JSON.parse(params.offer as string) as PublicOfferInfo;
+    const offerType = JSON.parse(params.offerType as string) as OfferTypeEnum
     const submittedFighters = useMemo<ShortInfoFighter[]>(() => {
-        return JSON.parse(params.submittedFighters as string);
+        return JSON.parse(params.submittedFighters as string) as ShortInfoFighter[];
     }, [params.submittedFighters]);
-
     const submittedIds = useMemo<string[]>(() => {
-        return submittedFighters.map(f => f.id);
+        return submittedFighters?.map(f => f.id) || [];
     }, [submittedFighters]);
-    const [offerToSubmit, setOfferToSubmit] = useState<PublicOfferInfo | null>(
-        null,
-    );
     const [fighterName, setFighterName] = useState<string | null>(null);
     const [fighterId, setFighterId] = useState<string | null>(null);
 
@@ -73,10 +72,10 @@ const SubmitFighterOfferScreen: React.FC = () => {
         closeFightersModal();
     };
 
-    const convertDateToNormalView = (date: string | null | undefined) => {
+    const convertDateToNormalView = (date: string[] | null | undefined) => {
         if (!date) return '';
-        const dateNormal = date.split('-');
-        return `${dateNormal[2]}.${dateNormal[1]}.${dateNormal[0]}`;
+        console.log(date);
+        return `${date[2]}.${date[1]}.${date[0]}`;
     };
 
     return (
@@ -113,7 +112,7 @@ const SubmitFighterOfferScreen: React.FC = () => {
 
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => {
+                        onPress={async () => {
                             if (!fighterId) {
                                 Alert.alert(
                                     'Choose a Fighter',
@@ -121,8 +120,19 @@ const SubmitFighterOfferScreen: React.FC = () => {
                                 );
                                 return;
                             }
-                            setFeatureModalVisible(true);
+                            if (offerType && offerType === OfferTypeEnum.EXCLUSIVE) {
+                                const data = {
+                                    fighterId: fighterId,
+                                    managerId: entityId,
+                                    response: 'ACCEPTED',
+                                };
+                                await submitFighterOnExclusiveOffer(offer.offerId, data)
+                                setIsMainVisible(false);
+                                router.push('/manager/fighter/success');
+                                return;
+                            }
                             setIsMainVisible(false);
+                            setFeatureModalVisible(true);
                         }}>
                         <Text style={styles.buttonText}>Submit Fighter</Text>
                     </TouchableOpacity>

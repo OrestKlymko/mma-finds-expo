@@ -3,29 +3,43 @@ import colors from '@/styles/colors';
 import React from 'react';
 import {FighterInfoResponse} from '@/service/response';
 import {useRouter} from "expo-router";
+import {OfferTypeEnum} from "@/models/model";
+import {chooseFighterForExclusiveOffer} from "@/service/service";
 
 type FighterManagerButtonsProps = {
-    fighter?: FighterInfoResponse | undefined | null;
-    offerId?: string;
-    fighterId?: string;
-    currency?: string;
-    eligibleToSelect?: boolean;
+    fighter?: FighterInfoResponse | undefined | null,
+    offerId?: string,
+    fighterId?: string,
+    currency?: string,
+    eligibleToSelect?: boolean,
+    offerType?: OfferTypeEnum
 };
 
 export const FighterManagerButtonsWithSelect = ({
-                                          fighter,
-                                          offerId,
-                                          fighterId,
-                                          currency,
-                                          eligibleToSelect,
-                                      }: FighterManagerButtonsProps) => {
+                                                    fighter,
+                                                    offerId,
+                                                    fighterId,
+                                                    currency,
+                                                    eligibleToSelect,
+                                                    offerType
+                                                }: FighterManagerButtonsProps) => {
     const router = useRouter();
-    const handleSelectFighter = () => {
+    const handleSelectFighter = async () => {
         if (!eligibleToSelect) {
             Alert.alert(
                 'You cannot select this fighter',
                 'Please extend the due date of the offer.',
             );
+            return;
+        }
+        if (offerType === OfferTypeEnum.EXCLUSIVE) {
+            if (!offerId || !fighterId) {
+                Alert.alert("Error", "Offer ID or Fighter ID is missing. Cannot proceed with the selection.");
+                return;
+            }
+            await chooseFighterForExclusiveOffer(fighterId, offerId);
+            Alert.alert("Private Offer Sent", "Please wait until the fighter accepts your offer.");
+            router.back();
             return;
         }
         router.push({

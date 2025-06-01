@@ -14,7 +14,6 @@ import {
     getCredit,
     submitOfferByFighterWithoutFeaturing,
 } from '@/service/service';
-import {useNavigation} from '@react-navigation/native';
 import {PublicOfferInfo} from "@/service/response";
 import {useRouter} from "expo-router";
 import {Image} from "expo-image";

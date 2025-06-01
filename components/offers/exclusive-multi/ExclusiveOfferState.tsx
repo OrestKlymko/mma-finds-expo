@@ -1,15 +1,41 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import React from 'react';
 import colors from '@/styles/colors';
 import {countDaysForAcceptance} from "@/utils/utils";
+import {publishPrivateOffer} from "@/service/service";
+import {ExclusiveOfferInfo, PublicOfferInfo} from "@/service/response";
+import {useRouter} from "expo-router";
 
 type Props = {
     offer: any;
 };
 
 export const ExclusiveOfferState = ({offer}: Props) => {
+    const router =useRouter();
+    const publishOffer = () => {
+        Alert.alert("Show your offer to the world!", "Are you sure you want to publish this offer?",
+            [
+                {
+                    text: "Cancel",
+                    style: "destructive"
+                },
+                {
+                    text: "Publish",
+                    isPreferred: true,
+                    onPress: async () => {
+                        if (!offer?.offerId) {
+                            Alert.alert("Error", "Offer ID is missing. Cannot publish the offer.");
+                            return;
+                        }
+                        await publishPrivateOffer(offer?.offerId)
+                        Alert.alert("Offer published", "Your offer is now visible to the world.");
+                        router.back();
+                    }
+                }
+            ])
 
+    }
     return (
         <>
             <View style={styles.eventSummaryContainer}>
@@ -24,6 +50,15 @@ export const ExclusiveOfferState = ({offer}: Props) => {
                                 : countDaysForAcceptance(offer?.dueDate) + ' Days'}
                     </Text>
                 </View>
+                {(offer?.showToAllManagers===false)?<View style={styles.button}>
+                    <TouchableOpacity onPress={publishOffer}>
+                        <Text style={styles.buttonText}>Publish Offer</Text>
+                    </TouchableOpacity>
+                </View>:(
+                    <View style={styles.summaryRowCentered}>
+                        <Text style={styles.summaryLabel}>Offer already published</Text>
+                    </View>
+                )}
             </View>
         </>
     );
@@ -56,5 +91,22 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         color: colors.primaryBlack,
+    },
+    button: {
+        backgroundColor: colors.primaryGreen,
+        borderRadius: 9,
+        paddingVertical: 12,
+        alignItems: 'center',
+        height: 56,
+        justifyContent: 'center',
+        width: '100%',
+        color: colors.white,
+    },
+    buttonText: {
+        fontSize: 16,
+        fontFamily: 'Roboto',
+        fontWeight: '500',
+        color: colors.white,
+        paddingVertical: 4,
     },
 });

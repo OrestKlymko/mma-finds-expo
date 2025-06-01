@@ -24,15 +24,15 @@ export const ChooseAnotherFighterButton = (
     useEffect(() => {
         if (type === 'Exclusive' && exclusiveFighterId) {
             confirmFighterParticipationExclusive(offerId, exclusiveFighterId).then(() => {
-                    router.back();
                     dispatch(resetExclusiveOffer());
+                    // router.back();
                 }
             )
         }
         if (type === 'Multi-Fight' && multiContractFighterId) {
             confirmFighterParticipationMultiFight(offerId, multiContractFighterId).then(() => {
-                router.back();
                 dispatch(resetMultiOffer());
+                // router.back();
             })
         }
     }, [exclusiveFighterId, multiContractFighterId, offerId, type]);

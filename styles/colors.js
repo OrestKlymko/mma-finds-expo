@@ -7,6 +7,7 @@ export default {
     priceGray: 'rgb(101, 101, 101)',
     grayBackground: '#F2F2F2',
     lightGray: '#F2F2F2',
+    lightPrimaryGreen: '#aee0c6', // Світлий відтінок основного зеленого
     error: '#FF0000',       // Колір помилки
     darkError: '#C01818',
     white: '#FFFFFF',       // Білий колір

@@ -6,6 +6,7 @@ import {useRouter} from "expo-router";
 import {SubmittedFighterList} from "@/components/offers/public/SubmittedFighterList";
 import colors from "@/styles/colors";
 import {FeatureFighterBottomSheet} from "@/components/submissions/FeaturedFighterBottomSheet";
+import {OfferTypeEnum} from "@/models/model";
 
 
 interface OfferDetailFooterProps {
@@ -48,6 +49,7 @@ export const ManagerSubmittedFighterList = ({
                         pathname: '/manager/submissions/submit', params: {
                             offer: JSON.stringify(offer),
                             submittedFighters: JSON.stringify(fighters),
+                            offerType: JSON.stringify(OfferTypeEnum.PUBLIC),
                         }
                     })
                 }}>

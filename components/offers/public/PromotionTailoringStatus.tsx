@@ -1,16 +1,17 @@
 import {StyleSheet, Text, View} from 'react-native';
 import colors from '@/styles/colors';
 import React from 'react';
-import {PublicOfferInfo, SubmittedInformationOffer} from '@/service/response';
+import {ExclusiveOfferInfo, PublicOfferInfo, SubmittedInformationOffer} from '@/service/response';
 import {getCurrencySymbol} from "@/utils/utils";
 import NegotiationOfferComponent from "@/components/offers/NegotiationOfferComponent";
 import {PromotionRequiredDocumentsSection} from "@/components/offers/PromotionRequiredDocumentsSection";
 
 type TailoringStatusProps = {
     submittedInformation?: SubmittedInformationOffer;
-    offer: PublicOfferInfo;
+    offer: PublicOfferInfo | ExclusiveOfferInfo | null;
     previousInfo?: SubmittedInformationOffer;
     docs: any[];
+    typeOffer?: 'Public' | 'Exclusive';
 };
 
 export const PromotionTailoringStatus = ({
@@ -18,6 +19,7 @@ export const PromotionTailoringStatus = ({
                                              offer,
                                              previousInfo,
                                              docs,
+                                             typeOffer = 'Public',
                                          }: TailoringStatusProps) => {
     if (
         submittedInformation?.statusResponded === 'PENDING' ||
@@ -76,10 +78,10 @@ export const PromotionTailoringStatus = ({
                         </View>
                     ))}
                     <PromotionRequiredDocumentsSection
-                        typeOffer={'Public'}
+                        typeOffer={typeOffer}
                         documents={docs}
                         dueDate={offer?.dueDateForDocument}
-                        offerId={offer.offerId}
+                        offerId={offer?.offerId}
                         fighterId={submittedInformation?.fighterId}
                     />
                 </View>
@@ -132,7 +134,7 @@ export const PromotionTailoringStatus = ({
                 offer={offer}
                 submittedInformation={submittedInformation}
                 previousInformation={previousInfo}
-                typeOffer={'Public'}
+                typeOffer={typeOffer}
             />
         );
     }

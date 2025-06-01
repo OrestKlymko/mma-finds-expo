@@ -25,7 +25,7 @@ const SuccessCreatePublicOfferScreen: React.FC = () => {
 
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => router.push('/offer/public')}>
+                onPress={() => router.push('/(app)/(tabs)/feed')}>
                 <Text style={styles.buttonText}>Continue</Text>
             </TouchableOpacity>
         </View>

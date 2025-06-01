@@ -138,7 +138,6 @@ const Manager = () => {
             }
             getManagerInfoById(entityId)
                 .then(res => {
-                    console.log(res);
                     setMethodRegistered(res.methodRegistered);
                     setProfileImage({
                         uri: `${res.imageLink}` || '',

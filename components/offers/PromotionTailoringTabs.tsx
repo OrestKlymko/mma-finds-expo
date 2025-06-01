@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import colors from '@/styles/colors';
 import {SubmittedInformationOffer} from "@/service/response";
 
@@ -14,6 +14,13 @@ export const PromotionTailoringTabs = ({
                                            selectedTab,
                                            setSelectedTab,
                                        }: PromotionTailoringTabsProps) => {
+    useEffect(() => {
+        if (submittedInformation?.statusResponded === 'ACCEPTED') {
+            setSelectedTab('Selected Fighter');
+        } else {
+            setSelectedTab('Preselected Fighter');
+        }
+    }, [submittedInformation]);
 
     return (
         <View style={styles.tabContainer}>

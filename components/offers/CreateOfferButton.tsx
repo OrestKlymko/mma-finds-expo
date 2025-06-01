@@ -24,7 +24,7 @@ export const CreateOfferButton = ({selectedTab}: CreateOfferButtonProps) => {
             onPress={() => {
                 router.push('/offer/exclusive/create')
             }}>
-            <Text style={styles.createButtonText}>Create Exclusive Offer</Text>
+            <Text style={styles.createButtonText}>Create Private Offer</Text>
         </TouchableOpacity>
     );
 };

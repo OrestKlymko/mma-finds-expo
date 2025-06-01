@@ -6,11 +6,12 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import {Image} from "expo-image";
 
 interface FighterCardProps {
-    fighter: ShortInfoFighter;
-    onPress: (fighter: ShortInfoFighter) => void;
+    fighter: ShortInfoFighter,
+    onPress: (fighter: ShortInfoFighter) => void,
+    selectedInList?: boolean
 }
 
-const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress}) => {
+const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress, selectedInList}) => {
     const isRejected = fighter?.contractStatus === 'REJECTED';
     const isUnverified = fighter?.verificationState !== 'APPROVED';
 
@@ -30,11 +31,16 @@ const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress}) => {
                         onPress(fighter);
                     }
                 }}
-                activeOpacity={isRejected || (isUnverified && fighter.verificationState) ? 1 : 0.7}
+                activeOpacity={isRejected || (isUnverified && fighter?.verificationState) ? 1 : 0.7}
                 disabled={isRejected}
                 style={[
                     styles.fighterCard,
-                    (isRejected || (isUnverified && fighter.verificationState)) && {opacity: 0.5}
+                    selectedInList && {backgroundColor: colors.primaryGreen},
+                    {
+                        opacity: isRejected ? 0.5 : 1,
+                        backgroundColor: selectedInList ? colors.lightPrimaryGreen : colors.lightGray
+                    },
+                    (isRejected || (isUnverified && fighter?.verificationState)) && {opacity: 0.5}
                 ]}>
                 <Ionicons
                     name="chevron-forward"
@@ -83,7 +89,7 @@ const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress}) => {
             )}
 
             {/* Show overlay for unverified */}
-            {fighter.verificationState && isUnverified && !isRejected && (
+            {fighter?.verificationState && isUnverified && !isRejected && (
                 <View style={styles.unverifiedOverlay}>
                     <Text style={styles.unverifiedText}>
                         Not verified yet. Please contact him for verification.

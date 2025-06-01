@@ -16,7 +16,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import GoBackButton from '@/components/GoBackButton';
 import colors from '@/styles/colors';
 import {sendFeedback} from '@/service/service';
-import {useNavigation} from '@react-navigation/native';
 import * as DocumentPicker from "expo-document-picker";
 import {useRouter} from "expo-router";
 
@@ -35,7 +34,6 @@ const ShareAnIdeaScreen = () => {
     const insets = useSafeAreaInsets();
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-    const navigation = useNavigation();
     // 📂 **Функція для прикріплення файлу**
 
     const handleAttachFile = async () => {

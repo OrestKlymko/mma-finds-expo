@@ -11,12 +11,12 @@ import {
     CreatePaymentIntentRequest,
     CreatePaymentIntentStripeRequest,
     CreateTaskRequest,
-    DefaultMethodRequest,
+    DefaultMethodRequest, FighterAndManagerIdsResponse, FighterInfoRequest,
     InvitationMemberRequest,
     LoginRequest,
     OfferSubmissionResponse,
     PayCreditRequest,
-     PaySuccessFeeRequest,
+    PaySuccessFeeRequest,
     PublicOfferToSelectedFighterRequest,
     RecoveryPasswordRequest,
     ResponseExclusiveOfferRequest,
@@ -56,7 +56,7 @@ import {
     PromotionInformationResponse,
     PromotionNameResponse,
     PromotionResponse, PromotionShortInfo,
-    PublicOfferInfo,
+    PublicOfferInfo, ResponseFighterOnPrivateOfferEnum,
     ShortInfoFighter,
     SportTypeResponse,
     SubAccountResponse,
@@ -202,10 +202,10 @@ export const getFoundationStyles = (): Promise<FoundationStyleResponse[]> =>
     request<FoundationStyleResponse[]>('/foundation', {method: 'GET'}); // CHECKED
 
 export const getFoundationStylesFilter = (): Promise<FoundationStyleResponse[]> =>
-    request<FoundationStyleResponse[]>('/fighter/foundation-styles/filter', {method: 'GET'});
+    request<FoundationStyleResponse[]>('/filter/foundation', {method: 'GET'});
 
 export const getFoundationStylesFilterOfferById = (offerId: string): Promise<FoundationStyleResponse[]> =>
-    request<FoundationStyleResponse[]>(`/fighter/foundation-styles/offer/${offerId}`, {method: 'GET'});
+    request<FoundationStyleResponse[]>(`/filter/foundation/submitted-fighter/${offerId}`, {method: 'GET'});
 
 export const getShortInfoManager = (managerId: string): Promise<ManagerShortInfo> =>
     request<ManagerShortInfo>(`/manager/${managerId}/short-info`, {method: 'GET'}); // CHECKED
@@ -228,11 +228,11 @@ export const confirmFighterParticipationMultiFight = (offerId: string, fighterId
 export const confirmFighterParticipationExclusive = (offerId: string, fighterId: string): Promise<void> =>
     request<void>(`/exclusive/submit-fighter/${offerId}/${fighterId}`, {method: 'POST'});
 
+export const responseFighterOnSubmissionPrivateOffer = (offerId: string, fighterId: string, response: ResponseFighterOnPrivateOfferEnum): Promise<void> =>
+    request<void>(`/offer/exclusive/${offerId}/${fighterId}/${response}/respond`, {method: 'PUT'});
+
 export const getFighterByManagerId = (managerId: string): Promise<ShortInfoFighter[]> =>
     request<ShortInfoFighter[]>(`/fighter/manager/${managerId}`, {method: 'GET'}); // CHECKED
-
-export const createPaymentIntentForCharge = (data: CreatePaymentIntentRequest): Promise<CreatePaymentIntentResponse> =>
-    jsonRequest<CreatePaymentIntentResponse>('/payment/create-payment-intent', 'POST', data);
 
 export const createPaymentIntentForStripe = (data: CreatePaymentIntentStripeRequest): Promise<CreatePaymentIntentResponse> =>
     jsonRequest<CreatePaymentIntentResponse>('/stripe/payment-intent', 'POST', data);
@@ -337,6 +337,15 @@ export const getAllPublicOffers = (
     const qs = buildQueryString({promotionId, lastSeen});
     return request<PublicOfferInfo[]>(`/offer/public${qs}`, {method: 'GET'}); // CHECKED
 };
+
+export const getAllPrivateOffers = (
+    promotionId?: string | null,
+    lastSeen?: string | null
+): Promise<PublicOfferInfo[]> => {
+    const qs = buildQueryString({promotionId, lastSeen});
+    return request<PublicOfferInfo[]>(`/offer/exclusive${qs}`, {method: 'GET'}); // CHECKED
+};
+
 export const getExclusiveOffers = (): Promise<any> =>
     request<any>('/offer/exclusive', {method: 'GET'});// CHECKED
 
@@ -359,17 +368,20 @@ export const getExclusiveOfferInfoById = (offerId: string, fighterId: undefined 
     return request<FullInfoAboutExclusiveOffer>(`/offer/exclusive/${offerId}${qs}`, {method: 'GET'});
 } // CHECKED
 
-export const chooseFighterForExclusiveOffer = (fighterId: string, offerId: string): Promise<void> =>
-    request<void>(`/exclusive-offers/choose-fighter/${fighterId}/${offerId}`, {method: 'POST'});
+export const chooseFighterForExclusiveOffer = (fighterId: string | null | undefined, offerId: string): Promise<void> =>
+    request<void>(`/offer/exclusive/${offerId}/${fighterId}/choose-fighter`, {method: 'POST'});
+
+export const publishPrivateOffer = (offerId: string): Promise<void> =>
+    request<void>(`/offer/exclusive/${offerId}/publish`, {method: 'PUT'});
 
 export const declineExclusiveOffer = (offerId: string, data: ResponseExclusiveOfferRequest): Promise<void> =>
-    jsonRequest<void>(`negotiation/exclusive/reject/${offerId}/${data.fighterId}`, 'POST', {rejectedReason: data.response});
+    jsonRequest<void>(`/negotiation/exclusive/reject/${offerId}/${data.fighterId}`, 'POST', {rejectionReason: data.response});
 
 export const declineMultiFightOffer = (offerId: string, data: ResponseExclusiveOfferRequest): Promise<void> =>
-    jsonRequest<void>(`/negotiation/multi/reject/${offerId}/${data.fighterId}`, 'POST', {rejectedReason: data.response});
+    jsonRequest<void>(`/negotiation/multi/reject/${offerId}/${data.fighterId}`, 'POST', {rejectionReason: data.response});
 
 export const acceptMultiFightOffer = (offerId: string, fighterId: string): Promise<void> =>
-    request<void>(`negotiation/multi/confirm/${offerId}/${fighterId}`, {method: 'POST'});
+    request<void>(`/negotiation/multi/confirm/${offerId}/${fighterId}`, {method: 'POST'});
 
 export const negotiationDocumentForMultiFightOffer = (data: CreateMultiOfferTailoringRequest): Promise<void> =>
     jsonRequest<void>(`/negotiation/multi/negotiate/${data.offerId}/${data.fighterId}`, 'POST', {pursesMultiFight: data.purses});
@@ -391,6 +403,12 @@ export const getShortInfoFightersByManager = (managerId: string): Promise<ShortI
 
 export const createExclusiveOffer = (data: CreateExclusiveOfferRequest): Promise<void> =>
     jsonRequest<void>('/offer/exclusive', 'POST', data); // CHECKED
+
+export const submitFighterOnExclusiveOffer = (offerId: string, fighterInfo: FighterInfoRequest): Promise<FighterInfoRequest> =>
+    jsonRequest<FighterInfoRequest>(`/offer/exclusive/${offerId}/submit`, 'POST', fighterInfo);
+
+export const getSubmittedFightersOnExclusiveOffer = (offerId: string): Promise<FighterAndManagerIdsResponse> =>
+    jsonRequest<FighterAndManagerIdsResponse>(`/offer/exclusive/${offerId}/submit`, 'GET');
 
 export const createMultiFightOffer = (data: CreateMultiOfferRequest): Promise<void> =>
     jsonRequest<void>('/offer/multi', 'POST', data); // CHECKED
@@ -455,7 +473,7 @@ export const getMultiFightOfferById = (offerId: string, fighterId: string | unde
 }
 
 export const getAllPromotionName = (): Promise<PromotionNameResponse[]> =>
-    request<PromotionNameResponse[]>('/promotion/all-name', {method: 'GET'});
+    request<PromotionNameResponse[]>('/filter/promotion/name', {method: 'GET'});
 
 export const updateFighter = (fighterId: string, data: FormData): Promise<any> =>
     request<any>(`/fighter/${fighterId}`, {method: 'PUT', body: data});
@@ -464,10 +482,10 @@ export const featureFighterOnOffer = (offerId: string, fighterId: string): Promi
     request<void>(`/submission/${offerId}/${fighterId}/feature`, {method: 'POST', body: JSON.stringify({})});
 
 export const changeNotificationState = (state: ChangeNotificationStatusRequest): Promise<void> =>
-    jsonRequest<void>('/auth/notification', 'POST', state);
+    jsonRequest<void>('/notification/mobile', 'POST', state);
 
 export const getMessageInfo = (userId: string, userRole: USER_ROLE | undefined): Promise<MessageInfoResponse> =>
-    request<MessageInfoResponse>(`/user/message-info?userIds=${userId}&userRole=${userRole}`, {method: 'GET'});
+    request<MessageInfoResponse>(`/notification/mobile/message?userIds=${userId}&userRole=${userRole}`, {method: 'GET'});
 
 export const sendNotification = (data: SendNotificationRequest): Promise<any> =>
     jsonRequest<any>('/user/notification', 'POST', data);
@@ -479,13 +497,13 @@ export const getFeatures = (): Promise<FeatureResponse[]> =>
     request<FeatureResponse[]>('/features', {method: 'GET'});
 
 export const getFilterForPublicOffers = (): Promise<FilterPublicOfferPromotionResponse> =>
-    request<FilterPublicOfferPromotionResponse>('/filter/public-offers', {method: 'GET'});
+    request<FilterPublicOfferPromotionResponse>('/filter/promotion/public', {method: 'GET'});
 
 export const getFilterForPublicOffersManager = (): Promise<FilterPublicOfferManagerResponse> =>
     request<FilterPublicOfferManagerResponse>('/filter/public-offers/manager', {method: 'GET'});
 
 export const getFilterForExclusiveOffers = (): Promise<FilterPublicOfferPromotionResponse> =>
-    request<FilterPublicOfferPromotionResponse>('/filter/exclusive-offers', {method: 'GET'});
+    request<FilterPublicOfferPromotionResponse>('/filter/promotion/exclusive', {method: 'GET'});
 
 export const getAllRequiredDocumentByPromotion = (): Promise<DocumentRequiredResponse[]> =>
     request<DocumentRequiredResponse[]>('/document', {method: 'GET'});

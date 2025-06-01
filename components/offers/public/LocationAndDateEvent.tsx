@@ -9,6 +9,7 @@ type Props = {
 };
 
 export const LocationAndDateEvent = ({offer}: Props) => {
+
   return (
     <>
       <View style={[styles.infoRow, {marginTop: 20}]}>

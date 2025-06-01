@@ -69,7 +69,7 @@ const CreateExclusiveOfferScreen = () => {
                     showsHorizontalScrollIndicator={false}
                     keyboardShouldPersistTaps="handled"
                     contentContainerStyle={styles.container}>
-                    <Text style={styles.title}>Exclusive Fight Offer</Text>
+                    <Text style={styles.title}>Private Fight Offer</Text>
 
                     <Text style={styles.label}>Type of offer*</Text>
                     <View style={styles.buttonGroup}>{contractTypeButtons}</View>

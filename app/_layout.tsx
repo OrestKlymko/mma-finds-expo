@@ -57,8 +57,10 @@ export default function RootLayout() {
     }, []);
     return (
         <StripeProvider
-            publishableKey="pk_test_51PDR6jRxes7eHgo9gthYYUPzuYs4hRSkNh90LUWIFKFDahVlq7xfrPvxE4qPA8NQl46UwYefTor8AzYot2XdJSky00GA1iREea"
-            merchantIdentifier="merchant.com.youApp">
+            publishableKey="pk_test_51RTR3zRvBlhBqGC0txGeKmwc8U8MwVZZcPzGdm8MNaDLyTO4bLiQFxPzXL282CkGoza3ltPdx4FZ3u2XVsjmgdNh00fdCThgIR"
+            merchantIdentifier="merchant.com.mmafinds.payment"
+            urlScheme="com.mmafinds.app"
+        >
             <ReduxProvider store={store}>
                 <CountryModalProvider>
                     <AuthProvider>

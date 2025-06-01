@@ -316,7 +316,8 @@ export type FullInfoAboutPublicOffer = {
 
 export type FullInfoAboutExclusiveOffer = {
     offer: ExclusiveOfferInfo;
-    fighter: ShortInfoFighter;
+    submittedFighters: ShortInfoFighter[];
+    chosenFighter: ShortInfoFighter;
     benefit: Benefit;
     submittedInformation?: SubmittedInformationOffer;
     previousOfferPrice?: SubmittedInformationOffer;
@@ -355,8 +356,7 @@ export type ExclusiveOfferInfo = {
     promotionName: string;
     promotionAvatar: string;
     closedReason?: string | null;
-    fighterName: string;
-    fighterId: string;
+    chooseFighterId: string;
     dueDateForDocument?: string;
     opponentName?: string | null | undefined;
     opponentNationality?: string | null | undefined;
@@ -369,6 +369,7 @@ export type ExclusiveOfferInfo = {
     opponentAmateurWins?: string | null | undefined;
     opponentAmateurLosses?: string | null | undefined;
     opponentAmateurDraws?: string | null | undefined;
+    showToAllManagers: boolean;
 };
 
 export type FighterInfoResponse = {
@@ -599,8 +600,8 @@ export interface FilterPublicOfferManagerResponse
 
 export type PromotionResponse = {
     promotionId: string;
-    managerId:string;
-    isVerified:string;
+    managerId: string;
+    isVerified: string;
     name: string;
     imageLink: string;
     country: string;
@@ -613,8 +614,6 @@ export type CheckCriteriaExistResponse = {
 }
 
 
-
-
 //NEW RESPONSES
 
 export type ManagerShortInfo = {
@@ -622,7 +621,7 @@ export type ManagerShortInfo = {
     promotionId: string | null;
     isVerified: boolean;
     name: string;
-    imageLink:string;
+    imageLink: string;
     companyName: string;
     country: string;
 }
@@ -632,8 +631,21 @@ export type PromotionShortInfo = {
     promotionId: string;
     isVerified: boolean;
     name: string;
-    imageLink:string;
+    imageLink: string;
     activeNumberOffer: number;
     country: string;
 }
 
+
+//CONSTANT
+
+export enum OfferType {
+    EXCLUSIVE,
+    PUBLIC,
+    MULTI_CONTRACT
+}
+
+export enum ResponseFighterOnPrivateOfferEnum {
+    ACCEPTED = 'ACCEPTED',
+    REJECTED = 'REJECTED',
+}

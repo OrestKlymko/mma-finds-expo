@@ -21,7 +21,7 @@ export const FighterManageButtonWithSendExclusiveOffer = ({
                 onPress={() => {
                     router.push({pathname: '/offer/exclusive/create', params: {fighterId: fighterId}})
                 }}>
-                <Text style={styles.selectButtonText}>Send Exclusive Offer</Text>
+                <Text style={styles.selectButtonText}>Send Private Offer</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.contactButton}

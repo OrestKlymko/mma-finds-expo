@@ -4,8 +4,8 @@ import colors from '@/styles/colors';
 import {Filter} from "@/models/model";
 
 type OfferTabProps = {
-    selectedTab: 'Public' | 'Exclusive';
-    setSelectedTab: (tab: 'Public' | 'Exclusive') => void;
+    selectedTab: 'Public' | 'Private';
+    setSelectedTab: (tab: 'Public' | 'Private') => void;
     setSelectedFilters: React.Dispatch<React.SetStateAction<any>>;
 };
 
@@ -34,20 +34,20 @@ export const OfferTab: React.FC<OfferTabProps> = ({
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
-                style={[styles.tab, selectedTab === 'Exclusive' && styles.tabActive]}
+                style={[styles.tab, selectedTab === 'Private' && styles.tabActive]}
                 onPress={() => {
-                    setSelectedTab('Exclusive');
+                    setSelectedTab('Private');
                     setSelectedFilters((prev: Filter) => ({
                         ...prev,
-                        activeTab: 'Exclusive',
+                        activeTab: 'Private',
                     }));
                 }}>
                 <Text
                     style={[
                         styles.tabText,
-                        selectedTab === 'Exclusive' && styles.tabTextActive,
+                        selectedTab === 'Private' && styles.tabTextActive,
                     ]}>
-                    Exclusive
+                    Private
                 </Text>
             </TouchableOpacity>
         </View>

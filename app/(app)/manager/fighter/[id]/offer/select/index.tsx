@@ -12,16 +12,18 @@ import {FighterCharacters} from "@/components/fighter/FighterCharacters";
 import {FighterAndManagerClickHeader} from "@/components/fighter/FighterAndManagerClickHeader";
 import {FighterManagerButtonsWithSelect} from "@/components/fighter/FighterManagerButtonsWithSelect";
 import {useLocalSearchParams} from "expo-router";
+import {FighterLookingState} from "@/components/fighter/FighterLookingState";
+import {OfferTypeEnum} from "@/models/model";
 
 const PromotionFighterDetailsWithSelectFighterScreen = () => {
     const insets = useSafeAreaInsets();
     const [fighter, setFighter] = useState<FighterInfoResponse | null>(null);
     const params = useLocalSearchParams();
-    const {id} = params as {id: string};
-    const {offerId} = params as {offerId: string};
-    const {currency} = params as {currency: string};
-    const {eligibleToSelect} = params as {eligibleToSelect: string};
-
+    const {id} = params as { id: string };
+    const {offerId} = params as { offerId: string };
+    const {currency} = params as { currency: string };
+    const {eligibleToSelect} = params as { eligibleToSelect: string };
+    const offerType = (params.offerType as string) as OfferTypeEnum;
     const [contentLoading, setContentLoading] = useState(false);
     useEffect(() => {
         setContentLoading(true);
@@ -37,11 +39,11 @@ const PromotionFighterDetailsWithSelectFighterScreen = () => {
     }, [id]);
 
     if (contentLoading) {
-        return <ContentLoader />;
+        return <ContentLoader/>;
     }
     return (
         <View style={{flex: 1, backgroundColor: colors.background}}>
-            <GoBackButton />
+            <GoBackButton/>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -50,17 +52,21 @@ const PromotionFighterDetailsWithSelectFighterScreen = () => {
                     styles.container,
                     {paddingBottom: insets.bottom},
                 ]}>
-                <FighterAndManagerClickHeader fighter={fighter} />
+                <FighterAndManagerClickHeader fighter={fighter}/>
                 <FighterManagerButtonsWithSelect
                     fighter={fighter}
                     offerId={offerId}
                     fighterId={id}
                     currency={currency}
-                    eligibleToSelect={eligibleToSelect==='true'}
+                    eligibleToSelect={eligibleToSelect === 'true'}
+                    offerType={offerType}
                 />
-                <FighterDescription description={fighter?.description} />
+                <FighterLookingState
+                    lookingForOpponent={fighter?.lookingForOpponent ?? true}
+                />
+                <FighterDescription description={fighter?.description}/>
 
-                <FighterCharacters fighter={fighter} />
+                <FighterCharacters fighter={fighter}/>
             </ScrollView>
         </View>
     );

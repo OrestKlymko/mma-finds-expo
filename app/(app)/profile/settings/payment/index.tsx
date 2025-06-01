@@ -94,7 +94,7 @@ const PaymentMethodsScreen = () => {
                     testEnv: true,
                 },
             });
-
+            console.log(initError);
             if (initError) {
                 Alert.alert('Error', `Failed to initialize: ${initError.message}`);
                 return;
@@ -102,6 +102,7 @@ const PaymentMethodsScreen = () => {
 
             // Показуємо PaymentSheet
             const {error: paymentSheetError} = await presentPaymentSheet();
+            console.log(paymentSheetError);
 
             if (paymentSheetError) {
                 Alert.alert(

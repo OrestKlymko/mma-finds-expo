@@ -7,7 +7,6 @@ import {
     Platform,
     KeyboardAvoidingView, ActivityIndicator,
 } from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/native';
 import {StyleSheet} from 'react-native';
 
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -107,8 +106,7 @@ const SignUpPromotionScreen = () => {
 
         if (isSecondProfile) {
             setLoading(true);
-            const formData = await createFormDataForPromotion(dataToSend, "", "");
-            formData.append('secondProfile', 'true');
+            const formData = await createFormDataForPromotionAsSecondProfile(dataToSend);
             createPromotion(formData)
                 .then(async res => {
                     await handleSuccessAuth(res);
@@ -127,7 +125,7 @@ const SignUpPromotionScreen = () => {
             router.push({
                 pathname: '/(auth)/sign-up/method',
                 params: {
-                    data: JSON.stringify(dataToSend),
+                    data: JSON.stringify({...dataToSend,secondProfile: 'false'}),
                     role: 'PROMOTION'
                 }
             });

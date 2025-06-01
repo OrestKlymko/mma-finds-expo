@@ -1,4 +1,8 @@
-export type OfferType = 'Public' | 'Exclusive' | 'Multi-fight contract';
+export enum OfferTypeEnum {
+    PUBLIC = 'PUBLIC',
+    EXCLUSIVE = 'EXCLUSIVE',
+    MULTIPLE = 'MULTIPLE',
+}
 
 
 export interface ImageSelectorComponentProps {

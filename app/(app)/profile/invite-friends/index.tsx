@@ -37,7 +37,7 @@ const InviteFriendsScreen = () => {
                         Earn up to €500 in credits with Referrals!
                     </Text>
                     <Text style={styles.description}>
-                        Referring new members to our platform gives you exclusive rewards!
+                        Referring new members to our platform gives you private rewards!
                         Whether you invite promotions or fighter representatives, you’ll
                         receive up to €50 in credits to use on your future purchases.
                     </Text>

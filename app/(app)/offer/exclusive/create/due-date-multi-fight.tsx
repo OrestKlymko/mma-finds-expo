@@ -120,7 +120,7 @@ const ExclusiveOfferDueDateScreen = () => {
                 {/* Subtitle */}
                 <Text style={styles.subtitle}>
                     Choose a deadline for fighters’ representative to confirm or reject
-                    your exclusive offer.
+                    your private offer.
                 </Text>
 
                 {/* Вибір дати */}
@@ -152,7 +152,7 @@ const ExclusiveOfferDueDateScreen = () => {
                         <ActivityIndicator size="small" color={colors.white} />
                     ) : (
                         <Text style={styles.submitButtonText}>
-                            Send Exclusive Fight Offer
+                            Send Private Fight Offer
                         </Text>
                     )}
                 </TouchableOpacity>

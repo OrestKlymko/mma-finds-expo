@@ -1,15 +1,11 @@
 import React, {useState} from 'react';
-import {Alert, ScrollView, StyleSheet, Text, View,} from 'react-native';
+import {ScrollView, StyleSheet, Text, View,} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '@/store/store';
-import {setFighterId} from '@/store/createExclusiveOfferSlice';
-import {useFocusEffect, useLocalSearchParams, useRouter} from "expo-router";
+import {useFocusEffect, useLocalSearchParams} from "expo-router";
 import {Benefit, ExclusiveOfferInfo, ShortInfoFighter, SubmittedInformationOffer} from "@/service/response";
-import {chooseFighterForExclusiveOffer, getExclusiveOfferInfoById} from "@/service/service";
+import {getExclusiveOfferInfoById} from "@/service/service";
 import {EventPosterImage} from "@/components/offers/public/EventPosterImage";
 import {TitleWithAction} from "@/components/offers/public/TitleWithAction";
-import {ShareOffer} from "@/components/offers/public/ShareOffer";
 import {ExclusiveOfferState} from "@/components/offers/exclusive-multi/ExclusiveOfferState";
 import {LocationAndDateEvent} from "@/components/offers/public/LocationAndDateEvent";
 import ContentLoader from "@/components/ContentLoader";
@@ -18,21 +14,17 @@ import OfferExtendedDetailsInfo from "@/components/offers/public/OfferExtendedDe
 import EventDescription from "@/components/EventDescription";
 import colors from "@/styles/colors";
 import {
-    ExclusivePromotionTailoringProcess
-} from "@/components/offers/exclusive-single/ExclusivePromotionTailoringProcess";
-import ExclusiveMyFighterList from "@/components/offers/ExclusiveMyFighterList";
+    SubmittedFighterPrivateOfferSection
+} from "@/components/offers/exclusive-single/SubmittedFighterPrivateOfferSection";
+import {
+    PrivatePromotionTailoringProcess
+} from "@/components/offers/exclusive-single/PrivatePromotionTailoringProcess";
+import {PrivateManagerTailoringProcess} from "@/components/offers/exclusive-single/PrivateManagerTailoringProcess";
 
-export const PromotionSingleOffer = () => {
+export const ManagerSingleOffer = () => {
     const insets = useSafeAreaInsets();
-    const {fighterId} = useSelector(
-        (state: RootState) => state.createExclusiveOffer,
-    );
-
-    const router = useRouter();
-    const dispatch = useDispatch();
-    const [fighters, setFighters] = useState<ShortInfoFighter>(
-        {} as ShortInfoFighter,
-    );
+    const [submittedFighters, setSubmittedFighters] = useState<ShortInfoFighter[]>([]);
+    const [fightersChosen, setFightersChosen] = useState<ShortInfoFighter | null>(null);
     const [offer, setOffer] = useState<ExclusiveOfferInfo | null>(null);
     const {id} = useLocalSearchParams<{ id: string }>()
     const [benefits, setBenefits] = useState<Benefit | null>(null);
@@ -46,41 +38,24 @@ export const PromotionSingleOffer = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            setContentLoading(true);
-            getExclusiveOfferInfoById(id)
-                .then(res => {
-                    setOffer(res.offer);
-                    setFighters(res.fighter);
-                    setBenefits(res.benefit);
-                    setSubmittedInformation(res?.submittedInformation);
-                    setPreviousInfo(res?.previousOfferPrice);
-                })
-                .finally(() => setContentLoading(false));
-
-            if (fighterId) {
-                setContentLoading(true);
-                chooseAnotherFighter();
-            }
-        }, [fighterId, id]),
+            if (!id) return;
+            getData();
+        }, [id])
     );
 
-    const chooseAnotherFighter = () => {
-        if (!fighterId) {
-            return;
-        }
-        chooseFighterForExclusiveOffer(fighterId, id)
-            .then(() => {
-                dispatch(setFighterId(''));
-                router.back();
+    const getData = () => {
+        setContentLoading(true);
+        getExclusiveOfferInfoById(id, null)
+            .then(res => {
+                setOffer(res.offer);
+                setFightersChosen(res.chosenFighter)
+                setSubmittedFighters(res.submittedFighters)
+                setBenefits(res.benefit);
+                setSubmittedInformation(res?.submittedInformation);
+                setPreviousInfo(res?.previousOfferPrice);
             })
-            .catch(() => {
-                Alert.alert('Error', 'Something went wrong. Please try again.');
-            })
-            .finally(() => {
-                setContentLoading(false);
-            });
-    };
-
+            .finally(() => setContentLoading(false));
+    }
     if (contentLoading) {
         return <ContentLoader/>;
     }
@@ -103,19 +78,24 @@ export const PromotionSingleOffer = () => {
                 )}
                 <TitleWithAction title={offer?.eventName || 'Event Name'}/>
                 <ExclusiveOfferState offer={offer}/>
-                <LocationAndDateEvent offer={offer}/>
+                {offer&&<LocationAndDateEvent offer={offer}/>}
                 {offer?.eventDescription && (
                     <EventDescription eventDescription={offer.eventDescription}/>
                 )}
                 <OfferExtendedDetailsInfo offer={offer} benefits={benefits}/>
                 <OpponentDetailsSection offer={offer}/>
-                <ExclusiveMyFighterList offerType={'Exclusive Offer'} fighter={fighters} offerId={offer?.offerId}/>
+
+                <PrivateManagerTailoringProcess offer={offer} submittedFighters={submittedFighters}
+                                                  onRefresh={getData} chosenFighter={fightersChosen}
+                                                  submittedInformation={submittedInformation}
+                                                  previousInfo={previousInfo}/>
+                {/*<ExclusiveMyFighterList offerType={'Exclusive Offer'} fighter={fighters} offerId={offer?.offerId}/>*/}
             </View>
         </ScrollView>
     );
 };
 
-export default PromotionSingleOffer;
+export default ManagerSingleOffer;
 
 const styles = StyleSheet.create({
     container: {

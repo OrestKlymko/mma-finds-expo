@@ -2,20 +2,23 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import colors from '@/styles/colors';
 import {useSubmittedFilterFighter} from '@/context/SubmittedFilterFighterContext';
-import {PublicOfferInfo, ShortInfoFighter, SubmittedInformationOffer} from '@/service/response';
+import {ExclusiveOfferInfo, PublicOfferInfo, ShortInfoFighter, SubmittedInformationOffer} from '@/service/response';
 import {SubmittedFighterList} from "@/components/offers/public/SubmittedFighterList";
 import {useRouter} from "expo-router";
+import {OfferTypeEnum} from "@/models/model";
 
 type PromotionTailoringSubmittedFightersProps = {
-    fighters: ShortInfoFighter[];
-    offer: PublicOfferInfo;
+    submittedFighters: ShortInfoFighter[];
+    offer: PublicOfferInfo | ExclusiveOfferInfo;
     submittedInformation?: SubmittedInformationOffer;
+    offerType?: OfferTypeEnum;
 };
 
 export const PromotionTailoringSubmittedFighters = ({
-                                                        fighters,
+                                                        submittedFighters,
                                                         offer,
                                                         submittedInformation,
+                                                        offerType
                                                     }: PromotionTailoringSubmittedFightersProps) => {
     const {setAvailableFilters} = useSubmittedFilterFighter();
     const router = useRouter();
@@ -23,9 +26,9 @@ export const PromotionTailoringSubmittedFighters = ({
         <>
             <Text style={styles.eventTitle}>Submitted Fighters</Text>
             <SubmittedFighterList
-                fighters={fighters
-                    .slice(0, 3)
-                    .filter(f => f.id !== offer.chooseFighterId)}
+                fighters={submittedFighters
+                    .filter(f => f.id !== offer.chooseFighterId)
+                    .slice(0, 3)}
                 scrollEnabled={false}
                 onSelectFighter={item => {
                     if (submittedInformation?.statusResponded === 'REJECTED') {
@@ -37,6 +40,7 @@ export const PromotionTailoringSubmittedFighters = ({
                                 eligibleToSelect: (!(
                                     offer?.closedReason && offer?.closedReason !== ''
                                 )).toString(),
+                                offerType: JSON.stringify(offerType),
                             },
                         })
                     } else {
@@ -65,6 +69,7 @@ export const PromotionTailoringSubmittedFighters = ({
                             eligibleToSelect: (
                                 !(offer?.closedReason && offer?.closedReason !== '')
                             ).toString(),
+                            offerType: JSON.stringify(offerType),
                         },
                     })
                 }}>

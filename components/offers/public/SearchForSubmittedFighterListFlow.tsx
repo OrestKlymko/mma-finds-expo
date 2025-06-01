@@ -1,7 +1,7 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import colors from '@/styles/colors';
 import React, {useEffect, useState} from 'react';
-import {getPublicOfferInfoById} from '@/service/service';
+import {getExclusiveOfferInfoById, getPublicOfferInfoById} from '@/service/service';
 import {useSubmittedFilterFighter} from '@/context/SubmittedFilterFighterContext';
 import ContentLoader from '@/components/ContentLoader';
 import {ShortInfoFighter} from '@/service/response';
@@ -9,12 +9,14 @@ import {ExistsFilter} from "@/components/offers/public/ExistsFilter";
 import {SearchSection} from "@/components/offers/public/SearchSection";
 import {useRouter} from "expo-router";
 import {SubmittedFighterList} from "@/components/offers/public/SubmittedFighterList";
+import {OfferTypeEnum} from "@/models/model";
 
 interface SearchForSubmittedFighterListFlowProps {
-    offerId?: string;
-    currency?: string;
-    excludeFighterId?: string;
-    eligibleToSelect?: boolean;
+    offerId?: string,
+    currency?: string,
+    excludeFighterId?: string,
+    eligibleToSelect?: boolean,
+    offerType?: OfferTypeEnum
 }
 
 export function SearchForSubmittedFighterListFlow({
@@ -22,6 +24,7 @@ export function SearchForSubmittedFighterListFlow({
                                                       currency,
                                                       excludeFighterId,
                                                       eligibleToSelect,
+                                                      offerType
                                                   }: SearchForSubmittedFighterListFlowProps) {
     const [searchQuery, setSearchQuery] = useState('');
     const [fighters, setFighters] = useState<ShortInfoFighter[]>([]);
@@ -32,7 +35,35 @@ export function SearchForSubmittedFighterListFlow({
     useEffect(() => {
         setContentLoading(true);
         if (!availableFilters.offerId) return;
-        getPublicOfferInfoById(availableFilters.offerId)
+        if (offerType && offerType === OfferTypeEnum.EXCLUSIVE) {
+            getExclusiveOfferInfoById(availableFilters.offerId, null)
+                .then(res => {
+                    if (excludeFighterId) {
+                        setFighters(
+                            res.submittedFighters.filter(
+                                (fighter: ShortInfoFighter) => fighter.id !== excludeFighterId,
+                            ),
+                        );
+                        setFilteredFighters(
+                            res.submittedFighters.filter(
+                                (fighter: ShortInfoFighter) => fighter.id !== excludeFighterId,
+                            ),
+                        );
+                    } else {
+                        setFighters(res.submittedFighters);
+                        setFilteredFighters(res.submittedFighters);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading offer content:', error);
+                })
+                .finally(() => {
+                    setContentLoading(false);
+                })
+            return;
+        }
+
+        getPublicOfferInfoById(availableFilters.offerId, null)
             .then(res => {
                 if (excludeFighterId) {
                     setFighters(
@@ -84,7 +115,7 @@ export function SearchForSubmittedFighterListFlow({
     }, [fighters, searchQuery, availableFilters]);
 
     if (contentLoading) {
-        return <ContentLoader />;
+        return <ContentLoader/>;
     }
 
     return (
@@ -94,7 +125,7 @@ export function SearchForSubmittedFighterListFlow({
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
                 />
-                <ExistsFilter />
+                <ExistsFilter/>
             </View>
 
             {filteredFighters.length === 0 ? (
@@ -110,6 +141,7 @@ export function SearchForSubmittedFighterListFlow({
                                 offerId: offerId,
                                 currency: currency,
                                 eligibleToSelect: eligibleToSelect?.toString(),
+                                offerType: JSON.stringify(offerType),
                             },
                         })
                     }}

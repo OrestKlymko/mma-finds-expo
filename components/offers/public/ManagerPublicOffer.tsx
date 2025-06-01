@@ -116,7 +116,7 @@ export const ManagerOfferDetailScreen = () => {
                     <View style={styles.eventSummaryContainer}>
                         <OfferState offer={offer} fightersLength={fighters.length} />
                     </View>
-                    <LocationAndDateEvent offer={offer} />
+                    {offer&&<LocationAndDateEvent offer={offer}/>}
                     <EventDescription eventDescription={offer?.eventDescription} />
                     <OfferExtendedDetailsInfo offer={offer} benefits={benefits} />
                     <OpponentDetailsSection offer={offer}/>

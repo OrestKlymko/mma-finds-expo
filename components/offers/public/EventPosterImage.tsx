@@ -1,16 +1,13 @@
 import GoBackButton from '@/components/GoBackButton';
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
-import {useAuth} from '@/context/AuthContext';
 import {Image} from "expo-image";
-import {useRouter} from "expo-router";
 
 type Props = {
   eventImageLink: string | undefined;
 };
 
 export const EventPosterImage = ({eventImageLink}: Props) => {
-  const router = useRouter();
   return (
     <View style={styles.imageWrapper}>
       <Image
