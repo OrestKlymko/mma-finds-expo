@@ -22,7 +22,10 @@ export const MyOfferSection = ({offers}: MyOfferSectionProps) => {
                     <Text style={styles.seeAll}>See All</Text>
                 </TouchableOpacity>
             </View>
-            <OfferList offers={offers} horizontal />
+            <OfferList offers={offers} horizontal onClick={offerId => {
+                console.log(offerId)
+                router.push(`/offers/public/${offerId}`)
+            }}/>
         </View>
     );
 };

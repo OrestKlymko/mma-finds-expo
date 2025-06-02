@@ -165,6 +165,8 @@ export type CreatePaymentIntentResponse = {
     clientSecret: string;
 };
 
+
+
 export type InvitationLinkResponse = {
     link: string;
 };
@@ -207,6 +209,9 @@ export type PaymentSetupIntentResponse = {
     customerId: string;
 };
 
+export type PaymentStatusResponse = {
+    paid: boolean;
+}
 export type SubAccountResponse = {
     id: string;
     name: string;

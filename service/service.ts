@@ -52,7 +52,7 @@ import {
     MultiContractResponse,
     MultiContractShortInfo,
     NationalityResponse,
-    PaymentSetupIntentResponse,
+    PaymentSetupIntentResponse, PaymentStatusResponse,
     PromotionInformationResponse,
     PromotionNameResponse,
     PromotionResponse, PromotionShortInfo,
@@ -236,6 +236,9 @@ export const getFighterByManagerId = (managerId: string): Promise<ShortInfoFight
 
 export const createPaymentIntentForStripe = (data: CreatePaymentIntentStripeRequest): Promise<CreatePaymentIntentResponse> =>
     jsonRequest<CreatePaymentIntentResponse>('/stripe/payment-intent', 'POST', data);
+
+export const chargePaymentIntentOnDefaultMethod = (data: CreatePaymentIntentStripeRequest): Promise<PaymentStatusResponse> =>
+    jsonRequest<PaymentStatusResponse>('/stripe/charge-default', 'POST', data);
 
 export const setDefaultPaymentMethod = (): Promise<void> =>
     request<void>('/payment/default', {method: 'POST'});

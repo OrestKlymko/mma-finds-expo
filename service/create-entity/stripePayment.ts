@@ -1,19 +1,25 @@
-import {createPaymentIntentForStripe} from "@/service/service";
+import {chargePaymentIntentOnDefaultMethod, createPaymentIntentForStripe} from "@/service/service";
 import {initPaymentSheet, presentPaymentSheet} from "@stripe/stripe-react-native";
 import {Alert} from "react-native";
+import {CreatePaymentIntentStripeRequest} from "@/service/request";
 
 export const payWithStripe = async (
     amountStr: string,
     currency = 'EUR'
 ): Promise<boolean> => {
     const cents = Math.round(parseFloat(amountStr) * 100);
-
+    const data: CreatePaymentIntentStripeRequest = {
+        amount: cents.toString(),
+        currency: currency.toLowerCase(),
+    }
+    const successPayment = await chargePaymentIntentOnDefaultMethod(data)
+    if (successPayment) {
+        return true;
+    }
     const {clientSecret} = await createPaymentIntentForStripe({
         amount: cents.toString(),
         currency: currency.toLowerCase(),
     });
-
-    console.log('Stripe clientSecret:', clientSecret);
 
 
     const {error: initErr} = await initPaymentSheet({
