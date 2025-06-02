@@ -145,7 +145,7 @@ export const PromotionFinalScreen = () => {
                     blockScroll={true}
                     offers={publicOffers}
                     onClick={offerId =>
-                        router.push(`/offer/public/${offerId}`)
+                        router.push(`/offers/public/${offerId}`)
                     }
                 />
             </ScrollView>

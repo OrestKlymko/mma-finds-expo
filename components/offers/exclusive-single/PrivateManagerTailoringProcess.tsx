@@ -10,6 +10,7 @@ import {PrivateOfferManagerCandidates} from "@/components/offers/exclusive-singl
 import {Text, TouchableOpacity} from "react-native";
 import colors from "@/styles/colors";
 import {useRouter} from "expo-router";
+import {LogInAndSubmitFighterButton} from "@/components/offers/LogInAndSubmitFighterButton";
 
 interface ExclusivePromotionTailoringProcessProps {
     submittedFighters: ShortInfoFighter[],
@@ -57,20 +58,7 @@ export const PrivateManagerTailoringProcess = ({
     }, [offer, submittedInformation]);
 
     if (!role || role === 'ANONYMOUS') {
-        return <TouchableOpacity
-            onPress={()=>router.push('/sign-up/manager')}
-            style={{
-                backgroundColor: colors.primaryGreen,
-                padding: 10,
-                borderRadius: 20,
-                height: 56,
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}>
-            <Text style={{color: colors.white, fontSize: 14, fontWeight: '500'}}>
-                Log in to submit your fighter
-            </Text>
-        </TouchableOpacity>
+        return <LogInAndSubmitFighterButton/>
     }
 
     return chosenFighter ? (

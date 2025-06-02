@@ -45,7 +45,7 @@ export const OfferContent: React.FC<Props> = ({
                     <OfferList
                         offers={filteredOffers}
                         onClick={(offerId) => {
-                            router.push(`/offer/public/${offerId}`)
+                            router.push(`/offers/public/${offerId}`)
                         }}
                         footerButton={<CreateOfferButton selectedTab={selectedTab} />}
                     />

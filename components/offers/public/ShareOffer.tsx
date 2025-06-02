@@ -4,7 +4,7 @@ import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import appsFlyer from "react-native-appsflyer";
 
 import colors from '@/styles/colors';
-import {ExclusiveOfferInfo, MultiContractFullInfo, PublicOfferInfo, ShortInfoFighter,} from '@/service/response';
+import {ExclusiveOfferInfo, PublicOfferInfo, ShortInfoFighter,} from '@/service/response';
 import {formatDateFromLocalDate} from "@/utils/utils";
 import {OfferTypeEnum} from "@/models/model";
 import {useAuth} from "@/context/AuthContext";
@@ -13,7 +13,6 @@ type Props = {
     offer:
         | PublicOfferInfo
         | ExclusiveOfferInfo
-        | MultiContractFullInfo
         | null
         | undefined;
     typeOffer: OfferTypeEnum;
@@ -22,32 +21,27 @@ type Props = {
 
 
 export const ShareOffer: React.FC<Props> = ({offer, typeOffer}) => {
-    const {entityId}=useAuth()
+    const {entityId} = useAuth()
     const shareOffer = async () => {
         if (!offer) return;
-        switch (typeOffer) {
-            case OfferTypeEnum.PUBLIC:
-                await sharePublicOffer(offer as PublicOfferInfo, makeLink);
-                break;
-            case OfferTypeEnum.EXCLUSIVE:
-                await sharePrivateOffer(offer as ExclusiveOfferInfo, makeLink);
-                break;
-        }
+        await handleShareOffer(offer, typeOffer === OfferTypeEnum.PUBLIC ? 'public' : 'private', makeLink)
     };
 
     const makeLink = (custom: Record<string, any>) =>
         new Promise<string>((resolve, reject) => {
+            const privateOfferDeepLink = `com.mmafinds.app://offers/private/${offer?.offerId}`;
+            const publicOfferDeepLink = `com.mmafinds.app://offers/public/${offer?.offerId}`;
             appsFlyer.generateInviteLink(
                 {
                     brandDomain: 'links.mmafinds.com',   // your custom domain
-                    deeplinkPath : `com.mmafinds.app://offers/private/${offer?.offerId}`,
-                    channel    : 'share',
-                    campaign   : 'offer_share',
-                    userParams : {
+                    deeplinkPath: typeOffer === OfferTypeEnum.PUBLIC ? publicOfferDeepLink : privateOfferDeepLink,
+                    channel: 'share',
+                    campaign: 'offer_share',
+                    userParams: {
                         ...custom,
-                        entityInvite : entityId,
-                        af_dp        : `com.mmafinds.app://offers/private/${offer?.offerId}`,
-                        af_force_deeplink: 'true'
+                        entityInvite: entityId,
+                        af_dp: typeOffer === OfferTypeEnum.PUBLIC ? publicOfferDeepLink : privateOfferDeepLink,
+                        af_force_deeplink: 'true' //TODO Remove this when we will have a stable version of the app
                     }
                 },
                 url => resolve(url),
@@ -56,15 +50,14 @@ export const ShareOffer: React.FC<Props> = ({offer, typeOffer}) => {
         });
 
 
-
     const formatOpponentDetails = (o: PublicOfferInfo | ExclusiveOfferInfo) => {
         if (o.opponentName) {
-            return `\nOpponent: ${o.opponentName}\n`;
+            return `Opponent - ${o.opponentName}`;
         }
         const rule = o.mmaRules === 'PROFESSIONAL' ? 'Professional' : 'Amateur';
-        return `\nOpponent: ${o.opponentName} (${rule} ${
+        return `Opponent - ${o.opponentName} (${rule} ${
             o.sportType
-        } Record: ${getRecord(o)})`;
+        } Record - ${getRecord(o)})`;
     };
 
     const getRecord = (o: PublicOfferInfo | ExclusiveOfferInfo) => {
@@ -77,144 +70,35 @@ export const ShareOffer: React.FC<Props> = ({offer, typeOffer}) => {
     const reworkLocation = (o: PublicOfferInfo | ExclusiveOfferInfo) => {
         if (!o.eventLocation) return '';
         return o.eventLocation.length > 20
-            ? `\nLocation: ${o.eventLocation.slice(0, 20)}...`
-            : `\nLocation: ${o.eventLocation}`;
+            ? `Location - ${o.eventLocation.slice(0, 20)}...`
+            : `Location - ${o.eventLocation}`;
     };
 
 
-    // const sharePublicOffer = async (o: PublicOfferInfo) => {
-    //     const control: any = {
-    //         offerId: o.offerId,
-    //         params: {
-    //             $fallback_url: `https://api.mmafinds.com/api/share-offer/public/${o.offerId}`,
-    //             $desktop_url: `https://api.mmafinds.com/api/share-offer/public/${o.offerId}`,
-    //             $ios_url: `com.mmafinds.app://offer/public/${o.offerId}`,
-    //             $android_url: `com.mmafinds.app://offer/public/${o.offerId}`,
-    //         },
-    //     };
-    //
-    //     const shortUrl = await createShortUrl(`public-offer/${o.offerId}`, control);
-    //
-    //     const message = `\nEvent: ${o.eventName}\nDate: ${formatDateFromLocalDate(
-    //         o.eventDate,
-    //     )}${reworkLocation(o)}\nSport: ${
-    //         o.mmaRules === 'PROFESSIONAL' ? 'Professional' : 'Amateur'
-    //     } ${o.sportType}${formatOpponentDetails(o)}\nWeight Class: ${
-    //         o.weightClass
-    //     }\nFighter Nationality: ${
-    //         o.country
-    //     }\n\nFull fight details are now available in the MMA Finds app. Don’t miss your chance – apply today!\n\nClick here: ${shortUrl}`.trim();
-    //
-    //     await Share.share({message, title: 'New Fight Offer!'});
-    // };
-
-    const sharePublicOffer = async (
-        o: PublicOfferInfo,
+    const handleShareOffer = async (
+        o: ExclusiveOfferInfo | PublicOfferInfo,
+        type: 'private' | 'public',
         makeLink: (p: Record<string, any>) => Promise<string>
     ) => {
         const params = {
             offerId: o.offerId,
-            type: 'public',
-        };
-        const shortUrl = await makeLink(params);
-
-        const message = ` 
-Event: ${o.eventName}
-Date: ${formatDateFromLocalDate(o.eventDate)}
-Location: ${o.eventLocation}
-Sport: ${o.mmaRules === 'PROFESSIONAL' ? 'Professional' : 'Amateur'} ${o.sportType}
-Opponent: ${o.opponentName}
-Weight Class: ${o.weightClass}
-
-Full fight details in MMA Finds app.
-Click here: ${shortUrl}
-    `.trim();
-
-        await Share.share({message, title: 'New Fight Offer!'});
-    };
-
-    const sharePrivateOffer = async (
-        o: ExclusiveOfferInfo,
-        makeLink: (p: Record<string, any>) => Promise<string>
-    ) => {
-        const params = {
-            offerId: o.offerId,
-            type: 'private',
+            type: type,
         };
         const shortUrl = await makeLink(params);
 
         const message = `Event - ${o.eventName}
 Date - ${formatDateFromLocalDate(o.eventDate)}
-Location - ${o.eventLocation}
+${reworkLocation(o)}
 Sport - ${o.mmaRules === 'PROFESSIONAL' ? 'Professional' : 'Amateur'} ${o.sportType}
-Opponent - ${o.opponentName}
+${formatOpponentDetails(o)}
 Weight Class - ${o.weightClass}
+Fighter Nationality - ${o.opponentNationality}
 
-Full fight details in MMA Finds app.
+Full fight details are now available in the MMA Finds app. Don’t miss your chance – apply today!
     `.trim();
 
-        await Share.share({message, title: 'New Fight Offer!',url: shortUrl});
+        await Share.share({message, title: 'New Fight Offer!', url: shortUrl});
     };
-    // const shareExclusiveOffer = async (o: ExclusiveOfferInfo) => {
-    //     const control = {
-    //         offerId: o.offerId,
-    //         params: {
-    //             $fallback_url: `https://api.mmafinds.com/api/share-offer/exclusive/${o.offerId}`,
-    //             $desktop_url: `https://api.mmafinds.com/api/share-offer/exclusive/${o.offerId}`,
-    //             $ios_url: `com.mmafinds.app://offer/exclusive/single/${o.offerId}`,
-    //             $android_url: `com.mmafinds.app://offer/exclusive/single/${o.offerId}`,
-    //         },
-    //         og: {
-    //             $og_title: `Fight Offer: ${o.eventName}`,
-    //             $og_description: `Check out ${o.eventName} in ${o.eventLocation}.`,
-    //             $og_image_url: o.eventImageLink,
-    //         },
-    //     };
-    //
-    //     const shortUrl = await createShortUrl(
-    //         `exclusive-offer/${o.offerId}`,
-    //         control,
-    //     );
-    //
-    //     const message = `\nEvent: ${o.eventName}\nDate: ${formatDateFromLocalDate(
-    //         o.eventDate,
-    //     )}${reworkLocation(o)}\nSport: ${
-    //         o.mmaRules === 'PROFESSIONAL' ? 'Professional' : 'Amateur'
-    //     } ${o.sportType}${formatOpponentDetails(o)}\nWeight Class: ${
-    //         o.weightClass
-    //     }\n\nFull fight details are now available in the MMA Finds app.\n\nClick here: ${shortUrl}`.trim();
-    //
-    //     await Share.share({message, title: 'New Fight Offer!'});
-    // };
-    //
-    // const shareMultiFightOffer = async (o: MultiContractFullInfo) => {
-    //
-    //     const control = {
-    //         offerId: o.offerId,
-    //         params: {
-    //             $fallback_url: `https://api.mmafinds.com/api/share-offer/multi-fight-contract/${o.offerId}`,
-    //             $desktop_url: `https://api.mmafinds.com/api/share-offer/multi-fight-contract/${o.offerId}`,
-    //             $ios_url: `com.mmafinds.app://offer/exclusive/multi/${o.offerId}`,
-    //             $android_url: `com.mmafinds.app://offer/exclusive/multi/${o.offerId}`,
-    //         },
-    //         og: null,
-    //     };
-    //
-    //     const shortUrl = await createShortUrl(
-    //         `multi-fight-contract/${o.offerId}`,
-    //         control,
-    //     );
-    //
-    //     const message = `\nPromotion: ${o.promotionName}\nYour Fighter: ${
-    //         fighter?.formattedName || fighter?.name || 'Not chosen'
-    //     }\nSports: ${o.sportType.join(', ')}\nWeight Class: ${
-    //         o.weightClass
-    //     }\nTerm: ${o.numberOfFight} Fights, ${
-    //         o.durationContractMonth
-    //     } Months\n\nFull fight details are now available in the MMA Finds app.\n\nClick here: ${shortUrl}`.trim();
-    //
-    //     await Share.share({message, title: 'New Fight Offer!'});
-    // };
 
     return (
         <TouchableOpacity onPress={shareOffer} style={styles.buttonContainer}>

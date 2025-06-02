@@ -50,7 +50,7 @@ export const OfferListForFighter = (({
                     if (offerType === OfferTypeEnum.EXCLUSIVE) {
                         router.push(`/offers/private/${offerId}`);
                     } else {
-                        router.push(`/offer/public/${item.offerId}`)
+                        router.push(`/offers/public/${item.offerId}`)
                     }
                 }} item={item} isFavorite={isFavorite} removeFavorite={removeFavorite}/>)}
         />

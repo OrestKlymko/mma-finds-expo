@@ -98,7 +98,7 @@ const NotificationsScreen = () => {
                 });
                 break;
             case 'PUBLIC_OFFER':
-                router.push(`/offer/public/${notif.data.offerId}`);
+                router.push(`/offers/public/${notif.data.offerId}`);
                 break;
             case 'MULTI_FIGHT_OFFER':
                 router.push({

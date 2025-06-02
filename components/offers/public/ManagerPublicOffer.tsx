@@ -10,7 +10,7 @@ import {useRoute, useFocusEffect} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PublicOfferInfo, ShortInfoFighter} from "@/service/response";
-import { Benefit } from '@/models/model';
+import {Benefit} from '@/models/model';
 import {getBenefitsInPublicOffer, getPublicInfoForManager} from '@/service/service';
 import {useLocalSearchParams} from "expo-router";
 import ContentLoader from '@/components/ContentLoader';
@@ -23,6 +23,8 @@ import OfferExtendedDetailsInfo from './OfferExtendedDetailsInfo';
 import OpponentDetailsSection from './OpponentDetailsSection';
 import colors from "@/styles/colors";
 import {ManagerSubmittedFighterList} from "@/components/submissions/ManagerSubmittedFighterList";
+import {LogInAndSubmitFighterButton} from "@/components/offers/LogInAndSubmitFighterButton";
+import {useAuth} from "@/context/AuthContext";
 
 
 export const ManagerOfferDetailScreen = () => {
@@ -30,7 +32,7 @@ export const ManagerOfferDetailScreen = () => {
     const [fighters, setFighters] = useState<ShortInfoFighter[]>([]);
     const [offer, setOffer] = useState<PublicOfferInfo | null>(null);
     const [benefits, setBenefits] = useState<Benefit | null>(null);
-
+    const {role} = useAuth();
     const [isFavorite, setIsFavorite] = useState(false);
     const {id} = useLocalSearchParams<{ id: string }>();
     const [contentLoading, setContentLoading] = useState(false);
@@ -92,7 +94,7 @@ export const ManagerOfferDetailScreen = () => {
     };
 
     if (contentLoading) {
-        return <ContentLoader />;
+        return <ContentLoader/>;
     }
     return (
         <KeyboardAvoidingView
@@ -106,7 +108,7 @@ export const ManagerOfferDetailScreen = () => {
                     styles.container,
                     {paddingBottom: insets.bottom},
                 ]}>
-                <EventPosterImage eventImageLink={offer?.eventImageLink} />
+                <EventPosterImage eventImageLink={offer?.eventImageLink}/>
                 <View style={styles.eventDetailsContainer}>
                     <EventHeaderForManager
                         isFavorite={isFavorite}
@@ -114,17 +116,18 @@ export const ManagerOfferDetailScreen = () => {
                         offer={offer}
                     />
                     <View style={styles.eventSummaryContainer}>
-                        <OfferState offer={offer} fightersLength={fighters.length} />
+                        <OfferState offer={offer} fightersLength={fighters.length}/>
                     </View>
-                    {offer&&<LocationAndDateEvent offer={offer}/>}
-                    <EventDescription eventDescription={offer?.eventDescription} />
-                    <OfferExtendedDetailsInfo offer={offer} benefits={benefits} />
+                    {offer && <LocationAndDateEvent offer={offer}/>}
+                    <EventDescription eventDescription={offer?.eventDescription}/>
+                    <OfferExtendedDetailsInfo offer={offer} benefits={benefits}/>
                     <OpponentDetailsSection offer={offer}/>
-                    <ManagerSubmittedFighterList
-                        fighters={fighters}
-                        offer={offer}
-                        onRefreshFighterList={getOfferInfo}
-                    />
+                    {(!role || role === 'ANONYMOUS') ? <LogInAndSubmitFighterButton/>
+                        : <ManagerSubmittedFighterList
+                            fighters={fighters}
+                            offer={offer}
+                            onRefreshFighterList={getOfferInfo}
+                        />}
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>

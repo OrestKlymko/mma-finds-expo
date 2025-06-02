@@ -38,7 +38,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
             onClick(item.offerId);
             return;
         } else {
-            router.push(`/offer/public/${item.offerId}`)
+            router.push(`/offers/public/${item.offerId}`)
         }
     }, [item.offerId, role]);
 

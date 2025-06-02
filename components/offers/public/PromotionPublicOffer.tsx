@@ -19,6 +19,7 @@ import OpponentDetailsSection from "@/components/offers/public/OpponentDetailsSe
 import {PromotionTailoringProcess} from "@/components/offers/public/PromotionTailoringProcess";
 import {useFocusEffect, useLocalSearchParams, useRouter} from "expo-router";
 import SuccessFeePaymentSection from "@/components/offers/SuccessFeePaymentSection";
+import {OfferTypeEnum} from "@/models/model";
 
 
 export const PromotionOfferDetailsScreen = () => {
@@ -96,7 +97,7 @@ export const PromotionOfferDetailsScreen = () => {
             <EventPosterImage eventImageLink={offer?.eventImageLink}/>
             <View style={styles.eventDetailsContainer}>
                 <TitleWithAction title={offer?.eventName || 'Event Name'}/>
-                <ShareOffer offer={offer} typeOffer={'Public'}/>
+                <ShareOffer offer={offer} typeOffer={OfferTypeEnum.PUBLIC}/>
                 <OfferState offer={offer} fightersLength={fighters.length}/>
                 <FeatureOffer offer={offer}/>
                 <ManageOfferButton
