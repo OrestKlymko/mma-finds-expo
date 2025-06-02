@@ -9,9 +9,9 @@ import {
 import {useRoute, useFocusEffect} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {PublicOfferInfo, ShortInfoFighter} from "@/service/response";
-import {Benefit} from '@/models/model';
-import {getBenefitsInPublicOffer, getPublicInfoForManager} from '@/service/service';
+import {PublicOfferInfo, ShortInfoFighter, SubmittedInformationOffer} from "@/service/response";
+import {Benefit, Offer} from '@/models/model';
+import {getBenefitsInPublicOffer, getPublicInfoForManager, getPublicOfferInfoById} from '@/service/service';
 import {useLocalSearchParams} from "expo-router";
 import ContentLoader from '@/components/ContentLoader';
 import {EventPosterImage} from "@/components/offers/public/EventPosterImage";
@@ -25,6 +25,9 @@ import colors from "@/styles/colors";
 import {ManagerSubmittedFighterList} from "@/components/submissions/ManagerSubmittedFighterList";
 import {LogInAndSubmitFighterButton} from "@/components/offers/LogInAndSubmitFighterButton";
 import {useAuth} from "@/context/AuthContext";
+import SuccessFeePaymentSection from "@/components/offers/SuccessFeePaymentSection";
+import {RejectedReasonSection} from "@/components/submissions/RejectedReasonSection";
+import {ManagerOfferDetailFooter} from "@/components/submissions/ManagerOfferDetailFooter";
 
 
 export const ManagerOfferDetailScreen = () => {
@@ -36,62 +39,58 @@ export const ManagerOfferDetailScreen = () => {
     const [isFavorite, setIsFavorite] = useState(false);
     const {id} = useLocalSearchParams<{ id: string }>();
     const [contentLoading, setContentLoading] = useState(false);
-
-    useFocusEffect(
-        React.useCallback(() => {
-            let isActive = true;
-
-            const loadData = async () => {
-                if (!id) return;
-
-                try {
-                    setContentLoading?.(true); // якщо ти маєш loading
-
-                    const [offerInfo, benefitsBE] = await Promise.all([
-                        getPublicInfoForManager(id),
-                        getBenefitsInPublicOffer(id),
-                    ]);
-
-                    if (!isActive) return;
-
-                    setOffer(offerInfo.offer);
-                    setFighters(offerInfo.fighters);
-                    setBenefits(benefitsBE);
-
-                    const storedFavorites = await AsyncStorage.getItem('favoriteOffers');
-                    const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
-                    const isFavorited = favorites.some(
-                        (fav: PublicOfferInfo) => fav.offerId === offerInfo.offer.offerId,
-                    );
-                    setIsFavorite(isFavorited);
-                } catch (error) {
-                    console.error('Error loading offer info:', error);
-                } finally {
-                    if (isActive) setContentLoading?.(false);
-                }
-            };
-
+    const [submittedInformation, setSubmittedInformation] =
+        useState<SubmittedInformationOffer>();
+    const [previousInfo, setPreviousInfo] =
+        useState<SubmittedInformationOffer>();
+    useEffect(() => {
+        setContentLoading(true);
+        if (id) {
             loadData();
+        }
+    }, [id])
 
-            return () => {
-                isActive = false;
-            };
-        }, [id]),
-    );
-
-    const getOfferInfo = async () => {
-        getPublicInfoForManager(id).then(async res => {
-            setOffer(res.offer);
-            setFighters(res.fighters);
-
+    const loadData = async () => {
+        try {
+            if (!id) return;
+            const [benefitsResponse, offerResponse] = await Promise.all([
+                getBenefitsInPublicOffer(id),
+                getPublicOfferInfoById(id, null),
+            ]);
+            setBenefits(benefitsResponse);
+            setOffer(offerResponse.offer);
+            setFighters(offerResponse.fighters);
+            setSubmittedInformation(offerResponse?.submittedInformation);
+            setPreviousInfo(offerResponse?.previousOfferPrice);
             const storedFavorites = await AsyncStorage.getItem('favoriteOffers');
             const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
             const isFavorited = favorites.some(
-                (fav: PublicOfferInfo) => fav.offerId === res.offer.offerId,
+                (fav: Offer) => fav.offerId === offerResponse.offer.offerId,
             );
             setIsFavorite(isFavorited);
-        });
+        } catch (error) {
+            console.error('Error loading offer data:', error);
+        } finally {
+            setContentLoading(false);
+        }
     };
+
+    const renderFooter = () => {
+        if (submittedInformation && submittedInformation.statusResponded === 'ACCEPTED' && !submittedInformation.feePayment) {
+            return <SuccessFeePaymentSection offerId={id} submittedInformation={submittedInformation}/>
+        }
+
+        if (submittedInformation?.statusResponded === 'REJECTED' || fighters[0]?.contractStatus === 'REJECTED') {
+            return <RejectedReasonSection rejectionReason={fighters[0]?.rejectedReason}/>
+        }
+        return <ManagerOfferDetailFooter
+            submittedInformation={submittedInformation}
+            previousInfo={previousInfo}
+            fighters={fighters}
+            offer={offer}
+            onRefreshFighterList={loadData}
+        />
+    }
 
     if (contentLoading) {
         return <ContentLoader/>;
@@ -122,12 +121,9 @@ export const ManagerOfferDetailScreen = () => {
                     <EventDescription eventDescription={offer?.eventDescription}/>
                     <OfferExtendedDetailsInfo offer={offer} benefits={benefits}/>
                     <OpponentDetailsSection offer={offer}/>
+
                     {(!role || role === 'ANONYMOUS') ? <LogInAndSubmitFighterButton/>
-                        : <ManagerSubmittedFighterList
-                            fighters={fighters}
-                            offer={offer}
-                            onRefreshFighterList={getOfferInfo}
-                        />}
+                        : renderFooter()}
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>

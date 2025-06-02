@@ -1,7 +1,7 @@
 import {StyleSheet, Text} from 'react-native';
 import React, {useEffect} from 'react';
 import colors from "@/styles/colors";
-import {PublicOfferInfo, ShortInfoFighter} from "@/service/response";
+import {PublicOfferInfo, ShortInfoFighter, SubmittedInformationOffer} from "@/service/response";
 import {SubmittedInformationPublicOffer} from "@/models/tailoring-model";
 import {ManagerTailoringContent} from "@/components/submissions/ManagerTailoringContent";
 import {ManagerSubmittedFighterList} from "@/components/submissions/ManagerSubmittedFighterList";
@@ -9,8 +9,8 @@ import {ManagerSubmittedFighterList} from "@/components/submissions/ManagerSubmi
 interface OfferDetailFooterProps {
     fighters: ShortInfoFighter[];
     offer: PublicOfferInfo | null | undefined;
-    submittedInformation?: SubmittedInformationPublicOffer;
-    previousInfo?: SubmittedInformationPublicOffer | null;
+    submittedInformation?: SubmittedInformationOffer;
+    previousInfo?: SubmittedInformationOffer | null;
     onRefreshFighterList: () => void;
 }
 

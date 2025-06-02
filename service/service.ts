@@ -503,7 +503,7 @@ export const getFilterForPublicOffers = (): Promise<FilterPublicOfferPromotionRe
     request<FilterPublicOfferPromotionResponse>('/filter/promotion/public', {method: 'GET'});
 
 export const getFilterForPublicOffersManager = (): Promise<FilterPublicOfferManagerResponse> =>
-    request<FilterPublicOfferManagerResponse>('/filter/public-offers/manager', {method: 'GET'});
+    request<FilterPublicOfferManagerResponse>('/filter/manager/public', {method: 'GET'});
 
 export const getFilterForExclusiveOffers = (): Promise<FilterPublicOfferPromotionResponse> =>
     request<FilterPublicOfferPromotionResponse>('/filter/promotion/exclusive', {method: 'GET'});

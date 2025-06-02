@@ -1,5 +1,5 @@
 import {Text, TouchableOpacity, StyleSheet} from 'react-native';
-import {PublicOfferInfo, ShortInfoFighter} from "@/service/response";
+import {PublicOfferInfo, ShortInfoFighter, SubmittedInformationOffer} from "@/service/response";
 import {SubmittedInformationPublicOffer} from "@/models/tailoring-model";
 import {useRouter} from "expo-router";
 import {SubmittedFighterList} from "@/components/offers/public/SubmittedFighterList";
@@ -14,12 +14,12 @@ import {DocumentTailoring} from "@/components/DocumentTailoring";
 type ManagerTailoringContentProps = {
     fighters: ShortInfoFighter[];
     offer: PublicOfferInfo | null | undefined;
-    submittedInformation?: SubmittedInformationPublicOffer | undefined | null;
+    submittedInformation?: SubmittedInformationOffer | undefined | null;
     selectedTab:
         | 'Preselected Fighter'
         | 'Submitted Fighters'
         | 'Selected Fighter';
-    previousInfo?: SubmittedInformationPublicOffer | null;
+    previousInfo?: SubmittedInformationOffer | null;
     onRefreshFighterList: () => void;
 };
 

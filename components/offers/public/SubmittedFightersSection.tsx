@@ -1,4 +1,4 @@
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {SubmittedFighterList} from './SubmittedFighterList';
 import React from 'react';
 import colors from '@/styles/colors';
@@ -18,7 +18,7 @@ export const SubmittedFightersSection = ({fighters, offer, offerType}: Props) =>
     const router = useRouter();
     return (
         <>
-            <View style={styles.submittedFightersContainer}>
+            {offerType && offerType === OfferTypeEnum.EXCLUSIVE && <View style={styles.submittedFightersContainer}>
                 <Text style={styles.eventTitle}>Submitted Fighters</Text>
                 <TouchableOpacity style={styles.addMoreFighters}
                                   onPress={() => router.push({
@@ -29,7 +29,7 @@ export const SubmittedFightersSection = ({fighters, offer, offerType}: Props) =>
                         Add More Fighters
                     </Text>
                 </TouchableOpacity>
-            </View>
+            </View>}
             <SubmittedFighterList
                 fighters={fighters.slice(0, 3)}
                 scrollEnabled={false}

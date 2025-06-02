@@ -311,6 +311,7 @@ export type SubmittedInformationOffer = {
     fighterId: string;
     rejectionReason?: string | null;
     fightNumber?: number | null | undefined;
+    feePayment: string;
 };
 export type FullInfoAboutPublicOffer = {
     offer: PublicOfferInfo;
