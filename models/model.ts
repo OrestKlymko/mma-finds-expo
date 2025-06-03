@@ -1,6 +1,6 @@
 export enum OfferTypeEnum {
     PUBLIC = 'PUBLIC',
-    EXCLUSIVE = 'EXCLUSIVE',
+    PRIVATE = 'PRIVATE',
     MULTIPLE = 'MULTIPLE',
 }
 

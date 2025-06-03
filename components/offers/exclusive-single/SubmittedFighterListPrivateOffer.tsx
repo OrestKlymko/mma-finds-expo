@@ -39,7 +39,7 @@ export function SubmittedFighterListPrivateOffer({
                         pathname: '/manager/submissions/submit', params: {
                             offer: JSON.stringify(offer),
                             submittedFighters: JSON.stringify(fighters),
-                            offerType: JSON.stringify(OfferTypeEnum.EXCLUSIVE),
+                            offerType: JSON.stringify(OfferTypeEnum.PRIVATE),
                         }
                     })
                 }}>

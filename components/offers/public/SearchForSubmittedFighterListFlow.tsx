@@ -35,7 +35,7 @@ export function SearchForSubmittedFighterListFlow({
     useEffect(() => {
         setContentLoading(true);
         if (!availableFilters.offerId) return;
-        if (offerType && offerType === OfferTypeEnum.EXCLUSIVE) {
+        if (offerType && offerType === OfferTypeEnum.PRIVATE) {
             getExclusiveOfferInfoById(availableFilters.offerId, null)
                 .then(res => {
                     if (excludeFighterId) {

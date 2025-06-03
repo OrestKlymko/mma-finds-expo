@@ -18,7 +18,7 @@ export const SubmittedFightersSection = ({fighters, offer, offerType}: Props) =>
     const router = useRouter();
     return (
         <>
-            {offerType && offerType === OfferTypeEnum.EXCLUSIVE && <View style={styles.submittedFightersContainer}>
+            {offerType && offerType === OfferTypeEnum.PRIVATE && <View style={styles.submittedFightersContainer}>
                 <Text style={styles.eventTitle}>Submitted Fighters</Text>
                 <TouchableOpacity style={styles.addMoreFighters}
                                   onPress={() => router.push({

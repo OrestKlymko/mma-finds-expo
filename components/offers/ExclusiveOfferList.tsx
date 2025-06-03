@@ -29,7 +29,7 @@ export const ExclusiveOfferList: React.FC<OfferListProps> =
         const combinedOffers: OfferType[] = useMemo(() => {
             const exclusiveWithType = offers.map(o => ({
                 ...o,
-                typeOffer: 'EXCLUSIVE' as const,
+                typeOffer: 'PRIVATE' as const,
             }));
             const multiWithType = multiContractOffers.map(o => ({
                 ...o,

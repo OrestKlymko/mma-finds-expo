@@ -41,7 +41,7 @@ export const ExclusiveOfferState = ({offer}: Props) => {
     return (
         <>
             <View style={styles.eventSummaryContainer}>
-                <ShareOffer offer={offer} typeOffer={OfferTypeEnum.EXCLUSIVE}/>
+                <ShareOffer offer={offer} typeOffer={OfferTypeEnum.PRIVATE}/>
                 <View style={styles.summaryRowCentered}>
                     <Text style={styles.summaryLabel}>Time left to apply:</Text>
                     <Text style={styles.summaryValue}>

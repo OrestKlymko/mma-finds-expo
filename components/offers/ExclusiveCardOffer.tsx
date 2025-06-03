@@ -10,7 +10,7 @@ import {useRouter} from "expo-router";
 interface ExclusiveCardOfferProps {
     item: {
         offerId: string;
-        typeOffer: 'EXCLUSIVE' | 'MULTI';
+        typeOffer: 'PRIVATE' | 'MULTI';
         isFightTitled?: boolean;
         eventImageLink: string;
         eventName?: string;
@@ -35,7 +35,7 @@ export const ExclusiveCardOffer: React.FC<ExclusiveCardOfferProps> = ({
         if (item.verifiedState === 'NONE' || item.verifiedState === 'PENDING') {
             router.push('/profile/settings/account/account-info/verification')
         } else {
-            if (item.typeOffer === 'EXCLUSIVE') {
+            if (item.typeOffer === 'PRIVATE') {
                 router.push(`/offers/private/${item.offerId}`)
             } else {
                 router.push(`/offer/exclusive/multi/${item.offerId}`)
@@ -58,7 +58,7 @@ export const ExclusiveCardOffer: React.FC<ExclusiveCardOfferProps> = ({
             />
 
             <View style={styles.eventDetails}>
-                {item.typeOffer === 'EXCLUSIVE' && (
+                {item.typeOffer === 'PRIVATE' && (
                     <Text style={styles.eventTitle}>{item.eventName}</Text>
                 )}
 

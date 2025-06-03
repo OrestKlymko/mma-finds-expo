@@ -1,4 +1,5 @@
 import {TaskStatus} from './request';
+import {OfferTypeEnum} from "@/models/model";
 
 export type USER_ROLE = 'MANAGER' | 'PROMOTION' | 'PROMOTION_EMPLOYEE';
 export type VerificationState = 'PENDING' | 'APPROVED' | 'REJECTED' | 'NONE';
@@ -505,7 +506,7 @@ export type MultiContractShortInfo = {
     fighterName: string;
     fighterNickname: string;
     verifiedState: string;
-    typeOffer: string;
+    typeOffer: OfferTypeEnum;
     closedReason?: string;
     promotionAvatar?: string;
     dueDateDocument?: string;

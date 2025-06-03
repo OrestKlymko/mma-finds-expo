@@ -8,7 +8,7 @@ export type FilterFighter = {
 };
 
 export interface ExclusiveOfferFilter {
-    activeTab: 'Public' | 'Exclusive';
+    activeTab: 'Public' | 'Private';
     eventName: string[];
     fighterName: string[];
     offerType: string[];
@@ -20,7 +20,7 @@ export interface Filter  {
     rules: string[];
     weightClass: string[];
     eventName: string[];
-    activeTab: 'Public' | 'Exclusive';
+    activeTab: 'Public' | 'Private';
     fighterName: string[];
     offerType: string[];
 }

@@ -47,7 +47,7 @@ export const OfferListForFighter = (({
             keyExtractor={item => item.offerId}
             renderItem={({item}) =>
                 (<OfferCard onClick={(offerId) => {
-                    if (offerType === OfferTypeEnum.EXCLUSIVE) {
+                    if (offerType === OfferTypeEnum.PRIVATE) {
                         router.push(`/offers/private/${offerId}`);
                     } else {
                         router.push(`/offers/public/${item.offerId}`)

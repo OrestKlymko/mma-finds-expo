@@ -23,7 +23,7 @@ const FilterExclusiveOfferScreen = () => {
         useExclusiveOfferFilter();
 
     const [filter, setFilter] = useState<ExclusiveOfferFilter>({
-        activeTab: 'Exclusive',
+        activeTab: 'Private',
         eventName: [],
         fighterName: [],
         offerType: [],
@@ -33,8 +33,9 @@ const FilterExclusiveOfferScreen = () => {
         setContentLoading(true);
         getFilterForExclusiveOffers()
             .then(res => {
+                console.log(res);
                 setFilter({
-                    activeTab: 'Exclusive',
+                    activeTab: 'Private',
                     eventName: res.eventNames,
                     fighterName: res.fighterNames,
                     offerType: [],
@@ -64,7 +65,7 @@ const FilterExclusiveOfferScreen = () => {
 
     const clearAllFilters = () => {
         setSelectedExOfferFilters({
-            activeTab: 'Exclusive',
+            activeTab: 'Private',
             fighterName: [],
             offerType: [],
             eventName: [],

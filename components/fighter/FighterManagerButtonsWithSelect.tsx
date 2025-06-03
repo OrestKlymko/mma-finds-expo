@@ -32,7 +32,7 @@ export const FighterManagerButtonsWithSelect = ({
             );
             return;
         }
-        if (offerType === OfferTypeEnum.EXCLUSIVE) {
+        if (offerType === OfferTypeEnum.PRIVATE) {
             if (!offerId || !fighterId) {
                 Alert.alert("Error", "Offer ID or Fighter ID is missing. Cannot proceed with the selection.");
                 return;

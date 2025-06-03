@@ -119,7 +119,7 @@ const SubmitFighterOfferScreen: React.FC = () => {
                                 );
                                 return;
                             }
-                            if (offerType && offerType === OfferTypeEnum.EXCLUSIVE) {
+                            if (offerType && offerType === OfferTypeEnum.PRIVATE) {
                                 const data = {
                                     fighterId: fighterId,
                                     managerId: entityId,

@@ -1,11 +1,11 @@
 import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import colors from "@/styles/colors";
 import React, {useCallback, useState} from "react";
-import {PublicOfferInfo} from "@/service/response";
+import {MultiContractShortInfo, PublicOfferInfo} from "@/service/response";
 import {useRouter} from "expo-router";
 import {useFilter} from "@/context/FilterContext";
 import {useFocusEffect} from "@react-navigation/native";
-import {getAllPrivateOffers} from "@/service/service";
+import {getAllPrivateOffers, getMultiFightOffers} from "@/service/service";
 import {Filter, OfferTypeEnum} from "@/models/model";
 import ContentLoader from "@/components/ContentLoader";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -13,7 +13,8 @@ import OfferListForFighter from "@/components/offers/OfferListForFighter";
 import FilterLogo from "@/assets/filter.svg";
 
 export const PrivateOfferFeed = () => {
-    const [publicOffers, setPublicOffers] = useState<PublicOfferInfo[]>([]);
+    const [privateOffers, setPrivateOffers] = useState<PublicOfferInfo[]>([]);
+    const [multiFightOffers, setMultiFightOffers] = useState<MultiContractShortInfo[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const router = useRouter();
     const {selectedFilters, setSelectedFilters} = useFilter();
@@ -22,29 +23,54 @@ export const PrivateOfferFeed = () => {
     useFocusEffect(
         useCallback(() => {
             setContentLoading(true);
-            getAllPrivateOffers(null, null)
-                .then(res => {
-                    const filteredOffers = res.filter(
-                        (offer: PublicOfferInfo) =>
-                            (selectedFilters.eventPlace.length === 0 ||
-                                selectedFilters.eventPlace.some(place =>
-                                    offer.country.includes(place),
-                                )) &&
-                            (selectedFilters.eventName.length === 0 ||
-                                selectedFilters.eventName.includes(offer.eventName)) &&
-                            (selectedFilters.promotion.length === 0 ||
-                                selectedFilters.promotion.includes(offer.promotionName)) &&
-                            (selectedFilters.weightClass.length === 0 ||
-                                selectedFilters.weightClass.includes(offer.weightClass)) &&
-                            (selectedFilters.rules.length === 0 ||
+
+            if(!selectedFilters.offerType.includes('Multi-Fight') && selectedFilters.offerType.length > 0) {
+                getMultiFightOffers()
+                    .then(setMultiFightOffers)
+                    .catch(() => setMultiFightOffers([]));
+            }
+
+            if(selectedFilters.offerType.includes('Single Bout') || selectedFilters.offerType.length === 0) {
+                getAllPrivateOffers(null, null)
+                    .then((res) => {
+                        const filteredOffers = res.filter((offer: PublicOfferInfo) => {
+                            // 2.1) Фільтр за місцем проведення (country)
+                            const placeOk =
+                                selectedFilters.eventPlace.length === 0 ||
+                                selectedFilters.eventPlace.some((place) =>
+                                    offer.country.includes(place)
+                                );
+
+                            // 2.2) Фільтр за назвою події
+                            const nameOk =
+                                selectedFilters.eventName.length === 0 ||
+                                selectedFilters.eventName.includes(offer.eventName);
+
+                            // 2.3) Фільтр за промоушеном
+                            const promoOk =
+                                selectedFilters.promotion.length === 0 ||
+                                selectedFilters.promotion.includes(offer.promotionName);
+
+                            // 2.4) Фільтр за ваговою категорією
+                            const weightOk =
+                                selectedFilters.weightClass.length === 0 ||
+                                selectedFilters.weightClass.includes(offer.weightClass);
+
+                            // 2.5) Фільтр за правилами (Professional/Amateur)
+                            const rulesOk =
+                                selectedFilters.rules.length === 0 ||
                                 selectedFilters.rules.includes(
-                                    offer.isFightTitled ? 'Professional' : 'Ammateur',
-                                )),
-                    );
-                    setPublicOffers(filteredOffers);
-                })
-                .finally(() => setContentLoading(false));
-        }, [selectedFilters]),
+                                    offer.isFightTitled ? "Professional" : "Ammateur"
+                                );
+
+                            return placeOk && nameOk && promoOk && weightOk && rulesOk;
+                        });
+                        setPrivateOffers(filteredOffers);
+                    })
+                    .catch(() => setPrivateOffers([]))
+                    .finally(() => setContentLoading(false));
+            }
+        }, [selectedFilters])
     );
 
     const removeFilter = (category: string, value: string) => {
@@ -80,6 +106,15 @@ export const PrivateOfferFeed = () => {
                 category: 'eventName',
                 value: f,
             })),
+            ...selectedFilters.fighterName.map(f => ({
+                category: 'fighterName',
+                value: f,
+            })),
+            ...selectedFilters.offerType.map(f => ({
+                category: 'offerType',
+                value: f,
+            })),
+
         ];
 
         if (filters.length === 0) return null;
@@ -106,8 +141,8 @@ export const PrivateOfferFeed = () => {
         );
     };
     const renderContent = () => {
-        return publicOffers.length > 0 ? (
-            <OfferListForFighter offers={publicOffers} offerType={OfferTypeEnum.EXCLUSIVE}/>
+        return privateOffers.length > 0 ? (
+            <OfferListForFighter offers={privateOffers} offerType={OfferTypeEnum.PRIVATE}/>
         ) : (
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={styles.noOffersText}>No Public Offers Available</Text>
@@ -130,7 +165,7 @@ export const PrivateOfferFeed = () => {
                 </TouchableOpacity>
             </View>
             <TouchableOpacity
-                onPress={() => router.push("/(filter)/public-offer")}
+                onPress={() => router.push('/(filter)/exclusive-offer')}
                 style={styles.filterButton}>
                 <FilterLogo width={16} height={16} color={colors.primaryBlack}/>
             </TouchableOpacity>
