@@ -53,10 +53,8 @@ export default function AfterAuth() {
                 const idx = dp.indexOf('/offer');
                 if (idx !== -1) {
                     const path = dp.substring(idx);
-                    console.log(' Role: ', role);
                     if (!role) {
                         const storedRole = await AsyncStorage.getItem('authRole');
-                        console.log(storedRole);
                         if (!storedRole) {
                             setRole('ANONYMOUS');
                             await AsyncStorage.setItem('authRole', 'ANONYMOUS');

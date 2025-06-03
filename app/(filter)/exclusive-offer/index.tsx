@@ -33,7 +33,6 @@ const FilterExclusiveOfferScreen = () => {
         setContentLoading(true);
         getFilterForExclusiveOffers()
             .then(res => {
-                console.log(res);
                 setFilter({
                     activeTab: 'Private',
                     eventName: res.eventNames,

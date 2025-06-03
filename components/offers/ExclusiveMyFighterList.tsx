@@ -47,17 +47,6 @@ const ExclusiveMyFighterList = ({offerType, fighter, offerId}: ExclusiveMyFighte
         return <ContentLoader/>
     }
 
-    const renderChosenFighter = ()=>{
-        return (
-            <View style={styles.detailsContainer}>
-                <Text>We have already submitted fighter! Check your feed for the result.</Text>
-            </View>
-        )
-    }
-
-    if(fighter){
-        return renderChosenFighter();
-    }
     return (
         <View>
             <TouchableOpacity

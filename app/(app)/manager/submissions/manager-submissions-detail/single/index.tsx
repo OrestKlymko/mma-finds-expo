@@ -32,7 +32,7 @@ export const ManagerExclusiveOfferDetailsScreen = () => {
     const [previousInfo, setPreviousInfo] = useState<
         SubmittedInformationOffer | undefined
     >();
-    const {offerId,fighterId} = route.params as {
+    const {offerId, fighterId} = route.params as {
         offerId: string;
         fighterId: string;
     };
@@ -50,7 +50,7 @@ export const ManagerExclusiveOfferDetailsScreen = () => {
 
     const getExclusiveOfferInfo = () => {
         setContentLoading(true);
-        getExclusiveOfferInfoById(offerId,fighterId)
+        getExclusiveOfferInfoById(offerId, fighterId)
             .then(res => {
                 setOffer(res.offer);
                 setFighter(res.fighter);
@@ -62,7 +62,7 @@ export const ManagerExclusiveOfferDetailsScreen = () => {
     };
 
     if (contentLoading) {
-        return <ContentLoader />;
+        return <ContentLoader/>;
     }
     return (
         <ScrollView
@@ -74,19 +74,19 @@ export const ManagerExclusiveOfferDetailsScreen = () => {
                 {paddingBottom: insets.bottom},
             ]}>
             {/* Event Image */}
-            <EventPosterImage eventImageLink={offer?.eventImageLink} />
+            <EventPosterImage eventImageLink={offer?.eventImageLink}/>
             <View style={styles.eventDetailsContainer}>
                 {offer?.isFightTitled && (
                     <View style={styles.titleFightTag}>
                         <Text style={styles.titleFightText}>Title Fight</Text>
                     </View>
                 )}
-                <TitleWithAction title={offer?.eventName || 'Event Name'} />
+                <TitleWithAction title={offer?.eventName || 'Event Name'}/>
 
-                <ExclusiveOfferState offer={offer} />
-                {offer&&<LocationAndDateEvent offer={offer}/>}
-                <EventDescription eventDescription={offer?.eventDescription} />
-                <OfferExtendedDetailsInfo offer={offer} benefits={benefits} />
+                <ExclusiveOfferState offer={offer}/>
+                {offer && <LocationAndDateEvent offer={offer}/>}
+                <EventDescription eventDescription={offer?.eventDescription}/>
+                <OfferExtendedDetailsInfo offer={offer} benefits={benefits}/>
                 <OpponentDetailsSection offer={offer}/>
                 {fighter && offer && submittedInformation && (
                     <ExclusiveManagerTailoringContent

@@ -23,7 +23,7 @@ const PromotionFighterDetailsWithSelectFighterScreen = () => {
     const {offerId} = params as { offerId: string };
     const {currency} = params as { currency: string };
     const {eligibleToSelect} = params as { eligibleToSelect: string };
-    const offerType = (params.offerType as string) as OfferTypeEnum;
+    const offerType = JSON.parse(params.offerType as OfferTypeEnum || undefined);
     const [contentLoading, setContentLoading] = useState(false);
     useEffect(() => {
         setContentLoading(true);

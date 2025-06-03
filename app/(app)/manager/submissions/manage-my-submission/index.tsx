@@ -10,7 +10,7 @@ import ContentLoader from "@/components/ContentLoader";
 import colors from '@/styles/colors';
 import GoBackButton from "@/components/GoBackButton";
 import {SubmissionTab} from "@/components/submissions/SubmissionTab";
-import { SearchSubmission } from '@/components/submissions/SearchSubmissions';
+import {SearchSubmission} from '@/components/submissions/SearchSubmissions';
 import {SubmissionList} from "@/components/submissions/SubmissionList";
 
 const MyOffersScreen = () => {
@@ -35,24 +35,24 @@ const MyOffersScreen = () => {
     );
 
     if (contentLoading) {
-        return <ContentLoader />;
+        return <ContentLoader/>;
     }
     return (
         <View style={{flex: 1, backgroundColor: colors.background}}>
-            <GoBackButton />
+            <GoBackButton/>
             <View style={[styles.container, {paddingBottom: insets.bottom}]}>
                 <Text style={styles.title}>Manage Submissions</Text>
                 <Text style={styles.subtitle}>
                     Track all your active and inactive fighter{'\n'}
                     submissions to specific offers.
                 </Text>
-                <SubmissionTab activeTab={activeTab} setActiveTab={setActiveTab} />
+                <SubmissionTab activeTab={activeTab} setActiveTab={setActiveTab}/>
                 <SearchSubmission
                     submissions={submissions}
                     activeTab={activeTab}
                     setFilteredSubmissions={setFilteredSubmissions}
                 />
-                <SubmissionList filteredSubmission={filteredSubmissions} />
+                <SubmissionList filteredSubmission={filteredSubmissions}/>
             </View>
         </View>
     );

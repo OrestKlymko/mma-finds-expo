@@ -7,7 +7,7 @@ import {
     KeyboardAvoidingView,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {PublicOfferInfo, ShortInfoFighter} from '@/service/response';
+import {PublicOfferInfo, ShortInfoFighter, SubmittedInformationOffer} from '@/service/response';
 import {SubmittedInformationPublicOffer} from '@/models/tailoring-model';
 import {
     getBenefitsInPublicOffer,
@@ -37,9 +37,9 @@ export const ManagerSubmissionDetailScreen = () => {
     const [offer, setOffer] = useState<PublicOfferInfo | null>(null);
     const [benefits, setBenefits] = useState<Benefit | null>(null);
     const [submittedInformation, setSubmittedInformation] =
-        useState<SubmittedInformationPublicOffer>();
+        useState<SubmittedInformationOffer>();
     const [previousInfo, setPreviousInfo] =
-        useState<SubmittedInformationPublicOffer>();
+        useState<SubmittedInformationOffer>();
     const [contentLoading, setContentLoading] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
     const {offerId, fighterId} = useLocalSearchParams<{

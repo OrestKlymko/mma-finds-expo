@@ -23,7 +23,6 @@ export const MyOfferSection = ({offers}: MyOfferSectionProps) => {
                 </TouchableOpacity>
             </View>
             <OfferList offers={offers} horizontal onClick={offerId => {
-                console.log(offerId)
                 router.push(`/offers/public/${offerId}`)
             }}/>
         </View>

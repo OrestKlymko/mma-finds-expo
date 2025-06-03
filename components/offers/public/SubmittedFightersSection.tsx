@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {SubmittedFighterList} from './SubmittedFighterList';
 import React from 'react';
 import colors from '@/styles/colors';

@@ -104,7 +104,7 @@ const HomeManagerScreen = () => {
                     buttonText="Invite & Earn"
                     onPress={() => router.push('/(app)/profile/invite-friends')}
                 />
-                <MySubmissionSection submissions={submissions} />
+                {/*<MySubmissionSection submissions={submissions} />*/}
                 <HomeBanner
                     title="Feature Your Fighter"
                     image={require('@/assets/Featuredoffers.png')}

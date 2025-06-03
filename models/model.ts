@@ -5,6 +5,7 @@ export enum OfferTypeEnum {
 }
 
 
+
 export interface ImageSelectorComponentProps {
     image?: Photo | null;
     setPhoto: (photo: Photo) => void;

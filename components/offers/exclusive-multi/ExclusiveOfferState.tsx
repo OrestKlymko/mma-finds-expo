@@ -8,12 +8,15 @@ import {ExclusiveOfferInfo, PublicOfferInfo} from "@/service/response";
 import {useRouter} from "expo-router";
 import {ShareOffer} from "@/components/offers/public/ShareOffer";
 import {OfferTypeEnum} from "@/models/model";
+import {useAuth} from "@/context/AuthContext";
 
 type Props = {
-    offer: any;
+    offer: any,
+    offerType?: OfferTypeEnum
 };
 
-export const ExclusiveOfferState = ({offer}: Props) => {
+export const ExclusiveOfferState = ({offer, offerType}: Props) => {
+    const {role} = useAuth();
     const router = useRouter();
     const publishOffer = () => {
         Alert.alert("Show your offer to the world!", "Are you sure you want to publish this offer?",
@@ -38,10 +41,22 @@ export const ExclusiveOfferState = ({offer}: Props) => {
             ])
 
     }
+    const renderPrivateOfferManageState = () => {
+        return (offer?.showToAllManagers === false) ? <View style={styles.button}>
+            <TouchableOpacity onPress={publishOffer}>
+                <Text style={styles.buttonText}>Publish Offer</Text>
+            </TouchableOpacity>
+        </View> : (
+            <View style={styles.summaryRowCentered}>
+                <Text style={styles.summaryLabel}>Offer already published</Text>
+            </View>
+        )
+    }
     return (
         <>
             <View style={styles.eventSummaryContainer}>
-                <ShareOffer offer={offer} typeOffer={OfferTypeEnum.PRIVATE}/>
+                {(offerType===OfferTypeEnum.PRIVATE && (role !== 'MANAGER' && role !== 'ANONYMOUS')) &&
+                    <ShareOffer offer={offer} typeOffer={OfferTypeEnum.PRIVATE}/>}
                 <View style={styles.summaryRowCentered}>
                     <Text style={styles.summaryLabel}>Time left to apply:</Text>
                     <Text style={styles.summaryValue}>
@@ -53,15 +68,7 @@ export const ExclusiveOfferState = ({offer}: Props) => {
                                 : countDaysForAcceptance(offer?.dueDate) + ' Days'}
                     </Text>
                 </View>
-                {(offer?.showToAllManagers === false) ? <View style={styles.button}>
-                    <TouchableOpacity onPress={publishOffer}>
-                        <Text style={styles.buttonText}>Publish Offer</Text>
-                    </TouchableOpacity>
-                </View> : (
-                    <View style={styles.summaryRowCentered}>
-                        <Text style={styles.summaryLabel}>Offer already published</Text>
-                    </View>
-                )}
+                {(role !== 'MANAGER' && role !== 'ANONYMOUS') && renderPrivateOfferManageState()}
             </View>
         </>
     );

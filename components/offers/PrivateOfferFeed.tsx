@@ -1,7 +1,7 @@
 import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import colors from "@/styles/colors";
 import React, {useCallback, useState} from "react";
-import {MultiContractShortInfo, PublicOfferInfo} from "@/service/response";
+import {ExclusiveOfferInfo, MultiContractShortInfo, PublicOfferInfo} from "@/service/response";
 import {useRouter} from "expo-router";
 import {useFilter} from "@/context/FilterContext";
 import {useFocusEffect} from "@react-navigation/native";
@@ -11,9 +11,10 @@ import ContentLoader from "@/components/ContentLoader";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import OfferListForFighter from "@/components/offers/OfferListForFighter";
 import FilterLogo from "@/assets/filter.svg";
+import {ExclusiveOfferList} from "@/components/offers/ExclusiveOfferList";
 
 export const PrivateOfferFeed = () => {
-    const [privateOffers, setPrivateOffers] = useState<PublicOfferInfo[]>([]);
+    const [privateOffers, setPrivateOffers] = useState<ExclusiveOfferInfo[]>([]);
     const [multiFightOffers, setMultiFightOffers] = useState<MultiContractShortInfo[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const router = useRouter();
@@ -24,13 +25,13 @@ export const PrivateOfferFeed = () => {
         useCallback(() => {
             setContentLoading(true);
 
-            if(!selectedFilters.offerType.includes('Multi-Fight') && selectedFilters.offerType.length > 0) {
+            if (!selectedFilters.offerType.includes('Multi-Fight') || selectedFilters.offerType.length === 0) {
                 getMultiFightOffers()
                     .then(setMultiFightOffers)
                     .catch(() => setMultiFightOffers([]));
             }
 
-            if(selectedFilters.offerType.includes('Single Bout') || selectedFilters.offerType.length === 0) {
+            if (selectedFilters.offerType.includes('Single Bout') || selectedFilters.offerType.length === 0) {
                 getAllPrivateOffers(null, null)
                     .then((res) => {
                         const filteredOffers = res.filter((offer: PublicOfferInfo) => {
@@ -142,7 +143,7 @@ export const PrivateOfferFeed = () => {
     };
     const renderContent = () => {
         return privateOffers.length > 0 ? (
-            <OfferListForFighter offers={privateOffers} offerType={OfferTypeEnum.PRIVATE}/>
+            <ExclusiveOfferList offers={privateOffers} multiContractOffers={multiFightOffers}/>
         ) : (
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={styles.noOffersText}>No Public Offers Available</Text>

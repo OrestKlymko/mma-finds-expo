@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
 import {FlatList, View} from 'react-native';
 import {ExclusiveCardOffer} from './ExclusiveCardOffer';
-import {ExclusiveOfferInfo} from '@/service/response';
+import {ExclusiveOfferInfo, MultiContractShortInfo} from '@/service/response';
 export type MultiContractOffer = {
     eventId: string;
     eventName: string;
@@ -14,12 +14,12 @@ export type MultiContractOffer = {
     verifiedState?: string;
     typeOffer?: 'MULTI';
 };
-export type OfferType = ExclusiveOfferInfo | MultiContractOffer;
+export type OfferType = ExclusiveOfferInfo | MultiContractShortInfo;
 
 interface OfferListProps {
     offers?: ExclusiveOfferInfo[];
     horizontal?: boolean;
-    multiContractOffers?: MultiContractOffer[];
+    multiContractOffers?: MultiContractShortInfo[];
     footerButton?: React.ReactNode;
 }
 
@@ -39,14 +39,14 @@ export const ExclusiveOfferList: React.FC<OfferListProps> =
         }, [offers, multiContractOffers]);
 
         const renderItem = useCallback(({item}: {item: any}) => {
-            return <ExclusiveCardOffer item={item} />;
+            return <ExclusiveCardOffer item={item}/>;
         }, []);
 
         return (
             <FlatList
                 data={combinedOffers}
                 horizontal={horizontal}
-                keyExtractor={(item, index) => `${item.eventId}-${index}`}
+                keyExtractor={(item, index) => `${index}`}
                 renderItem={renderItem}
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}

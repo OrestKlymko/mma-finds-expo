@@ -97,7 +97,7 @@ export const PromotionSingleOffer = () => {
                     </View>
                 )}
                 <TitleWithAction title={offer?.eventName || 'Event Name'}/>
-                <ExclusiveOfferState offer={offer}/>
+                <ExclusiveOfferState offer={offer} offerType={OfferTypeEnum.PRIVATE}/>
                 {offer&&<LocationAndDateEvent offer={offer}/>}
                 {offer?.eventDescription && (
                     <EventDescription eventDescription={offer.eventDescription}/>

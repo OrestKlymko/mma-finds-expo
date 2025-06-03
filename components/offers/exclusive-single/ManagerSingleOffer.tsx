@@ -34,7 +34,6 @@ export const ManagerSingleOffer = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            console.log(role);
             if (!id) return;
             getData();
         }, [id])

@@ -11,6 +11,7 @@ import {MainOfferDetails} from "@/components/offers/exclusive-multi/MainOfferDet
 import {useFocusEffect, useLocalSearchParams} from "expo-router";
 import {MultiFightPurseGrid} from "@/components/offers/exclusive-multi/MultiFightPurseGrid";
 import ExclusiveMyFighterList from "@/components/offers/ExclusiveMyFighterList";
+import {MultiFightOfferManagerTailoringCandidates} from "@/components/offers/MultiFightOfferManagerTailoringCandidates";
 
 export const ManagerMultiFightOffer = () => {
     const insets = useSafeAreaInsets();
@@ -19,6 +20,7 @@ export const ManagerMultiFightOffer = () => {
     const [submissionInformations, setSubmissionInformations] = useState<
         SubmittedInformationOffer[]
     >([]);
+    const [previousInfo, setPreviousInfo] = useState<SubmittedInformationOffer[]>();
     const [contentLoader, setContentLoader] = useState(false);
 
     const {id} = useLocalSearchParams<{ id: string }>();
@@ -27,8 +29,9 @@ export const ManagerMultiFightOffer = () => {
         React.useCallback(() => {
             if (!id) return;
             setContentLoader(true);
-            getMultiFightOfferById(id)
+            getMultiFightOfferById(id, null)
                 .then(res => {
+                    setPreviousInfo(res.previousOfferPrice);
                     setOffer(res.offer);
                     setFighter(res.fighter);
                     setSubmissionInformations(res.submittedInformation);
@@ -60,7 +63,11 @@ export const ManagerMultiFightOffer = () => {
                     <TitleWithAction title={'Multi-Fight Offer'}/>
                     <MainOfferDetails offer={offer}/>
                     <MultiFightPurseGrid submittedInformation={submissionInformations}/>
-                    <ExclusiveMyFighterList offerType={'Multi-Fight Offer'} fighter={fighter} offerId={offer?.offerId}/>
+                    {(offer && fighter) ? <MultiFightOfferManagerTailoringCandidates offer={offer} fighter={fighter}
+                                                                                     submittedInformation={submissionInformations}
+                                                                                     previousInfo={previousInfo}/> :
+                        <ExclusiveMyFighterList offerType={'Multi-Fight Offer'} fighter={fighter}
+                                                offerId={offer?.offerId}/>}
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>

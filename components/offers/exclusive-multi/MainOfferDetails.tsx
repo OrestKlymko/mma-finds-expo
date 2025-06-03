@@ -3,6 +3,7 @@ import React from 'react';
 import colors from '@/styles/colors';
 import {MultiContractFullInfo} from '@/service/response';
 import {ExclusiveOfferState} from "@/components/offers/exclusive-multi/ExclusiveOfferState";
+import {OfferTypeEnum} from "@/models/model";
 
 type Props = {
     offer: MultiContractFullInfo | null | undefined;
@@ -11,7 +12,7 @@ type Props = {
 export const MainOfferDetails = ({offer}: Props) => {
     return (
         <View>
-            <ExclusiveOfferState offer={offer} />
+            <ExclusiveOfferState offer={offer} offerType={OfferTypeEnum.MULTIPLE} />
             <View style={{marginTop: 30}}>
                 <Text style={styles.cardTitle}>Main Offer Details</Text>
                 <View style={styles.offerDetailsCard}>

@@ -37,7 +37,7 @@ import {
     EmployeeTaskResponse,
     EventCreationResponse,
     EventShortInfo,
-    EventTaskResponse,
+    EventTaskResponse, ExclusiveOfferInfo,
     FeatureResponse, FighterInfoResponse,
     FilterPublicOfferManagerResponse,
     FilterPublicOfferPromotionResponse,
@@ -344,9 +344,9 @@ export const getAllPublicOffers = (
 export const getAllPrivateOffers = (
     promotionId?: string | null,
     lastSeen?: string | null
-): Promise<PublicOfferInfo[]> => {
+): Promise<ExclusiveOfferInfo[]> => {
     const qs = buildQueryString({promotionId, lastSeen});
-    return request<PublicOfferInfo[]>(`/offer/exclusive${qs}`, {method: 'GET'}); // CHECKED
+    return request<ExclusiveOfferInfo[]>(`/offer/exclusive${qs}`, {method: 'GET'}); // CHECKED
 };
 
 export const getExclusiveOffers = (): Promise<any> =>
