@@ -13,52 +13,17 @@ type RenderedFilter = {
     value: string;
 };
 
-export const ExistFilter = () => {
+export const ExistManagerFilter = () => {
     const {selectedFilters, setSelectedFilters} = useFilterFighter();
 
     const filters: RenderedFilter[] = [];
 
 
-    if (selectedFilters.fighterLocation?.length) {
-        selectedFilters.fighterLocation.forEach(val => {
+    if (selectedFilters.managerLocation?.length) {
+        selectedFilters.managerLocation.forEach(val => {
             if (val) {
                 filters.push({
-                    category: 'fighterLocation',
-                    label: val,
-                    value: val,
-                });
-            }
-        });
-    }
-
-
-    if (selectedFilters.foundationStyle?.length) {
-        selectedFilters.foundationStyle.forEach(val => {
-            if (val) {
-                filters.push({
-                    category: 'foundationStyle',
-                    label: val,
-                    value: val,
-                });
-            }
-        });
-    }
-
-
-    if (selectedFilters.matchType && selectedFilters.matchType !== 'All') {
-        filters.push({
-            category: 'matchType',
-            label: selectedFilters.matchType,
-            value: selectedFilters.matchType,
-        });
-    }
-
-
-    if (selectedFilters.promotion?.length) {
-        selectedFilters.promotion.forEach(val => {
-            if (val) {
-                filters.push({
-                    category: 'promotion',
+                    category: 'managerLocation',
                     label: val,
                     value: val,
                 });
@@ -71,13 +36,6 @@ export const ExistFilter = () => {
     const handleRemoveFilter = (category: keyof FilterFighter, value: string) => {
         setSelectedFilters(prev => {
             const currentValues = prev[category];
-
-            if (category === 'matchType') {
-                return {
-                    ...prev,
-                    matchType: 'All',
-                };
-            }
 
             if (Array.isArray(currentValues)) {
                 return {

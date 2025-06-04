@@ -12,6 +12,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import OfferListForFighter from "@/components/offers/OfferListForFighter";
 import FilterLogo from "@/assets/filter.svg";
 import {ExclusiveOfferList} from "@/components/offers/ExclusiveOfferList";
+import {useExclusiveOfferFilter} from "@/context/ExclusiveOfferFilterContext";
+import {ExclusiveOfferFilter} from "@/context/model/model";
 
 interface PrivateOfferFeedProps {
     showMyOffers: boolean
@@ -22,66 +24,83 @@ export const PrivateOfferFeed = ({showMyOffers}: PrivateOfferFeedProps) => {
     const [multiFightOffers, setMultiFightOffers] = useState<MultiContractShortInfo[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const router = useRouter();
-    const {selectedFilters, setSelectedFilters} = useFilter();
+    const {selectedExOfferFilters, setSelectedExOfferFilters} = useExclusiveOfferFilter();
     const [contentLoading, setContentLoading] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
+            let isActive = true;
             setContentLoading(true);
 
-            if (!selectedFilters.offerType.includes('Multi-Fight') || selectedFilters.offerType.length === 0) {
-                getMultiFightOffers()
-                    .then(setMultiFightOffers)
-                    .catch(() => setMultiFightOffers([]));
+            // Збираємо проміси у масив залежно від фільтрів
+            const promises: Promise<void>[] = [];
+
+            // Якщо потрібно отримувати Multi-Fight офери
+            if (
+                !selectedExOfferFilters.offerType.includes("Multi-Fight") ||
+                selectedExOfferFilters.offerType.length === 0
+            ) {
+                const p1 = getMultiFightOffers()
+                    .then((data) => {
+                        if (!isActive) return;
+                        setMultiFightOffers(data);
+                    })
+                    .catch(() => {
+                        if (!isActive) return;
+                        setMultiFightOffers([]);
+                    });
+                promises.push(p1);
             }
 
-            if (selectedFilters.offerType.includes('Single Bout') || selectedFilters.offerType.length === 0) {
-                getAllPrivateOffers(null, null)
+            // Якщо потрібно отримувати Single Bout (приватні) офери
+            if (
+                selectedExOfferFilters.offerType.includes("Single Bout") ||
+                selectedExOfferFilters.offerType.length === 0
+            ) {
+                const p2 = getAllPrivateOffers(null, null)
                     .then((res) => {
-                        const filteredOffers = res.filter((offer: PublicOfferInfo | ExclusiveOfferInfo) => {
-                            const bySubmission = showMyOffers ? offer.isSubmitted : true;
+                        if (!isActive) return;
+                        const filteredOffers = res.filter(
+                            (offer: PublicOfferInfo | ExclusiveOfferInfo) => {
+                                const bySubmission = showMyOffers ? offer.isSubmitted : true;
 
-                            const placeOk =
-                                selectedFilters.eventPlace.length === 0 ||
-                                selectedFilters.eventPlace.some((place) =>
-                                    offer.country.includes(place)
-                                );
+                                // 2.2) Фільтр за назвою події
+                                const nameOk =
+                                    selectedExOfferFilters.eventName.length === 0 ||
+                                    selectedExOfferFilters.eventName.includes(offer.eventName);
 
-                            // 2.2) Фільтр за назвою події
-                            const nameOk =
-                                selectedFilters.eventName.length === 0 ||
-                                selectedFilters.eventName.includes(offer.eventName);
-
-                            // 2.3) Фільтр за промоушеном
-                            const promoOk =
-                                selectedFilters.promotion.length === 0 ||
-                                selectedFilters.promotion.includes(offer.promotionName);
-
-                            // 2.4) Фільтр за ваговою категорією
-                            const weightOk =
-                                selectedFilters.weightClass.length === 0 ||
-                                selectedFilters.weightClass.includes(offer.weightClass);
-
-                            // 2.5) Фільтр за правилами (Professional/Amateur)
-                            const rulesOk =
-                                selectedFilters.rules.length === 0 ||
-                                selectedFilters.rules.includes(
-                                    offer.isFightTitled ? "Professional" : "Ammateur"
-                                );
-
-                            return placeOk && nameOk && promoOk && weightOk && rulesOk && bySubmission;
-                        });
+                                return nameOk && bySubmission;
+                            }
+                        );
                         setPrivateOffers(filteredOffers);
                     })
-                    .catch(() => setPrivateOffers([]))
-                    .finally(() => setContentLoading(false));
+                    .catch(() => {
+                        if (!isActive) return;
+                        setPrivateOffers([]);
+                    });
+                promises.push(p2);
             }
-        }, [selectedFilters, showMyOffers])
+
+            // Коли всі проміси виконаються (або хоча б один провалиться), виключаємо лоадер
+            Promise.all(promises)
+                .catch(() => {
+                    // тут, при потребі, можна обробити глобальну помилку
+                })
+                .finally(() => {
+                    if (isActive) setContentLoading(false);
+                });
+
+            return () => {
+                // Якщо екран втратить фокус/відмонтований, ми не будемо оновлювати стейт
+                isActive = false;
+            };
+        }, [selectedExOfferFilters, showMyOffers])
     );
 
+
     const removeFilter = (category: string, value: string) => {
-        setSelectedFilters(prev => {
-            const currentValues = prev[category as keyof Filter] ?? [];
+        setSelectedExOfferFilters(prev => {
+            const currentValues = prev[category as keyof ExclusiveOfferFilter] ?? [];
             if (!Array.isArray(currentValues)) {
                 return prev;
             }
@@ -95,28 +114,15 @@ export const PrivateOfferFeed = ({showMyOffers}: PrivateOfferFeedProps) => {
 
     const renderFilters = () => {
         const filters = [
-            ...selectedFilters.eventPlace.map(f => ({
-                category: 'eventPlace',
-                value: f,
-            })),
-            ...selectedFilters.weightClass.map(f => ({
-                category: 'weightClass',
-                value: f,
-            })),
-            ...selectedFilters.rules.map(f => ({category: 'rules', value: f})),
-            ...selectedFilters.promotion.map(f => ({
-                category: 'promotion',
-                value: f,
-            })),
-            ...selectedFilters.eventName.map(f => ({
+            ...selectedExOfferFilters.eventName.map(f => ({
                 category: 'eventName',
                 value: f,
             })),
-            ...selectedFilters.fighterName.map(f => ({
+            ...selectedExOfferFilters.fighterName.map(f => ({
                 category: 'fighterName',
                 value: f,
             })),
-            ...selectedFilters.offerType.map(f => ({
+            ...selectedExOfferFilters.offerType.map(f => ({
                 category: 'offerType',
                 value: f,
             })),
@@ -151,7 +157,7 @@ export const PrivateOfferFeed = ({showMyOffers}: PrivateOfferFeedProps) => {
             <ExclusiveOfferList offers={privateOffers} multiContractOffers={multiFightOffers}/>
         ) : (
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <Text style={styles.noOffersText}>No Public Offers Available</Text>
+                <Text style={styles.noOffersText}>No Private Offers Available</Text>
             </View>
         );
     };

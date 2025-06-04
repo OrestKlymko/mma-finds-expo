@@ -10,7 +10,7 @@ import {ShortInfoFighter} from '@/service/response';
 import {useRouter} from "expo-router";
 import FighterList from "@/app/(app)/manager/fighter";
 import {RecentSearch} from "@/components/offers/RecentSearch";
-import {ExistFilter} from "@/components/ExistFilter";
+import {ExistFighterFilter} from "@/components/ExistFighterFilter";
 import {SearchInput} from "@/components/SearchInput";
 
 
@@ -150,7 +150,7 @@ export function SearchForFighterFlow({
                         <Filter width={16} height={16} color={colors.white}/>
                     </TouchableOpacity>
                 </View>
-                <ExistFilter/>
+                <ExistFighterFilter/>
             </View>
 
             <RecentSearch

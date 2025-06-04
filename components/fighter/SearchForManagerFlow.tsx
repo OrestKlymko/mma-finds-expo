@@ -9,8 +9,9 @@ import ContentLoader from '@/components/ContentLoader';
 import {useRouter} from "expo-router";
 import {SearchInput} from "@/components/SearchInput";
 import {RecentSearch} from "@/components/offers/RecentSearch";
-import {ExistFilter} from "@/components/ExistFilter";
+import {ExistFighterFilter} from "@/components/ExistFighterFilter";
 import ManagerList from "@/components/fighter/ManagerList";
+import {ExistManagerFilter} from "@/components/ExistManagerFilter";
 
 export function SearchForManagerFlow() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -118,7 +119,7 @@ export function SearchForManagerFlow() {
                     </TouchableOpacity>
                 </View>
 
-                <ExistFilter/>
+                <ExistManagerFilter/>
             </View>
 
             <RecentSearch
