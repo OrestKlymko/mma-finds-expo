@@ -108,7 +108,7 @@ export default function Index() {
                                 </View>
                             )}
                             ListFooterComponent={
-                                <>
+                                <View style={{paddingVertical:10}}>
                                     <FloatingLabelInput
                                         style={styles.input}
                                         label="Document name"
@@ -141,7 +141,7 @@ export default function Index() {
                                         onPress={handleAddDocument}>
                                         <Text style={styles.addButtonText}>Add Document</Text>
                                     </TouchableOpacity>
-                                </>
+                                </View>
                             }
                             style={{marginBottom: 20}}
                         />

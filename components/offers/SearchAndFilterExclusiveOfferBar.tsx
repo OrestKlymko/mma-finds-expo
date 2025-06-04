@@ -44,12 +44,11 @@ export function SearchAndFilterExclusiveOfferBar({
                     selectedExOfferFilters.eventName.includes(offer?.eventName);
                 const matchesFighterName =
                     searchQuery.length === 0 ||
-                    offer?.fighterName
-                        .toLowerCase()
+                    offer?.opponentName?.toLowerCase()
                         .includes(searchQuery.toLowerCase()) ||
                     offer?.eventName.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     offer?.eventDate?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    offer?.fighterName?.toLowerCase().includes(searchQuery.toLowerCase());
+                    offer?.opponentName?.toLowerCase().includes(searchQuery.toLowerCase());
                 return matchesEventName && matchesFighterName;
             });
             getFilteredOffers(result);

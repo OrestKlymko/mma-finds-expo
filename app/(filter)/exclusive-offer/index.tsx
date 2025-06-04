@@ -156,11 +156,11 @@ const FilterExclusiveOfferScreen = () => {
                     </View>
                 </ScrollView>
 
-                <TouchableOpacity
-                    style={styles.showResultsButton}
-                    onPress={() => router.push('/feed')}>
-                    <Text style={styles.showResultsText}>Show Results</Text>
-                </TouchableOpacity>
+                {/*<TouchableOpacity*/}
+                {/*    style={styles.showResultsButton}*/}
+                {/*    onPress={() => router.}>*/}
+                {/*    <Text style={styles.showResultsText}>Show Results</Text>*/}
+                {/*</TouchableOpacity>*/}
             </View>
         </View>
     );

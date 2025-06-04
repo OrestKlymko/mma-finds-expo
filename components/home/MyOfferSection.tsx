@@ -17,7 +17,7 @@ export const MyOfferSection = ({offers}: MyOfferSectionProps) => {
                 <Text style={styles.sectionTitle}>My Offers</Text>
                 <TouchableOpacity
                     onPress={() => {
-                        router.push('/offer')
+                        router.push('/(app)/(tabs)/feed')
                     }}>
                     <Text style={styles.seeAll}>See All</Text>
                 </TouchableOpacity>

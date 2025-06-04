@@ -110,7 +110,8 @@ const SignUpPromotionScreen = () => {
             createPromotion(formData)
                 .then(async res => {
                     await handleSuccessAuth(res);
-                    setTimeout(() => router.push('/(app)/(tabs)'), 1000);
+                    router.push('/(app)/(tabs)');
+                    setLoading(false);
                 })
                 .catch(err => {
                     if (err?.response?.status === 409) {
@@ -120,12 +121,14 @@ const SignUpPromotionScreen = () => {
                     } else {
                         Alert.alert('Failed to create a profile.');
                     }
-                }).finally(() => setLoading(false));
+                    setLoading(false);
+                })
         } else {
+            setLoading(false);
             router.push({
                 pathname: '/(auth)/sign-up/method',
                 params: {
-                    data: JSON.stringify({...dataToSend,secondProfile: 'false'}),
+                    data: JSON.stringify({...dataToSend, secondProfile: 'false'}),
                     role: 'PROMOTION'
                 }
             });

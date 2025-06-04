@@ -109,7 +109,7 @@ export default function Index() {
                 <GoogleMethod onSuccess={createProfile} text={"Sign up with Google"} loading={googleLoading}
                               setLoading={setGoogleLoading}/>
                 <FacebookMethod data={data} handleSuccessAuth={handleSuccessAuth}/>
-                <AppleMethod handleSuccessAuth={createProfile} text={"Sign up with Google"} loadingApple={appleLoading}
+                <AppleMethod handleSuccessAuth={createProfile} text={"Sign up with Apple"} loadingApple={appleLoading}
                              setLoadingApple={setAppleLoading}/>
             </View>
         </View>

@@ -52,6 +52,7 @@ export const ExclusiveOfferState = ({offer, offerType}: Props) => {
             </View>
         )
     }
+
     return (
         <>
             <View style={styles.eventSummaryContainer}>
@@ -68,7 +69,7 @@ export const ExclusiveOfferState = ({offer, offerType}: Props) => {
                                 : countDaysForAcceptance(offer?.dueDate) + ' Days'}
                     </Text>
                 </View>
-                {(role !== 'MANAGER' && role !== 'ANONYMOUS') && renderPrivateOfferManageState()}
+                {((role !== 'MANAGER' && role !== 'ANONYMOUS')&&(role!=null)) && renderPrivateOfferManageState()}
             </View>
         </>
     );

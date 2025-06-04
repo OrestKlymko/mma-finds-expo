@@ -121,7 +121,8 @@ export default function Index() {
             createManagerSecond(formData)
                 .then(async res => {
                     await handleSuccessAuth(res);
-                    setTimeout(() => router.push('/(app)/(tabs)'), 1000);
+                    router.push('/(app)/(tabs)');
+                    setLoading(false)
                 })
                 .catch(err => {
                     if (err?.response?.status === 409) {
@@ -131,9 +132,10 @@ export default function Index() {
                     } else {
                         Alert.alert('Failed to create a profile.');
                     }
+                    setLoading(false);
                 })
-                .finally(() => setLoading(false));
         } else {
+            setLoading(false)
             router.push({
                 pathname: '/(auth)/sign-up/method',
                 params: {

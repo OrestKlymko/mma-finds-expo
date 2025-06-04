@@ -15,10 +15,12 @@ import {usePushNotifications} from "@/hooks/usePushNotifications";
 import {GoogleSignin} from "@react-native-google-signin/google-signin";
 import ContentLoader from "@/components/ContentLoader";
 import AfterAuth from "@/components/AfterAuth";
+import { useTrackRoute } from '@/hooks/useTrackRoute';
 
 
 export default function RootLayout() {
     usePushNotifications();
+    useTrackRoute();
     const [contentLoading, setContentLoading] = useState(false);
 
 

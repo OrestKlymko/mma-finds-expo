@@ -12,7 +12,11 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import OfferListForFighter from "@/components/offers/OfferListForFighter";
 import FilterLogo from "@/assets/filter.svg";
 
-export const PublicOfferFeed = () => {
+interface PublicOfferFeedProps {
+    showMyOffers: boolean
+}
+
+export const PublicOfferFeed = ({showMyOffers}: PublicOfferFeedProps) => {
     const [publicOffers, setPublicOffers] = useState<PublicOfferInfo[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const router = useRouter();
@@ -23,28 +27,48 @@ export const PublicOfferFeed = () => {
         useCallback(() => {
             setContentLoading(true);
             getAllPublicOffers(null, null)
-                .then(res => {
-                    const filteredOffers = res.filter(
-                        (offer: PublicOfferInfo) =>
-                            (selectedFilters.eventPlace.length === 0 ||
-                                selectedFilters.eventPlace.some(place =>
-                                    offer.country.includes(place),
-                                )) &&
-                            (selectedFilters.eventName.length === 0 ||
-                                selectedFilters.eventName.includes(offer.eventName)) &&
-                            (selectedFilters.promotion.length === 0 ||
-                                selectedFilters.promotion.includes(offer.promotionName)) &&
-                            (selectedFilters.weightClass.length === 0 ||
-                                selectedFilters.weightClass.includes(offer.weightClass)) &&
-                            (selectedFilters.rules.length === 0 ||
-                                selectedFilters.rules.includes(
-                                    offer.isFightTitled ? 'Professional' : 'Ammateur',
-                                )),
-                    );
+                .then((res) => {
+                    const filteredOffers = res.filter((offer: PublicOfferInfo) => {
+                        const bySubmission = showMyOffers ? offer.isSubmitted : true;
+
+                        const byPlace =
+                            selectedFilters.eventPlace.length === 0 ||
+                            selectedFilters.eventPlace.some((place) =>
+                                offer.country.includes(place)
+                            );
+
+                        const byEventName =
+                            selectedFilters.eventName.length === 0 ||
+                            selectedFilters.eventName.includes(offer.eventName);
+
+                        const byPromotion =
+                            selectedFilters.promotion.length === 0 ||
+                            selectedFilters.promotion.includes(offer.promotionName);
+
+                        const byWeightClass =
+                            selectedFilters.weightClass.length === 0 ||
+                            selectedFilters.weightClass.includes(offer.weightClass);
+
+                        const byRules =
+                            selectedFilters.rules.length === 0 ||
+                            selectedFilters.rules.includes(
+                                offer.isFightTitled ? "Professional" : "Ammateur"
+                            );
+
+                        return (
+                            bySubmission &&
+                            byPlace &&
+                            byEventName &&
+                            byPromotion &&
+                            byWeightClass &&
+                            byRules
+                        );
+                    });
+
                     setPublicOffers(filteredOffers);
                 })
                 .finally(() => setContentLoading(false));
-        }, [selectedFilters]),
+        }, [selectedFilters, showMyOffers])
     );
 
     const removeFilter = (category: string, value: string) => {
@@ -141,7 +165,7 @@ export const PublicOfferFeed = () => {
         {/* Content */}
         {renderContent()}</>
 
-    ;
+        ;
 };
 
 const styles = StyleSheet.create({

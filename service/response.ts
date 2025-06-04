@@ -295,6 +295,7 @@ export type PublicOfferInfo = {
     opponentAmateurWins?: string | null | undefined;
     opponentAmateurLosses?: string | null | undefined;
     opponentAmateurDraws?: string | null | undefined;
+    isSubmitted: boolean;
 };
 
 export type PublicOfferShortInfo = {
@@ -377,6 +378,7 @@ export type ExclusiveOfferInfo = {
     opponentAmateurLosses?: string | null | undefined;
     opponentAmateurDraws?: string | null | undefined;
     showToAllManagers: boolean;
+    isSubmitted: boolean;
 };
 
 export type FighterInfoResponse = {

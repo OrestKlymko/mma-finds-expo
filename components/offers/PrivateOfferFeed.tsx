@@ -13,7 +13,11 @@ import OfferListForFighter from "@/components/offers/OfferListForFighter";
 import FilterLogo from "@/assets/filter.svg";
 import {ExclusiveOfferList} from "@/components/offers/ExclusiveOfferList";
 
-export const PrivateOfferFeed = () => {
+interface PrivateOfferFeedProps {
+    showMyOffers: boolean
+}
+
+export const PrivateOfferFeed = ({showMyOffers}: PrivateOfferFeedProps) => {
     const [privateOffers, setPrivateOffers] = useState<ExclusiveOfferInfo[]>([]);
     const [multiFightOffers, setMultiFightOffers] = useState<MultiContractShortInfo[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -34,8 +38,9 @@ export const PrivateOfferFeed = () => {
             if (selectedFilters.offerType.includes('Single Bout') || selectedFilters.offerType.length === 0) {
                 getAllPrivateOffers(null, null)
                     .then((res) => {
-                        const filteredOffers = res.filter((offer: PublicOfferInfo) => {
-                            // 2.1) Фільтр за місцем проведення (country)
+                        const filteredOffers = res.filter((offer: PublicOfferInfo | ExclusiveOfferInfo) => {
+                            const bySubmission = showMyOffers ? offer.isSubmitted : true;
+
                             const placeOk =
                                 selectedFilters.eventPlace.length === 0 ||
                                 selectedFilters.eventPlace.some((place) =>
@@ -64,14 +69,14 @@ export const PrivateOfferFeed = () => {
                                     offer.isFightTitled ? "Professional" : "Ammateur"
                                 );
 
-                            return placeOk && nameOk && promoOk && weightOk && rulesOk;
+                            return placeOk && nameOk && promoOk && weightOk && rulesOk && bySubmission;
                         });
                         setPrivateOffers(filteredOffers);
                     })
                     .catch(() => setPrivateOffers([]))
                     .finally(() => setContentLoading(false));
             }
-        }, [selectedFilters])
+        }, [selectedFilters, showMyOffers])
     );
 
     const removeFilter = (category: string, value: string) => {

@@ -26,6 +26,9 @@ export const GoogleMethod = ({onSuccess, text,loading,setLoading}: GoogleMethodP
                 const {email} = user;
                 const fcm = await AsyncStorage.getItem('deviceToken');
                 onSuccess(email, fcm ?? '');
+            }else {
+                console.error("Google Signin failed:", response); //TODO
+                setLoading(false);
             }
         } catch (error) {
             console.error("Google Signin Error:", error?.response); //TODO
@@ -33,16 +36,18 @@ export const GoogleMethod = ({onSuccess, text,loading,setLoading}: GoogleMethodP
                 switch (error.code) {
                     case statusCodes.IN_PROGRESS:
                         console.error("Google Signin is in progress");
+                        setLoading(false);
                         break;
                     case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
                         console.error("Play services not available");
+                        setLoading(false);
                         break;
                     default:
                         console.error(error);
+                        setLoading(false);
                         break;
                 }
             }
-        }finally {
             setLoading(false);
         }
     }

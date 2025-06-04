@@ -37,7 +37,7 @@ export const AppleMethod = (
                 return;
             }
             handleSuccessAuth(email);
-
+            setLoadingApple(false);
         } catch (err: any) {
             if (err.code !== 'ERR_CANCELED') {
                 Alert.alert('Apple Sign-In', 'Failed to sign in');

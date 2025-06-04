@@ -195,13 +195,13 @@ const styles = StyleSheet.create({
         right: 0,
         backgroundColor: '#FFD700',
         paddingVertical: 4,
-        paddingHorizontal: 18,
+        paddingHorizontal: 15,
         borderTopRightRadius: 10,
         zIndex: 10,
     },
     featuredBadgeText: {
         color: '#000',
-        fontSize: 10,
+        fontSize: 8,
         fontWeight: '500',
     },
     closedOverlay: {

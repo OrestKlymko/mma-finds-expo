@@ -165,7 +165,7 @@ const FilterPublicOfferScreen = () => {
                                                 onPress={() => toggleFilter('promotion', promo)}
                                             />
                                         ))}
-                                {promotions.length > 5 && (
+                                {promotions&&promotions.length > 5 && (
                                     <TouchableOpacity
                                         onPress={() => handleMorePress('promotion')}
                                         style={styles.moreButton}>
@@ -221,13 +221,13 @@ const FilterPublicOfferScreen = () => {
                     </View>
                 </ScrollView>
 
-                <TouchableOpacity
-                    style={styles.showResultsButton}
-                    onPress={() => {
-                        router.push('/search')
-                    }}>
-                    <Text style={styles.showResultsText}>Show Results</Text>
-                </TouchableOpacity>
+                {/*<TouchableOpacity*/}
+                {/*    style={styles.showResultsButton}*/}
+                {/*    onPress={() => {*/}
+                {/*        router.push('/search')*/}
+                {/*    }}>*/}
+                {/*    <Text style={styles.showResultsText}>Show Results</Text>*/}
+                {/*</TouchableOpacity>*/}
             </View>
         </View>
     );

@@ -14,7 +14,7 @@ export const FighterForExclusiveOffer = ({fighterChosen}: FighterForExclusiveOff
     const router = useRouter();
 
     return <>
-        <Text style={styles.label}>Fighters*</Text>
+        <Text style={styles.label}>Fighters</Text>
         <TouchableOpacity
             style={[styles.inputRow]}
             onPress={() => {

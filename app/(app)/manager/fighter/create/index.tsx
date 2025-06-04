@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
     View,
     Text,
@@ -40,7 +40,7 @@ import {TapologyLinkInput} from '@/components/fighter/TapologyLinkInput';
 import MissingFieldsModal from "@/components/offers/MissingFieldsModal";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {MultiSportRecordInputs, RecordsBySport} from "@/components/fighter/MultiSportRecordInputs";
-import {cmToFeetInches, feetInchesToCm, kgToLbs} from "@/utils/unitConversions";
+import {cmToFeetInches, feetInchesToCm} from "@/utils/unitConversions";
 
 
 const CreateFightersProfileScreen = () => {
@@ -164,7 +164,7 @@ const CreateFightersProfileScreen = () => {
 
         if (heightUnit === 'cm') {
             heightCm = parseFloat(heightValue) || 0;
-            ({ feet: heightF, inches: heightIn } = cmToFeetInches(heightCm));
+            ({feet: heightF, inches: heightIn} = cmToFeetInches(heightCm));
         } else {
             heightF = parseFloat(heightFeet) || 0;
             heightIn = parseFloat(heightInches) || 0;
@@ -182,7 +182,7 @@ const CreateFightersProfileScreen = () => {
 
         if (reachUnit === 'cm') {
             reachCm = parseFloat(reachValue) || 0;
-            ({ feet: reachF, inches: reachIn } = cmToFeetInches(reachCm));
+            ({feet: reachF, inches: reachIn} = cmToFeetInches(reachCm));
         } else {
             reachF = parseFloat(reachFeet) || 0;
             reachIn = parseFloat(reachInches) || 0;
@@ -235,20 +235,21 @@ const CreateFightersProfileScreen = () => {
         formData.append('maxWeight', maxWeight);
         formData.append('fighterEmail', emailFighter.toLowerCase());
         Object.entries(sportRecords).forEach(([sportId, rec]) => {
-            formData.append('sportsScore', JSON.stringify({
+            const jsonString = JSON.stringify({
                 sportTypeId: sportId,
-                proWins:  rec.proWins,
-                proLoss:  rec.proLoss,
-                proDraw:  rec.proDraw,
-                amWins:   rec.amWins,
-                amLoss:   rec.amLoss,
-                amDraw:   rec.amDraw,
-            }));
+                proWins: rec.proWins ?? 0,
+                proLoss: rec.proLoss ?? 0,
+                proDraw: rec.proDraw ?? 0,
+                amWins: rec.amWins ?? 0,
+                amLoss: rec.amLoss ?? 0,
+                amDraw: rec.amDraw ?? 0,
+            });
+            formData.append('sportsScore', jsonString);
         });
-
+        console.log(formData)
         createFighter(formData)
             .then(() => {
-                router.push('/profile/my-fighters');
+                router.push('/(app)/(tabs)/feed');
             })
             .catch((e) => {
                 Alert.alert('Failed to create fighter profile');

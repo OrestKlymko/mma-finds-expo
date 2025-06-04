@@ -85,10 +85,8 @@ const LoginScreen = () => {
                 if (res.token) {
                     await AsyncStorage.setItem('authToken', res.token);
                 }
-                setTimeout(() => {
-                    setLoadingGoogle(false);
-                    router.push('/');
-                }, 1000);
+                router.push('/');
+                setLoadingGoogle(false);
             })
             .catch(err => {
                 if (err.status === 407) {
@@ -101,10 +99,7 @@ const LoginScreen = () => {
                 }
                 setLoadingGoogle(false);
 
-            }).finally(() => {
-
-            setAuthLoading(false);
-        });
+            })
     };
 
 

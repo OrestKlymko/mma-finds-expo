@@ -41,9 +41,9 @@ const FighterOfferFeedScreen = () => {
                 />
 
                 {selectedTab === "Public" ? (
-                    <PublicOfferFeed/>
+                    <PublicOfferFeed showMyOffers={showMyOffers}/>
                 ) : (
-                    <PrivateOfferFeed/>
+                    <PrivateOfferFeed showMyOffers={showMyOffers}/>
                 )}
 
                 {dialOpen && <Pressable style={styles.backdrop} onPress={() => setDialOpen(false)}/>}
