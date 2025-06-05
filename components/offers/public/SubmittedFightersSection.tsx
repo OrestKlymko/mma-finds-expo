@@ -42,7 +42,7 @@ export const SubmittedFightersSection = ({fighters, offer, offerType, chosenFigh
                     ).toString();
                     setStore({
                         ...store,
-                        offerId: item.id,
+                        offerId: offer?.offerId,
                         offerType: offerType,
                         eligibleToSelect: eligibleToSelect,
                         currency: offer?.currency,
@@ -58,16 +58,18 @@ export const SubmittedFightersSection = ({fighters, offer, offerType, chosenFigh
                         ...prev,
                         offerId: offer?.offerId ?? null,
                     }));
-                    router.push({
-                        pathname: `/offer/public/${offer.offerId}/fighter`,
-                        params: {
-                            currency: offer?.currency,
-                            eligibleToSelect: (
-                                !(offer?.closedReason && offer?.closedReason !== '')
-                            ).toString(),
-                            offerType: JSON.stringify(offerType)
-                        },
-                    })
+                    const eligibleToSelect = (
+                        !(offer?.closedReason && offer?.closedReason !== '')
+                    ).toString();
+                    setStore({
+                        ...store,
+                        offerId: offer?.offerId,
+                        offerType: offerType,
+                        eligibleToSelect: eligibleToSelect,
+                        currency: offer?.currency,
+                        excludeFighterId: chosenFighter?.id
+                    });
+                    router.push(`/offer/public/${offer.offerId}/fighter`)
                 }}>
                 <Text style={styles.ctaButtonText}>See the List</Text>
             </TouchableOpacity>

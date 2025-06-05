@@ -6,6 +6,7 @@ import {ExclusiveOfferInfo, PublicOfferInfo, ShortInfoFighter, SubmittedInformat
 import {SubmittedFighterList} from "@/components/offers/public/SubmittedFighterList";
 import {useRouter} from "expo-router";
 import {OfferTypeEnum} from "@/models/model";
+import {useSubmittedFighter} from "@/context/SubmittedFighterContext";
 
 type PromotionTailoringSubmittedFightersProps = {
     submittedFighters: ShortInfoFighter[];
@@ -21,6 +22,7 @@ export const PromotionTailoringSubmittedFighters = ({
                                                         offerType
                                                     }: PromotionTailoringSubmittedFightersProps) => {
     const {setAvailableFilters} = useSubmittedFilterFighter();
+    const {setStore, store} = useSubmittedFighter();
     const router = useRouter();
     return (
         <>
@@ -31,27 +33,16 @@ export const PromotionTailoringSubmittedFighters = ({
                     .slice(0, 3)}
                 scrollEnabled={false}
                 onSelectFighter={item => {
-                    if (submittedInformation?.statusResponded === 'REJECTED') {
-                        router.push({
-                            pathname: `/manager/fighter/${item.id}/offer/select`,
-                            params: {
-                                offerId: offer.offerId,
-                                currency: offer?.currency,
-                                eligibleToSelect: (!(
-                                    offer?.closedReason && offer?.closedReason !== ''
-                                )).toString(),
-                                offerType: JSON.stringify(offerType),
-                            },
-                        })
-                    } else {
-                        router.push({
-                            pathname: `/manager/fighter/${item.id}/offer/select`,
-                            params: {
-                                offerId: offer.offerId,
-                                currency: offer?.currency
-                            },
-                        })
-                    }
+                    setStore({
+                        ...store,
+                        offerId: offer.offerId,
+                        currency: offer?.currency,
+                        eligibleToSelect: (!(
+                            offer?.closedReason && offer?.closedReason !== ''
+                        )).toString(),
+                        offerType: offerType,
+                    })
+                    router.push(`/manager/fighter/${item.id}/offer/select`)
                 }}
             />
             <TouchableOpacity
@@ -61,17 +52,17 @@ export const PromotionTailoringSubmittedFighters = ({
                         ...prev,
                         offerId: offer?.offerId,
                     }));
-                    router.push({
-                        pathname: `/public/${offer.offerId}/fighter`,
-                        params: {
-                            currency: offer?.currency ?? undefined,
-                            excludeFighterId: offer?.chooseFighterId ?? undefined,
-                            eligibleToSelect: (
-                                !(offer?.closedReason && offer?.closedReason !== '')
-                            ).toString(),
-                            offerType: JSON.stringify(offerType),
-                        },
+                    setStore({
+                        ...store,
+                        offerId: offer.offerId,
+                        currency: offer?.currency,
+                        eligibleToSelect: (!(
+                            offer?.closedReason && offer?.closedReason !== ''
+                        )).toString(),
+                        excludeFighterId: offer?.chooseFighterId ?? undefined,
+                        offerType: offerType,
                     })
+                    router.push(`/offer/public/${offer.offerId}/fighter`)
                 }}>
                 <Text style={styles.ctaButtonText}>See the List</Text>
             </TouchableOpacity>

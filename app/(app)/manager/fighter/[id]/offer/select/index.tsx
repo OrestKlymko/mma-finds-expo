@@ -14,16 +14,14 @@ import {FighterManagerButtonsWithSelect} from "@/components/fighter/FighterManag
 import {useLocalSearchParams} from "expo-router";
 import {FighterLookingState} from "@/components/fighter/FighterLookingState";
 import {OfferTypeEnum} from "@/models/model";
+import {useSubmittedFighter} from "@/context/SubmittedFighterContext";
 
 const PromotionFighterDetailsWithSelectFighterScreen = () => {
     const insets = useSafeAreaInsets();
     const [fighter, setFighter] = useState<FighterInfoResponse | null>(null);
     const params = useLocalSearchParams();
     const {id} = params as { id: string };
-    const {offerId} = params as { offerId: string };
-    const {currency} = params as { currency: string };
-    const {eligibleToSelect} = params as { eligibleToSelect: string };
-    const offerType = JSON.parse(params.offerType as OfferTypeEnum || undefined);
+    const {store}=useSubmittedFighter();
     const [contentLoading, setContentLoading] = useState(false);
     useEffect(() => {
         setContentLoading(true);
@@ -55,11 +53,11 @@ const PromotionFighterDetailsWithSelectFighterScreen = () => {
                 <FighterAndManagerClickHeader fighter={fighter}/>
                 <FighterManagerButtonsWithSelect
                     fighter={fighter}
-                    offerId={offerId}
+                    offerId={store.offerId}
                     fighterId={id}
-                    currency={currency}
-                    eligibleToSelect={eligibleToSelect === 'true'}
-                    offerType={offerType}
+                    currency={store.currency}
+                    eligibleToSelect={store.eligibleToSelect === 'true'}
+                    offerType={store.offerType}
                 />
                 <FighterLookingState
                     lookingForOpponent={fighter?.lookingForOpponent ?? true}

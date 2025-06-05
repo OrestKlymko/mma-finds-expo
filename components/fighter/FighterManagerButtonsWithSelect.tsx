@@ -8,11 +8,11 @@ import {chooseFighterForExclusiveOffer} from "@/service/service";
 
 type FighterManagerButtonsProps = {
     fighter?: FighterInfoResponse | undefined | null,
-    offerId?: string,
+    offerId?: string | null,
     fighterId?: string,
     currency?: string,
-    eligibleToSelect?: boolean,
-    offerType?: OfferTypeEnum
+    eligibleToSelect?: boolean | null,
+    offerType?: OfferTypeEnum | null | undefined
 };
 
 export const FighterManagerButtonsWithSelect = ({

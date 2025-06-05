@@ -93,7 +93,7 @@ export const PromotionTailoringCandidates = ({
         case 'Submitted Fighters':
             return (
                 <PromotionTailoringSubmittedFighters
-                    fighters={fighters}
+                    submittedFighters={fighters}
                     offer={offer}
                 />
             );

@@ -10,6 +10,7 @@ import {SearchSection} from "@/components/offers/public/SearchSection";
 import {useRouter} from "expo-router";
 import {SubmittedFighterList} from "@/components/offers/public/SubmittedFighterList";
 import {OfferTypeEnum} from "@/models/model";
+import {useSubmittedFighter} from "@/context/SubmittedFighterContext";
 
 interface SearchForSubmittedFighterListFlowProps {
     offerId?: string | null,
@@ -30,6 +31,7 @@ export function SearchForSubmittedFighterListFlow({
     const [fighters, setFighters] = useState<ShortInfoFighter[]>([]);
     const [filteredFighters, setFilteredFighters] = useState<ShortInfoFighter[]>([]);
     const {availableFilters} = useSubmittedFilterFighter();
+    const {store, setStore} = useSubmittedFighter();
     const router = useRouter();
     const [contentLoading, setContentLoading] = useState(false);
     useEffect(() => {
@@ -136,15 +138,15 @@ export function SearchForSubmittedFighterListFlow({
             ) : (
                 <SubmittedFighterList
                     onSelectFighter={(fighter: any) => {
-                        router.push({
-                            pathname: `/manager/fighter/${fighter.id}/offer/select`,
-                            params: {
-                                offerId: offerId,
-                                currency: currency,
-                                eligibleToSelect: eligibleToSelect?.toString(),
-                                offerType: JSON.stringify(offerType),
-                            },
-                        })
+                        setStore({
+                            ...store,
+                            offerId: offerId ?? null,
+                            offerType: offerType,
+                            eligibleToSelect: eligibleToSelect?.toString(),
+                            currency: currency,
+                            excludeFighterId: excludeFighterId
+                        });
+                        router.push(`/manager/fighter/${fighter.id}/offer/select`)
                     }}
                     fighters={filteredFighters}
                 />
