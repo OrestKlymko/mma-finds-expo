@@ -6,15 +6,18 @@ import {useSubmittedFilterFighter} from "@/context/SubmittedFilterFighterContext
 import {useRouter} from "expo-router";
 import {OfferTypeEnum} from "@/models/model";
 import {ShortInfoFighter} from "@/service/response";
+import {useSubmittedFighter} from "@/context/SubmittedFighterContext";
 
 type Props = {
     fighters: ShortInfoFighter[],
     offer: any,
-    offerType?: OfferTypeEnum
+    offerType?: OfferTypeEnum,
+    chosenFighter?: ShortInfoFighter | undefined | null
 };
 
-export const SubmittedFightersSection = ({fighters, offer, offerType}: Props) => {
+export const SubmittedFightersSection = ({fighters, offer, offerType, chosenFighter}: Props) => {
     const {setAvailableFilters} = useSubmittedFilterFighter();
+    const {setStore, store} = useSubmittedFighter();
     const router = useRouter();
     return (
         <>
@@ -34,17 +37,18 @@ export const SubmittedFightersSection = ({fighters, offer, offerType}: Props) =>
                 fighters={fighters.slice(0, 3)}
                 scrollEnabled={false}
                 onSelectFighter={async (item) => {
-                    router.push({
-                        pathname: `/manager/fighter/${item.id}/offer/select`,
-                        params: {
-                            offerType: JSON.stringify(offerType),
-                            offerId: offer?.offerId ?? null,
-                            currency: offer?.currency,
-                            eligibleToSelect: (
-                                !(offer?.closedReason && offer?.closedReason !== '')
-                            ).toString(),
-                        },
-                    })
+                    const eligibleToSelect = (
+                        !(offer?.closedReason && offer?.closedReason !== '')
+                    ).toString();
+                    setStore({
+                        ...store,
+                        offerId: item.id,
+                        offerType: offerType,
+                        eligibleToSelect: eligibleToSelect,
+                        currency: offer?.currency,
+                        excludeFighterId: chosenFighter?.id
+                    });
+                    router.push(`/manager/fighter/${item.id}/offer/select`)
                 }}
             />
             <TouchableOpacity

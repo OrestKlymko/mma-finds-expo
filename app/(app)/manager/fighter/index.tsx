@@ -12,8 +12,9 @@ interface FighterListProps {
     scrollEnabled?: boolean;
 }
 
-const FighterList = ({fighters, handleChooseFighter,
-                     scrollEnabled = true
+const FighterList = ({
+                         fighters, handleChooseFighter,
+                         scrollEnabled = true
                      }: FighterListProps) => {
     const {role} = useAuth();
     const router = useRouter();

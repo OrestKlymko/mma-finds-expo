@@ -15,7 +15,8 @@ import {usePushNotifications} from "@/hooks/usePushNotifications";
 import {GoogleSignin} from "@react-native-google-signin/google-signin";
 import ContentLoader from "@/components/ContentLoader";
 import AfterAuth from "@/components/AfterAuth";
-import { useTrackRoute } from '@/hooks/useTrackRoute';
+import {useTrackRoute} from '@/hooks/useTrackRoute';
+import {SubmittedFighterProvider} from "@/context/SubmittedFighterContext";
 
 
 export default function RootLayout() {
@@ -52,15 +53,17 @@ export default function RootLayout() {
                     <AuthProvider>
                         <AfterAuth/>
                         <NotificationProvider>
-                            <FilterProvider>
-                                <ExclusiveOfferFilterProvider>
-                                    <SubmittedFilterFighterProvider>
-                                        <FilterFighterProvider>
-                                            <Slot/>
-                                        </FilterFighterProvider>
-                                    </SubmittedFilterFighterProvider>
-                                </ExclusiveOfferFilterProvider>
-                            </FilterProvider>
+                            <SubmittedFighterProvider>
+                                <FilterProvider>
+                                    <ExclusiveOfferFilterProvider>
+                                        <SubmittedFilterFighterProvider>
+                                            <FilterFighterProvider>
+                                                <Slot/>
+                                            </FilterFighterProvider>
+                                        </SubmittedFilterFighterProvider>
+                                    </ExclusiveOfferFilterProvider>
+                                </FilterProvider>
+                            </SubmittedFighterProvider>
                         </NotificationProvider>
                     </AuthProvider>
                 </CountryModalProvider>

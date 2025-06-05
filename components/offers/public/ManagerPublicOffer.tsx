@@ -6,12 +6,11 @@ import {
     Platform,
     KeyboardAvoidingView,
 } from 'react-native';
-import {useRoute, useFocusEffect} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PublicOfferInfo, ShortInfoFighter, SubmittedInformationOffer} from "@/service/response";
 import {Benefit, Offer} from '@/models/model';
-import {getBenefitsInPublicOffer, getPublicInfoForManager, getPublicOfferInfoById} from '@/service/service';
+import {getBenefitsInPublicOffer, getPublicOfferInfoById} from '@/service/service';
 import {useLocalSearchParams} from "expo-router";
 import ContentLoader from '@/components/ContentLoader';
 import {EventPosterImage} from "@/components/offers/public/EventPosterImage";
@@ -22,7 +21,6 @@ import EventDescription from "@/components/EventDescription";
 import OfferExtendedDetailsInfo from './OfferExtendedDetailsInfo';
 import OpponentDetailsSection from './OpponentDetailsSection';
 import colors from "@/styles/colors";
-import {ManagerSubmittedFighterList} from "@/components/submissions/ManagerSubmittedFighterList";
 import {LogInAndSubmitFighterButton} from "@/components/offers/LogInAndSubmitFighterButton";
 import {useAuth} from "@/context/AuthContext";
 import SuccessFeePaymentSection from "@/components/offers/SuccessFeePaymentSection";
@@ -36,6 +34,7 @@ export const ManagerOfferDetailScreen = () => {
     const [offer, setOffer] = useState<PublicOfferInfo | null>(null);
     const [benefits, setBenefits] = useState<Benefit | null>(null);
     const {role} = useAuth();
+    const [chosenFighter, setChosenFighter] = useState<ShortInfoFighter | undefined>(undefined);
     const [isFavorite, setIsFavorite] = useState(false);
     const {id} = useLocalSearchParams<{ id: string }>();
     const [contentLoading, setContentLoading] = useState(false);
@@ -59,6 +58,7 @@ export const ManagerOfferDetailScreen = () => {
             ]);
             setBenefits(benefitsResponse);
             setOffer(offerResponse.offer);
+            setChosenFighter(offerResponse?.chosenFighter);
             setFighters(offerResponse.fighters);
             setSubmittedInformation(offerResponse?.submittedInformation);
             setPreviousInfo(offerResponse?.previousOfferPrice);
@@ -84,6 +84,7 @@ export const ManagerOfferDetailScreen = () => {
             return <RejectedReasonSection rejectionReason={fighters[0]?.rejectedReason}/>
         }
         return <ManagerOfferDetailFooter
+            chosenFighter={chosenFighter}
             submittedInformation={submittedInformation}
             previousInfo={previousInfo}
             fighters={fighters}

@@ -29,6 +29,7 @@ export const PromotionOfferDetailsScreen = () => {
     const [fighters, setFighters] = useState<ShortInfoFighter[]>([]);
     const [offer, setOffer] = useState<PublicOfferInfo | null>(null);
     const [previousInfo, setPreviousInfo] = useState<any>(null);
+    const [chosenFighter, setChosenFighter] = useState<ShortInfoFighter | undefined>(undefined);
     const {id} = useLocalSearchParams<{ id: string }>();
     const [benefits, setBenefits] = useState<Benefit | null>(null);
     const [submittedInformation, setSubmittedInformation] = useState<any | null>(
@@ -56,6 +57,7 @@ export const PromotionOfferDetailsScreen = () => {
             setOffer(offerInfo.offer);
             setFighters(offerInfo.fighters);
             setSubmittedInformation(offerInfo.submittedInformation);
+            setChosenFighter(offerInfo.chosenFighter);
             setPreviousInfo(offerInfo.previousOfferPrice);
             setBenefits(benefitFromBe);
         } catch (error) {
@@ -75,12 +77,13 @@ export const PromotionOfferDetailsScreen = () => {
         submittedInformation?.statusResponded !== 'REJECTED') {
             return <PromotionTailoringProcess
                 fighters={fighters}
+                chosenFighter={chosenFighter}
                 offer={offer}
                 submittedInformation={submittedInformation}
                 previousInfo={previousInfo}
             />
         }
-        return <SubmittedFightersSection offer={offer} fighters={fighters}/>
+        return <SubmittedFightersSection offer={offer} fighters={fighters} offerType={OfferTypeEnum.PUBLIC} chosenFighter={chosenFighter}/>
     }
     if (contentLoading) {
         return <ContentLoader/>;

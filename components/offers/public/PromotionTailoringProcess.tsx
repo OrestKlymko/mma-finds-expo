@@ -8,6 +8,7 @@ import {PromotionTailoringTabs} from "@/components/offers/PromotionTailoringTabs
 interface OfferDetailFooterProps {
     fighters: ShortInfoFighter[];
     offer: PublicOfferInfo;
+    chosenFighter: ShortInfoFighter | undefined;
     submittedInformation?: SubmittedInformationOffer;
     previousInfo?: SubmittedInformationOffer;
 }
@@ -17,6 +18,7 @@ export const PromotionTailoringProcess = ({
                                               offer,
                                               submittedInformation,
                                               previousInfo,
+                                                chosenFighter
                                           }: OfferDetailFooterProps) => {
     const [selectedTab, setSelectedTab] = React.useState<
         'Preselected Fighter' | 'Submitted Fighters' | 'Selected Fighter'
@@ -53,6 +55,7 @@ export const PromotionTailoringProcess = ({
                 setSelectedTab={setSelectedTab}
             />
             <PromotionTailoringCandidates
+                chosenFighter={chosenFighter}
                 fighters={fighters}
                 offer={offer}
                 selectedTab={selectedTab}

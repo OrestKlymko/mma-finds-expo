@@ -318,6 +318,7 @@ export type SubmittedInformationOffer = {
 export type FullInfoAboutPublicOffer = {
     offer: PublicOfferInfo;
     fighters: ShortInfoFighter[];
+    chosenFighter?: ShortInfoFighter;
     submittedInformation?: SubmittedInformationOffer;
     previousOfferPrice?: SubmittedInformationOffer;
 };

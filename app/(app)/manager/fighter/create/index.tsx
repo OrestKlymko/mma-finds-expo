@@ -246,7 +246,6 @@ const CreateFightersProfileScreen = () => {
             });
             formData.append('sportsScore', jsonString);
         });
-        console.log(formData)
         createFighter(formData)
             .then(() => {
                 router.push('/(app)/(tabs)/feed');

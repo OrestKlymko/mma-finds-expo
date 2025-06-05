@@ -2,13 +2,13 @@ import {StyleSheet, Text} from 'react-native';
 import React, {useEffect} from 'react';
 import colors from "@/styles/colors";
 import {PublicOfferInfo, ShortInfoFighter, SubmittedInformationOffer} from "@/service/response";
-import {SubmittedInformationPublicOffer} from "@/models/tailoring-model";
 import {ManagerTailoringContent} from "@/components/submissions/ManagerTailoringContent";
 import {ManagerSubmittedFighterList} from "@/components/submissions/ManagerSubmittedFighterList";
 
 interface OfferDetailFooterProps {
     fighters: ShortInfoFighter[];
     offer: PublicOfferInfo | null | undefined;
+    chosenFighter: ShortInfoFighter | undefined;
     submittedInformation?: SubmittedInformationOffer;
     previousInfo?: SubmittedInformationOffer | null;
     onRefreshFighterList: () => void;
@@ -19,6 +19,7 @@ export const ManagerOfferDetailFooter = ({
                                              offer,
                                              submittedInformation,
                                              previousInfo,
+                                             chosenFighter,
                                              onRefreshFighterList,
                                          }: OfferDetailFooterProps) => {
     const [selectedTab, setSelectedTab] = React.useState<
@@ -33,6 +34,7 @@ export const ManagerOfferDetailFooter = ({
         <ManagerTailoringContent
             fighters={fighters}
             offer={offer}
+            chosenFighter={chosenFighter}
             onRefreshFighterList={onRefreshFighterList}
             selectedTab={selectedTab}
             previousInfo={previousInfo}

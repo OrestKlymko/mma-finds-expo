@@ -1,18 +1,19 @@
 import React from 'react';
 import {PromotionTailoringSubmittedFighters} from './PromotionTailoringSubmittedFighters';
-import {PublicOfferInfo, SubmittedInformationOffer} from '@/service/response';
+import {PublicOfferInfo, ShortInfoFighter, SubmittedInformationOffer} from '@/service/response';
 import {useRouter} from "expo-router";
 import {SubmittedFighterList} from "@/components/offers/public/SubmittedFighterList";
 import {ChatOfferComponent} from "@/components/offers/ChatOfferComponent";
 import {PromotionTailoringStatus} from "@/components/offers/public/PromotionTailoringStatus";
 
 type TailoringCandidatesProps = {
-    fighters: any[];
+    fighters: ShortInfoFighter[];
     offer: PublicOfferInfo;
     selectedTab: string;
     docs: Document[];
     submittedInformation?: SubmittedInformationOffer;
     previousInfo?: SubmittedInformationOffer;
+    chosenFighter: ShortInfoFighter | undefined;
 };
 
 export const PromotionTailoringCandidates = ({
@@ -21,6 +22,7 @@ export const PromotionTailoringCandidates = ({
                                                  selectedTab,
                                                  docs,
                                                  submittedInformation,
+                                                 chosenFighter,
                                                  previousInfo,
                                              }: TailoringCandidatesProps) => {
     const router = useRouter();
@@ -30,9 +32,7 @@ export const PromotionTailoringCandidates = ({
             return (
                 <>
                     <SubmittedFighterList
-                        fighters={fighters.filter(
-                            fighter => fighter.id === offer.chooseFighterId,
-                        )}
+                        fighters={[chosenFighter]}
                         scrollEnabled={false}
                         onSelectFighter={item => {
                             router.push(`/(app)/manager/fighter/${item.id}/offer`)
@@ -41,15 +41,13 @@ export const PromotionTailoringCandidates = ({
                     <ChatOfferComponent
                         offer={offer}
                         avatar={
-                            fighters.filter(f => f.id === offer.chooseFighterId)[0]
-                                .managerAvatar
+                            chosenFighter?.managerAvatar
                         }
                         receiverUserId={
-                            fighters.filter(f => f.id === offer.chooseFighterId)[0].managerId
+                            chosenFighter?.managerId
                         }
                         senderName={
-                            fighters.filter(f => f.id === offer.chooseFighterId)[0]
-                                .managerName
+                            chosenFighter?.managerName
                         }
                         typeOffer={'Public'}
                     />
@@ -65,9 +63,7 @@ export const PromotionTailoringCandidates = ({
             return (
                 <>
                     <SubmittedFighterList
-                        fighters={fighters.filter(
-                            fighter => fighter.id === offer.chooseFighterId,
-                        )}
+                        fighters={[chosenFighter]}
                         scrollEnabled={false}
                         onSelectFighter={item => {
                             router.push(`/(app)/manager/fighter/${item.id}/offer`)
@@ -76,15 +72,13 @@ export const PromotionTailoringCandidates = ({
                     <ChatOfferComponent
                         offer={offer}
                         avatar={
-                            fighters.filter(f => f.id === offer.chooseFighterId)[0]
-                                .managerAvatar
+                            chosenFighter?.managerAvatar
                         }
                         receiverUserId={
-                            fighters.filter(f => f.id === offer.chooseFighterId)[0].managerId
+                            chosenFighter?.managerId
                         }
                         senderName={
-                            fighters.filter(f => f.id === offer.chooseFighterId)[0]
-                                .managerName
+                            chosenFighter?.managerName
                         }
                         typeOffer={'Public'}
                     />

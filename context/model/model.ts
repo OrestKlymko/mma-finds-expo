@@ -1,7 +1,9 @@
+import {OfferTypeEnum} from "@/models/model";
+
 export type FilterFighter = {
     fighterLocation: string[];
     foundationStyle: string[];
-    managerLocation:string[];
+    managerLocation: string[];
     matchType: string;
     promotion: string[];
     withTapology: boolean;
@@ -14,7 +16,7 @@ export interface ExclusiveOfferFilter {
     offerType: string[];
 }
 
-export interface Filter  {
+export interface Filter {
     eventPlace: string[];
     promotion: string[];
     rules: string[];
@@ -25,10 +27,17 @@ export interface Filter  {
     offerType: string[];
 }
 
-export interface SubmittedFilterFighter{
+export interface SubmittedFilterFighter {
     locations: string[],
     foundationStyle: string[],
-    offerId: string|null,
+    offerId: string | null,
     withTapology: boolean,
+}
 
+export interface SubmittedFighterStore {
+    offerId: string | null;
+    excludeFighterId?: string;
+    eligibleToSelect?: string;
+    currency?: string;
+    offerType?: OfferTypeEnum | null;
 }

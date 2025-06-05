@@ -12,11 +12,11 @@ import {SubmittedFighterList} from "@/components/offers/public/SubmittedFighterL
 import {OfferTypeEnum} from "@/models/model";
 
 interface SearchForSubmittedFighterListFlowProps {
-    offerId?: string,
+    offerId?: string | null,
     currency?: string,
     excludeFighterId?: string,
-    eligibleToSelect?: boolean,
-    offerType?: OfferTypeEnum
+    eligibleToSelect?: boolean | null,
+    offerType?: OfferTypeEnum | null
 }
 
 export function SearchForSubmittedFighterListFlow({
@@ -38,6 +38,7 @@ export function SearchForSubmittedFighterListFlow({
         if (offerType && offerType === OfferTypeEnum.PRIVATE) {
             getExclusiveOfferInfoById(availableFilters.offerId, null)
                 .then(res => {
+                    console.log(res);
                     if (excludeFighterId) {
                         setFighters(
                             res.submittedFighters.filter(

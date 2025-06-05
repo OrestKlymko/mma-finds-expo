@@ -4,32 +4,25 @@ import colors from '@/styles/colors';
 import GoBackButton from '@/components/GoBackButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {SearchForSubmittedFighterListFlow} from "@/components/offers/public/SearchForSubmittedFighterListFlow";
-import {useLocalSearchParams} from "expo-router";
-import {OfferTypeEnum} from "@/models/model";
+import {useSubmittedFighter} from "@/context/SubmittedFighterContext";
 
 const MyListSubmittedFighterScreen = () => {
     const insets = useSafeAreaInsets();
-
-    const params = useLocalSearchParams();
-    const offerId = params.id as string;
-    const currency = params.currency as string;
-    const offerType = JSON.parse(params.offerType as string) as OfferTypeEnum
-    const excludeFighterId = params.excludeFighterId as string;
-    const eligibleToSelect = params.eligibleToSelect as string;
+    const {store, clearStore} = useSubmittedFighter();
 
     return (
         <View style={{flex: 1, backgroundColor: colors.background}}>
-            <GoBackButton />
+            <GoBackButton actionAfterUnmount={clearStore}/>
             <View style={[styles.container, {paddingBottom: insets.bottom}]}>
                 {/* Title */}
                 <Text style={styles.title}>Submitted Fighters</Text>
 
                 <SearchForSubmittedFighterListFlow
-                    offerId={offerId}
-                    currency={currency}
-                    excludeFighterId={excludeFighterId}
-                    eligibleToSelect={eligibleToSelect==='true'}
-                    offerType={offerType}
+                    offerId={store.offerId}
+                    currency={store.currency}
+                    excludeFighterId={store.excludeFighterId}
+                    eligibleToSelect={store.eligibleToSelect === 'true'}
+                    offerType={store.offerType}
                 />
             </View>
         </View>

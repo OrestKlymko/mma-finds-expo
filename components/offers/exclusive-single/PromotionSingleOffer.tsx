@@ -72,7 +72,7 @@ export const PromotionSingleOffer = () => {
                 onRefresh={getData}
             />
         }
-        return <SubmittedFightersSection offer={offer} fighters={fighters} offerType={OfferTypeEnum.PRIVATE}/>
+        return <SubmittedFightersSection offer={offer} fighters={fighters} offerType={OfferTypeEnum.PRIVATE} chosenFighter={chosenFighter}/>
     }
 
     if (contentLoading) {

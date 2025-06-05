@@ -15,6 +15,7 @@ type ManagerTailoringContentProps = {
     fighters: ShortInfoFighter[];
     offer: PublicOfferInfo | null | undefined;
     submittedInformation?: SubmittedInformationOffer | undefined | null;
+    chosenFighter: ShortInfoFighter | undefined;
     selectedTab:
         | 'Preselected Fighter'
         | 'Submitted Fighters'
@@ -28,6 +29,7 @@ export const ManagerTailoringContent = ({
                                             offer,
                                             submittedInformation,
                                             previousInfo,
+                                            chosenFighter,
                                             onRefreshFighterList,
                                             selectedTab,
                                         }: ManagerTailoringContentProps) => {
@@ -37,9 +39,7 @@ export const ManagerTailoringContent = ({
             return (
                 <>
                     <SubmittedFighterList
-                        fighters={fighters.filter(
-                            fighter => fighter.id === offer?.chooseFighterId,
-                        )}
+                        fighters={[chosenFighter]}
                         scrollEnabled={false}
                         onSelectFighter={item => {
                             // router.push('/')
@@ -48,17 +48,14 @@ export const ManagerTailoringContent = ({
                     {submittedInformation?.statusResponded !== 'REJECTED' && (
                         <ChatOfferComponent
                             avatar={
-                                fighters.filter(f => f.id === submittedInformation?.fighterId)[0]
-                                    .managerAvatar
+                                chosenFighter?.managerAvatar
                             }
                             offer={offer}
                             receiverUserId={
-                                fighters.filter(f => f.id === submittedInformation?.fighterId)[0]
-                                    .managerId
+                                chosenFighter?.managerId
                             }
                             senderName={
-                                fighters.filter(f => f.id === submittedInformation?.fighterId)[0]
-                                    .managerName
+                                chosenFighter?.managerName
                             }
                             typeOffer={'Public'}
                         />
@@ -86,16 +83,14 @@ export const ManagerTailoringContent = ({
                     />
                     <ChatOfferComponent
                         avatar={
-                            fighters.filter(f => f.id === submittedInformation?.fighterId)[0]
-                                .managerAvatar
+                            chosenFighter?.managerAvatar
                         }
                         offer={offer}
                         receiverUserId={
-                            fighters.filter(f => f.id === submittedInformation?.fighterId)[0].managerId
+                            chosenFighter?.managerId
                         }
                         senderName={
-                            fighters.filter(f => f.id === submittedInformation?.fighterId)[0]
-                                .managerName
+                            chosenFighter?.managerName
                         }
                         typeOffer={'Public'}
                     />

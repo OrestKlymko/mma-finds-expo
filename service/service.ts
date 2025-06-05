@@ -357,9 +357,6 @@ export const getPublicOfferInfoById = (offerId: string, fighterId: string | null
     return request<FullInfoAboutPublicOffer>(`/offer/public/${offerId}${qs}`, {method: 'GET'});
 } // CHECKED
 
-export const getPublicInfoForManager = (offerId: string): Promise<FullInfoAboutPublicOffer> =>
-    request<FullInfoAboutPublicOffer>(`/offer/public/${offerId}/summary`, {method: 'GET'});
-
 export const submitOfferByFighterWithoutFeaturing = (offerId: string, fighterId: string): Promise<void> =>
     jsonRequest<void>(`/submission/${offerId}/${fighterId}/submit`, 'POST', {});
 

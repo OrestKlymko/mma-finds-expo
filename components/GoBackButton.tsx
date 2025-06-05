@@ -13,6 +13,7 @@ interface GoBackButtonProps {
     textStyle?: TextStyle;
     iconStyle?: TextStyle;
     onPress?: () => void;
+    actionAfterUnmount?: () => void;
 }
 
 const GoBackButton = ({
@@ -22,14 +23,17 @@ const GoBackButton = ({
                           textStyle,
                           iconStyle,
                           onPress,
+                          actionAfterUnmount,
+
                       }: GoBackButtonProps) => {
     const insets = useSafeAreaInsets();
     const router = useRouter();
 
 
     const handleBack = () => {
-        const prev = popPrev();
 
+        const prev = popPrev();
+        actionAfterUnmount?.();
         if (prev) {
             router.replace(prev);
         } else if (router.canGoBack()) {
