@@ -51,7 +51,7 @@ export const PromotionOfferDetailsScreen = () => {
     const loadingContent = async (offerIdentifier: string) => {
         try {
             const [offerInfo, benefitFromBe] = await Promise.all([
-                getPublicOfferInfoById(offerIdentifier,null),
+                getPublicOfferInfoById(offerIdentifier, null),
                 getBenefitsInPublicOffer(offerIdentifier),
             ]);
             setOffer(offerInfo.offer);
@@ -68,13 +68,13 @@ export const PromotionOfferDetailsScreen = () => {
     };
 
     const renderFooter = () => {
-        if(submittedInformation&&submittedInformation.statusResponded === 'ACCEPTED'&&offer){
-            return  <SuccessFeePaymentSection offerId={offer.offerId} submittedInformation={submittedInformation}/>
+        if (submittedInformation && submittedInformation.statusResponded === 'ACCEPTED' && !submittedInformation.feePayment && offer) {
+            return <SuccessFeePaymentSection offerId={offer.offerId} submittedInformation={submittedInformation}/>
         }
-        if(fighters &&
-        offer &&
-        submittedInformation &&
-        submittedInformation?.statusResponded !== 'REJECTED') {
+        if (fighters &&
+            offer &&
+            submittedInformation &&
+            submittedInformation?.statusResponded !== 'REJECTED') {
             return <PromotionTailoringProcess
                 fighters={fighters}
                 chosenFighter={chosenFighter}
@@ -83,7 +83,8 @@ export const PromotionOfferDetailsScreen = () => {
                 previousInfo={previousInfo}
             />
         }
-        return <SubmittedFightersSection offer={offer} fighters={fighters} offerType={OfferTypeEnum.PUBLIC} chosenFighter={chosenFighter}/>
+        return <SubmittedFightersSection offer={offer} fighters={fighters} offerType={OfferTypeEnum.PUBLIC}
+                                         chosenFighter={chosenFighter}/>
     }
     if (contentLoading) {
         return <ContentLoader/>;
@@ -108,7 +109,7 @@ export const PromotionOfferDetailsScreen = () => {
                     closedReason={offer?.closedReason}
                     type="Public"
                 />
-                {offer&&<LocationAndDateEvent offer={offer}/>}
+                {offer && <LocationAndDateEvent offer={offer}/>}
                 {offer?.eventDescription && (
                     <EventDescription eventDescription={offer.eventDescription}/>
                 )}

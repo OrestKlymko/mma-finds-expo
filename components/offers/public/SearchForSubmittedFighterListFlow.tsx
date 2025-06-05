@@ -40,7 +40,6 @@ export function SearchForSubmittedFighterListFlow({
         if (offerType && offerType === OfferTypeEnum.PRIVATE) {
             getExclusiveOfferInfoById(availableFilters.offerId, null)
                 .then(res => {
-                    console.log(res);
                     if (excludeFighterId) {
                         setFighters(
                             res.submittedFighters.filter(

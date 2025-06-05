@@ -1,5 +1,5 @@
 import {
-    FlatList,
+    FlatList, View,
 } from 'react-native';
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -44,6 +44,7 @@ export const OfferListForFighter = (({
             horizontal={horizontal}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={!horizontal ? () => <View style={{ height: 15 }} /> : () => <></>}
             keyExtractor={item => item.offerId}
             renderItem={({item}) =>
                 (<OfferCard onClick={(offerId) => {

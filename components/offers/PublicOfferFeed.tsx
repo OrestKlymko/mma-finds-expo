@@ -64,7 +64,6 @@ export const PublicOfferFeed = ({showMyOffers}: PublicOfferFeedProps) => {
                             byRules
                         );
                     });
-
                     setPublicOffers(filteredOffers);
                 })
                 .finally(() => setContentLoading(false));

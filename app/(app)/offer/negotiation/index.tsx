@@ -37,7 +37,6 @@ const NegotiationScreen = () => {
     const submittedInformation = params.submittedInformation ? JSON.parse(params.submittedInformation) as SubmittedInformationOffer : undefined;
     const previousInformation = params.previousInformation ? JSON.parse(params.previousInformation) as SubmittedInformationOffer : undefined;
 
-
     const [newOffer, setNewOffer] = useState({
         fightPurse: '0',
         winBonus: '0',

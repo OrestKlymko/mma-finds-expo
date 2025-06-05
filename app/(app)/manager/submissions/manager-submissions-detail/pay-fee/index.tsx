@@ -41,7 +41,7 @@ const SuccessFeePaymentScreen: React.FC = () => {
     }, []);
 
     const openPolicy = () =>
-        Alert.alert('Service Fee Policy', 'To support the platform, a Service Fee (3.33 % of the purse) is charged — min €30, max €60.');
+        Alert.alert('Service Fee Policy', 'To support the platform, a Service Fee (3.33% of the purse) is charged — min €30, max €60.');
 
     const onPay = () => {
         Alert.alert('Confirm Payment', `You will be charged €${fee.toFixed(2)}.`, [
@@ -58,8 +58,7 @@ const SuccessFeePaymentScreen: React.FC = () => {
                             feePayment: fee.toFixed(2),
                         };
                         await paySuccessFee(body);
-                        Alert.alert('Success', 'Payment completed!');
-                        router.back();
+                        router.push(`/offers/public/${offerId}`)
                     } catch (e) {
                         console.error(e);
                         Alert.alert('Error', 'Payment failed. Please try again.');
