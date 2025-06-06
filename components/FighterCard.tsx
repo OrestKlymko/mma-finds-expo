@@ -14,7 +14,7 @@ interface FighterCardProps {
 const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress, selectedInList}) => {
     const isRejected = fighter?.contractStatus === 'REJECTED';
     const isUnverified = fighter?.verificationState !== 'APPROVED';
-
+    const isRejectOrNonResponse = fighter.responseFighter && fighter.responseFighter !== 'ACCEPTED'
     const shortCountry = () => {
         if (fighter?.country?.length > 25) {
             return fighter.country.slice(0, 25) + '...';
@@ -31,13 +31,13 @@ const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress, selectedInLi
                         onPress(fighter);
                     }
                 }}
-                activeOpacity={isRejected || (isUnverified && fighter?.verificationState) ? 1 : 0.7}
-                disabled={isRejected}
+                activeOpacity={isRejectOrNonResponse || isRejected || (isUnverified && fighter?.verificationState) ? 1 : 0.7}
+                disabled={isRejected || isRejectOrNonResponse}
                 style={[
                     styles.fighterCard,
                     selectedInList && {backgroundColor: colors.primaryGreen},
                     {
-                        opacity: isRejected ? 0.5 : 1,
+                        opacity: isRejected || isRejectOrNonResponse ? 0.5 : 1,
                         backgroundColor: selectedInList ? colors.lightPrimaryGreen : colors.lightGray
                     },
                     (isRejected || (isUnverified && fighter?.verificationState)) && {opacity: 0.5}
@@ -88,6 +88,18 @@ const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress, selectedInLi
                 </View>
             )}
 
+            {fighter.responseFighter === 'REJECTED' && (
+                <View style={styles.rejectedOverlay}>
+                    <Text style={styles.rejectedText}>Fighter has not accepted the fight.</Text>
+                </View>
+            )}
+            {
+                fighter.responseFighter === 'PENDING' && (
+                    <View style={styles.rejectedOverlay}>
+                        <Text style={styles.pendingText}>Fighter has not responded to the fight.</Text>
+                    </View>
+                )
+            }
             {/* Show overlay for unverified */}
             {fighter?.verificationState && isUnverified && !isRejected && (
                 <View style={styles.unverifiedOverlay}>
@@ -160,6 +172,11 @@ const styles = StyleSheet.create({
     },
     rejectedText: {
         color: colors.darkError,
+        fontSize: 12,
+        fontWeight: '600',
+    },
+    pendingText: {
+        color: colors.darkYellow,
         fontSize: 12,
         fontWeight: '600',
     },

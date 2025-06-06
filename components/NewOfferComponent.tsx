@@ -21,6 +21,7 @@ export const NewOfferComponent = (
     {newOffer, setNewOffer, editingField, setEditingField, currency}: NewOfferComponentProps,
 ) => {
     return (
+
         <View style={styles.section}>
             <Text style={styles.sectionTitle}>New Offered Purse</Text>
 

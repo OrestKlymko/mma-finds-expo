@@ -15,6 +15,7 @@ export default {
     warning: 'rgb(159, 184, 93)',
     orange: 'rgb(255, 159, 67)',
     yellow: 'rgb(255, 202, 58)',
+    darkYellow: 'rgb(147,112,18)',
     verifiedColor: '#2C94FC',
     buttonUploadGray:'#707070'
 };

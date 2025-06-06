@@ -14,6 +14,7 @@ import {getVerificationStatus, sendVerificationDataForPromotion} from '@/service
 import ContentLoader from '@/components/ContentLoader';
 import {Image} from "expo-image";
 import * as DocumentPicker from 'expo-document-picker';
+import {useLocalSearchParams} from "expo-router";
 
 
 export type VerificationState = 'NONE' | 'PENDING' | 'APPROVED' | 'REJECTED';
@@ -22,6 +23,8 @@ export type VerificationMethod = 'EMAIL' | 'DOCUMENT' | null;
 const VerificationPromotionScreen: React.FC = () => {
     const [status, setStatus] = useState<VerificationState | null>(null);
     const [method, setMethod] = useState<VerificationMethod>(null);
+    const params = useLocalSearchParams<{ routeToMain?: string }>();
+
     // @ts-ignore
     const [file, setFile] = useState<DocumentPicker.Response | null>(null);
     const [contentLoading, setContentLoading] = useState(false);
@@ -207,7 +210,7 @@ const VerificationPromotionScreen: React.FC = () => {
     }
     return (
         <View style={{flex: 1, backgroundColor: colors.white}}>
-            <GoBackButton/>
+            {params?.routeToMain === 'true' ? <GoBackButton specificScreen="/" /> : <GoBackButton />}
             <View style={styles.root}>
                 {/* === Rejected Banner === */}
                 {status === 'REJECTED' && rejectedState()}

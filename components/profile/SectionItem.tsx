@@ -21,7 +21,7 @@ export const SectionItem = ({title, items}: SectionProps) => {
       <Text style={styles.sectionTitle}>{title}</Text>
       {items.map((item: Section, index: number) => {
         const isComingSoon =
-          item.label === 'Task Center';
+          item.label === 'Task Center' || item.label=== 'Sub-Accounts';
         return (
           <TouchableOpacity
             key={index}

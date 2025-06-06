@@ -130,7 +130,9 @@ const PromotionSetDueDatePublicOffer = () => {
                                 [
                                     {
                                         text: 'Go to Verification',
-                                        onPress: () => router.push('/profile/settings/account/account-info/verification'),
+                                        onPress: () => router.push('/profile/settings/account/account-info/verification',{
+                                            routeToMain: 'true',
+                                        }),
                                     },
                                     {
                                         text: 'Cancel',

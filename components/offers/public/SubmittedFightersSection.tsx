@@ -21,18 +21,18 @@ export const SubmittedFightersSection = ({fighters, offer, offerType, chosenFigh
     const router = useRouter();
     return (
         <>
-            {offerType && offerType === OfferTypeEnum.PRIVATE && <View style={styles.submittedFightersContainer}>
+            <View style={styles.submittedFightersContainer}>
                 <Text style={styles.eventTitle}>Submitted Fighters</Text>
-                <TouchableOpacity style={styles.addMoreFighters}
-                                  onPress={() => router.push({
-                                      pathname: '/offer/exclusive/create/fighter/add-more',
-                                      params: {offerId: offer?.offerId ?? null}
-                                  })}>
+                {offerType && offerType === OfferTypeEnum.PRIVATE && <TouchableOpacity style={styles.addMoreFighters}
+                                                                                       onPress={() => router.push({
+                                                                                           pathname: '/offer/exclusive/create/fighter/add-more',
+                                                                                           params: {offerId: offer?.offerId ?? null}
+                                                                                       })}>
                     <Text style={styles.addMoreFightersText}>
                         Add More Fighters
                     </Text>
-                </TouchableOpacity>
-            </View>}
+                </TouchableOpacity>}
+            </View>
             <SubmittedFighterList
                 fighters={fighters.slice(0, 3)}
                 scrollEnabled={false}

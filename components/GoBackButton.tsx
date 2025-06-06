@@ -12,6 +12,7 @@ interface GoBackButtonProps {
     style?: ViewStyle;
     textStyle?: TextStyle;
     iconStyle?: TextStyle;
+    shouldGoBack?: boolean;
     onPress?: () => void;
     actionAfterUnmount?: () => void;
 }
@@ -23,6 +24,7 @@ const GoBackButton = ({
                           textStyle,
                           iconStyle,
                           onPress,
+                            shouldGoBack = false,
                           actionAfterUnmount,
 
                       }: GoBackButtonProps) => {
@@ -31,7 +33,14 @@ const GoBackButton = ({
 
 
     const handleBack = () => {
-
+        if(shouldGoBack){
+            router.back();
+            return;
+        }
+        if (specificScreen) {
+            router.replace(specificScreen);
+            return;
+        }
         const prev = popPrev();
         actionAfterUnmount?.();
         if (prev) {

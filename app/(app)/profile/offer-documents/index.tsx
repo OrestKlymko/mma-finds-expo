@@ -75,7 +75,7 @@ export default function Index() {
                 <ScrollView
                     contentContainerStyle={{flexGrow: 1}}
                     keyboardShouldPersistTaps="handled">
-                    <GoBackButton/>
+                    <GoBackButton shouldGoBack={true}/>
                     <View style={[styles.container, {paddingBottom: insets.bottom}]}>
                         <Text style={styles.title}>Required documents</Text>
                         <Text style={styles.subtitle}>

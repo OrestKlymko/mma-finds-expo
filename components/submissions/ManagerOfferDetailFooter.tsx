@@ -4,6 +4,7 @@ import colors from "@/styles/colors";
 import {PublicOfferInfo, ShortInfoFighter, SubmittedInformationOffer} from "@/service/response";
 import {ManagerTailoringContent} from "@/components/submissions/ManagerTailoringContent";
 import {ManagerSubmittedFighterList} from "@/components/submissions/ManagerSubmittedFighterList";
+import {PromotionTailoringTabs} from "@/components/offers/PromotionTailoringTabs";
 
 interface OfferDetailFooterProps {
     fighters: ShortInfoFighter[];
@@ -31,15 +32,22 @@ export const ManagerOfferDetailFooter = ({
         }
     }, [submittedInformation]);
     return submittedInformation ? (
-        <ManagerTailoringContent
-            fighters={fighters}
-            offer={offer}
-            chosenFighter={chosenFighter}
-            onRefreshFighterList={onRefreshFighterList}
-            selectedTab={selectedTab}
-            previousInfo={previousInfo}
-            submittedInformation={submittedInformation}
-        />
+        <>
+            <PromotionTailoringTabs
+                submittedInformation={submittedInformation}
+                selectedTab={selectedTab}
+                setSelectedTab={setSelectedTab}
+            />
+            <ManagerTailoringContent
+                fighters={fighters}
+                offer={offer}
+                chosenFighter={chosenFighter}
+                onRefreshFighterList={onRefreshFighterList}
+                selectedTab={selectedTab}
+                previousInfo={previousInfo}
+                submittedInformation={submittedInformation}
+            />
+        </>
     ) : (
         <>
             <ManagerSubmittedFighterList

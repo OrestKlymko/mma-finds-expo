@@ -54,7 +54,7 @@ const AccountInfoScreen = () => {
                             <Icon name="chevron-right" size={20} color={colors.gray}/>
                         </TouchableOpacity>
                     )}
-                    <VerificationButton/>
+                    <VerificationButton />
                 </ScrollView>
             </ScrollView>
         </View>

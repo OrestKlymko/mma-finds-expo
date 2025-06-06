@@ -19,6 +19,7 @@ import {getCurrencySymbol} from "@/utils/utils";
 import {useLocalSearchParams, useRouter} from "expo-router";
 import {PriceRow} from "@/components/PriceRow";
 import {NewOfferComponent} from "@/components/NewOfferComponent";
+import {EventPosterImage} from "@/components/offers/public/EventPosterImage";
 
 const NegotiationScreen = () => {
     const router = useRouter();
@@ -38,25 +39,15 @@ const NegotiationScreen = () => {
     const previousInformation = params.previousInformation ? JSON.parse(params.previousInformation) as SubmittedInformationOffer : undefined;
 
     const [newOffer, setNewOffer] = useState({
-        fightPurse: '0',
-        winBonus: '0',
-        finishBonus: '0',
+        fightPurse: '',
+        winBonus: '',
+        finishBonus: '',
     });
 
     const [editingField, setEditingField] = useState<string | null>(null);
 
     const handleOfferSend = () => {
-        if (
-            !newOffer.fightPurse ||
-            newOffer.fightPurse.trim() === '' ||
-            !newOffer.winBonus ||
-            newOffer.winBonus.trim() === '' ||
-            !newOffer.finishBonus ||
-            newOffer.finishBonus.trim() === ''
-        ) {
-            Alert.alert('Error', 'Please fill in all fields');
-            return;
-        }
+
         if (!offerId || !fighterId) {
             Alert.alert('Error', 'Invalid offer or fighter ID');
             return;
@@ -65,9 +56,9 @@ const NegotiationScreen = () => {
             offerId: offerId,
             fighterId: fighterId,
             negotiateRequest: {
-                fightPurse: parseFloat(newOffer.fightPurse),
-                winBonus: parseFloat(newOffer.winBonus),
-                finishBonus: parseFloat(newOffer.finishBonus),
+                fightPurse: parseFloat(newOffer.fightPurse||'0'),
+                winBonus: parseFloat(newOffer.winBonus||'0'),
+                finishBonus: parseFloat(newOffer.finishBonus||'0'),
             },
         };
         if (typeOffer === 'Public') {
@@ -128,21 +119,16 @@ const NegotiationScreen = () => {
         }
     };
     return (
-        <TouchableWithoutFeedback
-            onPress={() => {
-                setEditingField(null);
-                Keyboard.dismiss();
-            }}>
-            <ScrollView style={{flex: 1, backgroundColor: colors.background}}>
-                <GoBackButton/>
+        <ScrollView style={{flex: 1, backgroundColor: colors.background}} keyboardShouldPersistTaps="handled"
+                    keyboardDismissMode="on-drag">
+            <TouchableWithoutFeedback
+                onPress={() => {
+                    setEditingField(null);
+                    Keyboard.dismiss();
+                }}>
+                <View>
+                <EventPosterImage eventImageLink={offer?.eventImageLink}/>
                 <View style={styles.container}>
-                    {offer?.eventImageLink && (
-                        <Image
-                            source={{uri: offer.eventImageLink}}
-                            style={styles.image}
-                            resizeMode="cover"
-                        />
-                    )}
                     <Text style={styles.title}>Negotiate the Offer</Text>
                     <Text style={styles.subtitle}>
                         Propose the price you can offer and send it!
@@ -159,8 +145,9 @@ const NegotiationScreen = () => {
                         <Text style={styles.sendButtonText}>Send Offer</Text>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
-        </TouchableWithoutFeedback>
+                </View>
+            </TouchableWithoutFeedback>
+        </ScrollView>
     );
 };
 
@@ -170,12 +157,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.white,
-    },
-    image: {
-        paddingHorizontal: 20,
-        height: 180,
-        borderRadius: 12,
-        marginBottom: 16,
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        paddingTop: 24,
+        marginTop: -50
     },
     title: {
         fontSize: 24,

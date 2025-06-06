@@ -9,6 +9,8 @@ import {
 } from "@/components/offers/exclusive-single/SubmittedFighterPrivateOfferSection";
 import {DocumentTailoring} from "@/components/DocumentTailoring";
 import {PromotionTailoringStatus} from "@/components/offers/public/PromotionTailoringStatus";
+import {SubmittedFightersSection} from "@/components/offers/public/SubmittedFightersSection";
+import {OfferTypeEnum} from "@/models/model";
 
 type ExclusiveOfferTailoringCandidates = {
     submittedFighters: ShortInfoFighter[];
@@ -77,13 +79,11 @@ export const PrivateOfferPromotionCandidates = ({
             );
         case 'Submitted Fighters':
             return (
-                <SubmittedFighterPrivateOfferSection
-                    submittedInformation={submittedInformation}
-                    submittedFighters={submittedFighters}
+                <SubmittedFightersSection
+                    fighters={submittedFighters}
                     offer={offer}
-                    onRefresh={() => {
-                        router.reload();
-                    }}
+                    offerType={OfferTypeEnum.PRIVATE}
+                    chosenFighter={chosenFighter}
                 />
             );
         default:

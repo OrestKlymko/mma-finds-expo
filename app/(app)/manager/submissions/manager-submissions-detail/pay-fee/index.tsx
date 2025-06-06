@@ -17,6 +17,7 @@ import { paySuccessFee, rejectPublicOffer } from '@/service/service';
 import { payWithStripe } from '@/service/create-entity/stripePayment';
 import { PaySuccessFeeRequest, ResponsorOfferRequest } from '@/service/request';
 import GoBackButton from '@/components/GoBackButton';
+import {SubmittedInformationOffer} from "@/service/response";
 
 const MIN_FEE = 30;
 const MAX_FEE = 60;
@@ -25,15 +26,34 @@ const { width } = Dimensions.get('window');
 
 const SuccessFeePaymentScreen: React.FC = () => {
     const router = useRouter();
-    const params = useLocalSearchParams();
+    const params = useLocalSearchParams<{
+        submittedInformation?: string;
+        offerId?: string;
+    }>();
     const offerId = params.offerId as string;
-    const submitted = JSON.parse(params.submittedInformation as string);
+
+    // безпечний варіант розбору JSON:
+    let submitted: SubmittedInformationOffer | undefined;
+    if (typeof params.submittedInformation === 'string') {
+        try {
+            submitted = JSON.parse(params.submittedInformation) as SubmittedInformationOffer;
+        } catch (e) {
+            console.warn('Неможливо розпарсити submittedInformation:', e);
+            submitted = undefined;
+        }
+    } else {
+        // тут params.submittedInformation або undefined, або масив string[] (якщо використовуєте кілька однакових ключів у query)
+        submitted = undefined;
+    }
 
     const [loading, setLoading] = useState(true);
     const [fee, setFee] = useState(0);
     const [processing, setProcessing] = useState<'PAY' | 'DECLINE' | null>(null);
 
     useEffect(() => {
+        if(!submitted || !offerId) {
+            return;
+        }
         const purse = (+submitted.fightPurse || 0) + (+submitted.bonusPurse || 0) + (+submitted.winPurse || 0);
         const raw = purse * RATE;
         setFee(Math.min(Math.max(raw, MIN_FEE), MAX_FEE));
