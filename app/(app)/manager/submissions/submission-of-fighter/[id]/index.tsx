@@ -16,7 +16,7 @@ const Index = () => {
     const [activeTab, setActiveTab] = useState<SubmissionTabType>('Active');
 
     const [fighter, setFighter] = useState<FighterInfoResponse | null>(null);
-    const { fighterId } = useLocalSearchParams<{fighterId: string}>()
+    const { id } = useLocalSearchParams<{id: string}>()
     const [submissions, setSubmissions] = useState<OfferSubmissionResponse[]>([]);
     const [filteredSubmissions, setFilteredSubmissions] = useState<OfferSubmissionResponse[]>(
         [],
@@ -27,14 +27,14 @@ const Index = () => {
         let isActive = true;
 
         const loadFighterInfo = async () => {
-            if (!fighterId) return;
+            if (!id) return;
 
             setContentLoading(true);
 
             try {
                 const [fighterData, submissionsFromBe] = await Promise.all([
-                    getFullInfoAboutFighter(fighterId),
-                    getSubmissionsOfferByFighter(fighterId),
+                    getFullInfoAboutFighter(id),
+                    getSubmissionsOfferByFighter(id),
                 ]);
 
                 if (isActive) {
@@ -55,14 +55,14 @@ const Index = () => {
         return () => {
             isActive = false;
         };
-    }, [fighterId]);
+    }, [id]);
 
     if (contentLoading) {
         return <ContentLoader />;
     }
     return (
         <View style={{flex: 1, backgroundColor: colors.background}}>
-            <GoBackButton />
+            <GoBackButton shouldGoBack={true} />
             <View style={styles.container}>
                 <Text style={styles.title}>Submissions of</Text>
                 <Text style={styles.subtitle}>{fighter?.name}</Text>
@@ -74,7 +74,7 @@ const Index = () => {
                     setFilteredSubmissions={setFilteredSubmissions}
                 />
                 <SubmissionList
-                    fighterId={fighterId}
+                    fighterId={id}
                     filteredSubmission={filteredSubmissions}
                 />
             </View>

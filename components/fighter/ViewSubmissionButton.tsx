@@ -22,7 +22,7 @@ export const ViewSubmissionButton = (
     const router = useRouter();
 
     const handleSelectFighter = () => {
-        router.push(`/(app)/manager/submissions/submission-of-fighter?fighterId=${fighterId}`);
+        router.push(`/(app)/manager/submissions/submission-of-fighter/${fighterId}`);
     };
 
     return (

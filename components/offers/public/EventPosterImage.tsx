@@ -6,6 +6,7 @@ import {Image} from "expo-image";
 type Props = {
     eventImageLink: string | undefined,
     role?: "MANAGER" | "PROMOTION" | "PROMOTION_EMPLOYEE" | "ANONYMOUS" | null | undefined
+    goBackDirectly?: boolean
 };
 
 export const EventPosterImage = ({eventImageLink, role}: Props) => {
@@ -18,6 +19,7 @@ export const EventPosterImage = ({eventImageLink, role}: Props) => {
                 style={styles.eventImage}
             />
             <GoBackButton
+                shouldGoBack={true}
                 color={'white'}
                 style={{position: 'absolute', left: 10}}
             />

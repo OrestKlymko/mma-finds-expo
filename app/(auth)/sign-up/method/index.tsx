@@ -47,6 +47,8 @@ export default function Index() {
         }
         if (typeOffer === 'private') {
             await submitFighterOnExclusiveOffer(offerId, data)
+            AsyncStorage.removeItem("offerIdToSubmit");
+            AsyncStorage.removeItem("typeOffer");
         }
 
     }

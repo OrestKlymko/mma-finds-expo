@@ -108,7 +108,7 @@ export const ManagerOfferDetailScreen = () => {
                     styles.container,
                     {paddingBottom: insets.bottom},
                 ]}>
-                <EventPosterImage eventImageLink={offer?.eventImageLink}/>
+                <EventPosterImage eventImageLink={offer?.eventImageLink} goBackDirectly={true}/>
                 <View style={styles.eventDetailsContainer}>
                     <EventHeaderForManager
                         isFavorite={isFavorite}

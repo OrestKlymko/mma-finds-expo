@@ -316,7 +316,7 @@ const CreateFightersProfileScreen = () => {
                     value={emailFighter}
                     onChangeText={setEmailFighter}
                     containerStyle={[emailAvailable == null && styles.inputContainer]}
-                    onEndEditing={handleExistEmail}
+                    onBlur={handleExistEmail}
                 />
                 {emailAvailable != null && (
                     <View style={styles.statusRow}>
@@ -337,7 +337,7 @@ const CreateFightersProfileScreen = () => {
                     hasSubmitted={hasSubmitted}
                     isRequired={true}
                     onChangeText={setNameSurname}
-                    onEndEditing={handleExistNameSurname}
+                    onBlur={handleExistEmail}
                     containerStyle={[nameAvailable == null && styles.inputContainer]}
                 />
                 {nameAvailable != null && (

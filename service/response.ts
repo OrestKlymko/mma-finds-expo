@@ -419,6 +419,7 @@ export type FighterInfoResponse = {
     maxWeight: number;
     verificationState: VerificationState
     sportScore: SportScore[];
+    managerImageLink?: string;
 }
 
 export type SportScore = {

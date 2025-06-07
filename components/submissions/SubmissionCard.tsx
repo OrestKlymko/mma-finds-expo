@@ -45,16 +45,10 @@ export const SubmissionCard = ({
                     }});
                 break;
             case 'Public':
-                router.push({pathname:'/manager/submissions/manager-submissions-detail',params: {
-                        offerId: offerSubmissionResponse.offerId,
-                        fighterId: offerSubmissionResponse.fighterId || fighterId,
-                    }});
+                router.push(`/offers/public/${item.offerId}`);
                 break;
             case 'Exclusive':
-                router.push({pathname:'/manager/submissions/manager-submissions-detail/single',params: {
-                        offerId: offerSubmissionResponse.offerId,
-                        fighterId: offerSubmissionResponse.fighterId || fighterId,
-                    }});
+                router.push(`/offers/private/${item.offerId}`);
                 break;
         }
     };
