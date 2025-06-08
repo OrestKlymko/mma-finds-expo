@@ -337,7 +337,7 @@ const CreateFightersProfileScreen = () => {
                     hasSubmitted={hasSubmitted}
                     isRequired={true}
                     onChangeText={setNameSurname}
-                    onBlur={handleExistEmail}
+                    onBlur={handleExistNameSurname}
                     containerStyle={[nameAvailable == null && styles.inputContainer]}
                 />
                 {nameAvailable != null && (

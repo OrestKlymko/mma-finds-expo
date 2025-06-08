@@ -48,6 +48,7 @@ import { TapologyLinkInput } from '@/components/fighter/TapologyLinkInput';
 import SocialMediaModal from "@/components/SocialMediaModal";
 import {useLocalSearchParams} from "expo-router";
 import MissingFieldsModal from "@/components/offers/MissingFieldsModal";
+import {MultiSportRecordInputs, RecordsBySport} from "@/components/fighter/MultiSportRecordInputs";
 
 
 
@@ -63,6 +64,7 @@ const EditFightersProfileScreen = () => {
     >([]);
     const [profileImage, setProfileImage] = useState<Photo | null>(null);
     const [oldPhoto, setOldPhoto] = useState<string | null>(null);
+    const [sportRecords, setSportRecords] = useState<RecordsBySport>({});
     const [loading, setLoading] = useState(false);
     const [noTapologyLink, setNoTapologyLink] = useState(false);
 
@@ -118,6 +120,7 @@ const EditFightersProfileScreen = () => {
     // --- 1) Load reference data & manager info
     useEffect(() => {
         if(!fighter) return;
+        console.log(fighter)
         getNationalities().then(data => {
             const found = data.find(n => n.id === fighter.nationalId);
             if (found) {
@@ -139,11 +142,14 @@ const EditFightersProfileScreen = () => {
         });
 
         getSportTypes().then(data => {
-            const selected = data.filter(sport =>
-                Array.isArray(fighter.sportTypeId)
-                    ? fighter.sportTypeId.includes(sport.id)
-                    : sport.id === fighter.sportTypeId,
-            );
+            const selected = data.filter(sport => {
+                if (Array.isArray(fighter.sportScore)) {
+                    return fighter.sportScore.some(score => score.sportTypeId === sport.id);
+                } else {
+                    return fighter.sportScore?.sportTypeId === sport.id;
+                }
+            });
+            console.log(selected);
             setSelectedSportTypes(selected);
         });
     }, [fighter]);
@@ -172,7 +178,7 @@ const EditFightersProfileScreen = () => {
         // Convert date string to Date
         if (fighter.dateOfBirth) {
             const dob = new Date(fighter.dateOfBirth);
-            setDateOfBirth(dob);
+            setDateOfBirth(dob); //TODO: FIX DATE
             const nowYear = new Date().getFullYear();
             setAge(String(nowYear - dob.getFullYear()));
         }
@@ -204,13 +210,7 @@ const EditFightersProfileScreen = () => {
         setContinent(fighter.continent ?? '');
         setCountry(fighter.countryName ?? '');
         // Records
-        setProWins(String(fighter.professionalMmaRecordWin ?? 0));
-        setProLoss(String(fighter.professionalMmaRecordLose ?? 0));
-        setProDraw(String(fighter.professionalMmaRecordDraw ?? 0));
-        setAmWins(String(fighter.amateurMmaRecordWin ?? 0));
-        setAmLoss(String(fighter.amateurMmaRecordLose ?? 0));
-        setAmDraw(String(fighter.amateurMmaRecordDraw ?? 0));
-
+        setSportRecords(fighter.sportScore ?? []);
         // Foundation style (match after foundationStyles loaded)
 
         // Links
@@ -337,6 +337,17 @@ const EditFightersProfileScreen = () => {
         formData.append('sherdogLink', sherdogLink);
         formData.append('description', aboutFighter);
         formData.append('sportTypeId', selectedSportTypes?.map(t => t.id) ?? []);
+        Object.entries(sportRecords).forEach(([sportId, rec]) => {
+            formData.append('sportsScore', JSON.stringify({
+                sportTypeId: sportId,
+                proWins:  rec.proWins,
+                proLoss:  rec.proLoss,
+                proDraw:  rec.proDraw,
+                amWins:   rec.amWins,
+                amLoss:   rec.amLoss,
+                amDraw:   rec.amDraw,
+            }));
+        });
 
         // Social networks
         // If your backend expects them as separate fields:
@@ -492,24 +503,24 @@ const EditFightersProfileScreen = () => {
                 />
 
                 {/* Professional MMA Record* */}
-                <ProfessionalRecordInputs
-                    proWins={proWins}
-                    setProWins={setProWins}
-                    proLoss={proLoss}
-                    setProLoss={setProLoss}
-                    proDraw={proDraw}
-                    setProDraw={setProDraw}
-                    hasSubmitted={hasSubmitted}
-                />
+                {/*<ProfessionalRecordInputs*/}
+                {/*    proWins={proWins}*/}
+                {/*    setProWins={setProWins}*/}
+                {/*    proLoss={proLoss}*/}
+                {/*    setProLoss={setProLoss}*/}
+                {/*    proDraw={proDraw}*/}
+                {/*    setProDraw={setProDraw}*/}
+                {/*    hasSubmitted={hasSubmitted}*/}
+                {/*/>*/}
 
-                <AmateurRecordInputs
-                    amWins={amWins}
-                    setAmWins={setAmWins}
-                    amLoss={amLoss}
-                    setAmLoss={setAmLoss}
-                    amDraw={amDraw}
-                    setAmDraw={setAmDraw}
-                />
+                {/*<AmateurRecordInputs*/}
+                {/*    amWins={amWins}*/}
+                {/*    setAmWins={setAmWins}*/}
+                {/*    amLoss={amLoss}*/}
+                {/*    setAmLoss={setAmLoss}*/}
+                {/*    amDraw={amDraw}*/}
+                {/*    setAmDraw={setAmDraw}*/}
+                {/*/>*/}
 
                 {/* Foundation Style* */}
 
@@ -523,6 +534,13 @@ const EditFightersProfileScreen = () => {
                 <SportTypeMultiSelectDropdown
                     selectedSportTypes={selectedSportTypes}
                     setSelectedSportTypes={setSelectedSportTypes}
+                    hasSubmitted={hasSubmitted}
+                />
+
+                <MultiSportRecordInputs
+                    selectedSportTypes={selectedSportTypes}
+                    records={sportRecords}
+                    setRecords={setSportRecords}
                     hasSubmitted={hasSubmitted}
                 />
 
