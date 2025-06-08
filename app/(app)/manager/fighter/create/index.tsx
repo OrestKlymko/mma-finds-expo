@@ -234,18 +234,19 @@ const CreateFightersProfileScreen = () => {
         formData.append('minWeight', minWeight);
         formData.append('maxWeight', maxWeight);
         formData.append('fighterEmail', emailFighter.toLowerCase());
-        Object.entries(sportRecords).forEach(([sportId, rec]) => {
-            const jsonString = JSON.stringify({
-                sportTypeId: sportId,
-                proWins: rec.proWins ?? 0,
-                proLoss: rec.proLoss ?? 0,
-                proDraw: rec.proDraw ?? 0,
-                amWins: rec.amWins ?? 0,
-                amLoss: rec.amLoss ?? 0,
-                amDraw: rec.amDraw ?? 0,
-            });
-            formData.append('sportsScore', jsonString);
-        });
+        const scoresArray = Object.entries(sportRecords).map(([sportId, rec]) => ({
+            sportTypeId: sportId,
+            sportTypeName: selectedSportTypes.find(s => s.id === sportId)?.name ?? '',
+            proWins: rec.proWins ?? 0,
+            proLoss: rec.proLoss ?? 0,
+            proDraw: rec.proDraw ?? 0,
+            amWins: rec.amWins ?? 0,
+            amLoss: rec.amLoss ?? 0,
+            amDraw: rec.amDraw ?? 0,
+        }));
+
+        formData.append('sportsScore', JSON.stringify(scoresArray));
+
         createFighter(formData)
             .then(() => {
                 router.push('/(app)/(tabs)/feed');
@@ -337,7 +338,7 @@ const CreateFightersProfileScreen = () => {
                     hasSubmitted={hasSubmitted}
                     isRequired={true}
                     onChangeText={setNameSurname}
-                    onBlur={handleExistEmail}
+                    onBlur={handleExistNameSurname}
                     containerStyle={[nameAvailable == null && styles.inputContainer]}
                 />
                 {nameAvailable != null && (
