@@ -69,6 +69,7 @@ export const EventList = ({horizontal, fighterId, events, eventSelect}: EventLis
             data={events}
             horizontal={horizontal}
             keyExtractor={item => item.id}
+            ItemSeparatorComponent={!horizontal ? () => <View style={{ height: 15 }} /> : () => <></>}
             renderItem={({item}) => (
                 <TouchableOpacity
                     style={[styles.eventCard, setWidth]}

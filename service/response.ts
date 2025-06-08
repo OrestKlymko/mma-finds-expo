@@ -582,6 +582,7 @@ export type FighterFullProfile = {
     continent: string;
     minWeight: number | null;
     maxWeight: number | null;
+    sportScore: SportScore;
 };
 
 export type MessageInfoResponse = {
