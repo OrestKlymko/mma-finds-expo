@@ -9,6 +9,7 @@ import {useRouter} from "expo-router";
 import {ShareOffer} from "@/components/offers/public/ShareOffer";
 import {OfferTypeEnum} from "@/models/model";
 import {useAuth} from "@/context/AuthContext";
+import {ManageOfferButton} from "@/components/offers/public/ManageOfferButton";
 
 type Props = {
     offer: any,
@@ -69,7 +70,9 @@ export const ExclusiveOfferState = ({offer, offerType}: Props) => {
                                 : countDaysForAcceptance(offer?.dueDate) + ' Days'}
                     </Text>
                 </View>
-                {((role !== 'MANAGER' && role !== 'ANONYMOUS')&&(role!=null)) && renderPrivateOfferManageState()}
+                {((role !== 'MANAGER' && role !== 'ANONYMOUS')&&(role!=null)) &&offerType===OfferTypeEnum.PRIVATE && renderPrivateOfferManageState()}
+                {((role !== 'MANAGER' && role !== 'ANONYMOUS')&&(role!=null)) &&<ManageOfferButton offerId={offer?.offerId} closedReason={offer?.closedReason}
+                                    type={offerType===OfferTypeEnum.MULTIPLE?'Multi-fight contract':'Single fight'}/>}
             </View>
         </>
     );
@@ -108,7 +111,7 @@ const styles = StyleSheet.create({
         borderRadius: 9,
         paddingVertical: 12,
         alignItems: 'center',
-        height: 56,
+        height: 46,
         justifyContent: 'center',
         width: '100%',
         color: colors.white,

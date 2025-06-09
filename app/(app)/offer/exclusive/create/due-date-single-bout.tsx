@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {ActivityIndicator, Alert, Platform, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
-import {mapBenefitsToCreateBenefit} from '@/utils/utils';
+import {formatDateForBackend, mapBenefitsToCreateBenefit} from '@/utils/utils';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import colors from '@/styles/colors';
 import GoBackButton from '@/components/GoBackButton';
@@ -65,11 +65,6 @@ const ExclusiveOfferDueDateScreen = () => {
 
     const formatDate = (date: Date) => {
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-    };
-    const formatDateForBackend = (date: string): string => {
-        const [day, month, year] = date.split('/');
-        const parsedDate = new Date(`${year}-${month}-${day}`);
-        return parsedDate.toISOString().split('T')[0];
     };
 
     const handleSubmit = () => {

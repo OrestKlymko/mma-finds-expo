@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {FlatList, Modal, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
-import {FontAwesome as Icon} from '@expo/vector-icons';
+import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 
 import FloatingLabelInput from "./FloatingLabelInput";
 import colors from "@/styles/colors";
@@ -132,7 +132,7 @@ const SocialMediaModal: React.FC<SocialMediaModalProps> = ({
                     style={styles.socialMediaField}
                     onPress={() => setSocialMediaModalVisible(true)}>
                     <Text style={styles.socialMediaPlaceholder}>Social Media</Text>
-                    <Icon name="chevron-right" size={11} color={colors.primaryBlack}/>
+                    <Icon name="chevron-right" size={24} color={colors.primaryBlack}/>
                 </TouchableOpacity>
 
                 {socialList?.map((item, idx) => {

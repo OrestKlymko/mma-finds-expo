@@ -12,6 +12,7 @@ import {
     MultiFightPromotionTailoringProcess
 } from "@/components/offers/exclusive-multi/MultiFightPromotionTailoringProcess";
 import {useFocusEffect, useLocalSearchParams} from "expo-router";
+import {ManageOfferButton} from "@/components/offers/public/ManageOfferButton";
 
 export const PromotionMultiFightOffer = () => {
     const insets = useSafeAreaInsets();
@@ -32,7 +33,7 @@ export const PromotionMultiFightOffer = () => {
         React.useCallback(() => {
             if (!id) return;
             setContentLoader(true);
-            getMultiFightOfferById(id)
+            getMultiFightOfferById(id, null)
                 .then(res => {
                     setOffer(res.offer);
                     setFighter(res.fighter);
@@ -65,8 +66,7 @@ export const PromotionMultiFightOffer = () => {
                     <TitleWithAction title={'Multi-Fight Offer'}/>
                     {/*<ShareOffer offer={offer} typeOffer={'Multi-fight contract'} fighter={fighter}/>*/}
                     <MainOfferDetails offer={offer}/>
-
-                    {offer&&submissionInformations&&<MultiFightPromotionTailoringProcess
+                    {offer && submissionInformations && <MultiFightPromotionTailoringProcess
                         fighter={fighter}
                         offer={offer}
                         submittedInformation={submissionInformations}

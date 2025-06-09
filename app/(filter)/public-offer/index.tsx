@@ -142,7 +142,7 @@ const FilterPublicOfferScreen = () => {
                                 </Text>
                                 <Icon
                                     name={'chevron-right'}
-                                    size={20}
+                                    size={24}
                                     style={styles.moreButtonText}
                                 />
                             </TouchableOpacity>
@@ -174,7 +174,7 @@ const FilterPublicOfferScreen = () => {
                                         </Text>
                                         <Icon
                                             name={'chevron-right'}
-                                            size={20}
+                                            size={24}
                                             style={styles.moreButtonText}
                                         />
                                     </TouchableOpacity>
@@ -213,7 +213,7 @@ const FilterPublicOfferScreen = () => {
                                 </Text>
                                 <Icon
                                     name={'chevron-right'}
-                                    size={20}
+                                    size={24}
                                     style={styles.moreButtonText}
                                 />
                             </TouchableOpacity>

@@ -3,8 +3,7 @@ import {Text, TouchableOpacity, View, StyleSheet} from 'react-native';
 import {FoundationStyleResponse} from "@/service/response";
 import {getFoundationStyles} from "@/service/service";
 import colors from "@/styles/colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
-
+import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 
 
 interface Props {
@@ -40,8 +39,8 @@ export const FoundationStyleDropdown = ({
                     ]}>
                     {foundationStyle?.name || 'Foundation Style*'}
                 </Text>
-                <Ionicons
-                    name={showFoundationList ? 'chevron-up' : 'chevron-down'}
+                <Icon
+                    name={showFoundationList ? 'chevron-down':'chevron-right'}
                     size={24}
                     color={colors.gray}
                 />

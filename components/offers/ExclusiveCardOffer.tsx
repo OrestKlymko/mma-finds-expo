@@ -22,6 +22,7 @@ interface ExclusiveCardOfferProps {
         contractStartDate?: string;
         contractEndDate?: string;
         numberOfFights?: number;
+        closedReason?: string | null;
 
         verifiedState?: string; // 'NONE' | 'PENDING' | 'VERIFIED'
     };
@@ -48,7 +49,7 @@ export const ExclusiveCardOffer: React.FC<ExclusiveCardOfferProps> = ({
             key={item.offerId}
             style={[
                 styles.eventCard,
-                (item.verifiedState === 'NONE' || item.verifiedState === 'PENDING') &&
+                ((item.verifiedState === 'NONE' || item.verifiedState === 'PENDING') || item.closedReason) &&
                 styles.inactiveOffer,
             ]}
             onPress={handlePress}>
@@ -101,6 +102,14 @@ export const ExclusiveCardOffer: React.FC<ExclusiveCardOfferProps> = ({
                     </Text>
                 </View>
             )}
+            {(item.closedReason) && (
+                <View style={styles.reviewOverlay}>
+                    <Text style={styles.closedReasonText}>
+                        {item.closedReason || 'Offer is closed'}
+                    </Text>
+                </View>
+            )}
+
 
             <Icon name="chevron-right" size={24} color={colors.gray}/>
         </TouchableOpacity>
@@ -190,6 +199,12 @@ const styles = StyleSheet.create({
     },
     reviewOverlayText: {
         color: colors.primaryGreen,
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginTop: 5,
+    },
+    closedReasonText: {
+        color: colors.darkError,
         fontSize: 14,
         fontWeight: 'bold',
         marginTop: 5,

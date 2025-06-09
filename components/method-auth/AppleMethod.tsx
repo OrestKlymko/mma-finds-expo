@@ -20,8 +20,7 @@ export const AppleMethod = (
         try {
             const credential = await AppleAuthentication.signInAsync({
                 requestedScopes: [
-                    AppleAuthentication.AppleAuthenticationScope.EMAIL,
-                    AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                    AppleAuthentication.AppleAuthenticationScope.EMAIL
                 ],
             });
 

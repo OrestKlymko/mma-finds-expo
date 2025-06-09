@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import colors from '@/styles/colors';
-import {MaterialIcons as Icon} from '@expo/vector-icons';
+import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import React, {useEffect} from 'react';
 import {getSportTypes} from '@/service/service';
 import {SportTypeResponse} from '@/service/response';
@@ -46,7 +46,7 @@ export const SportTypeMultiChoose = ({
                         : 'Sport*'}
                 </Text>
                 <Icon
-                    name={showSportList ? 'chevron-up' : 'chevron-right'}
+                    name={showSportList ? 'chevron-down' : 'chevron-right'}
                     size={24}
                     color={colors.gray}
                 />

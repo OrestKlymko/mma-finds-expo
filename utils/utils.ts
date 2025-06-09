@@ -71,7 +71,8 @@ export const formatDateForBackend = (date: string): string => {
   const [day, month, year] = date.split(/[.\-/]/);
   const dd = day.padStart(2, '0');
   const mm = month.padStart(2, '0');
-  return `${year}-${mm}-${dd}`;
+  const dateIso = new Date(`${year}-${mm}-${dd}T00:00:00`);
+  return dateIso.toISOString().split('T')[0]; // Returns YYYY-MM-DD format
 };
 
 

@@ -21,7 +21,7 @@ import {useLocalSearchParams, useRouter} from "expo-router";
 const PromotionCloseOfferReasonScreen: React.FC = () => {
     const {offerId, type} = useLocalSearchParams<{
         offerId: string;
-        type: 'Exclusive' | 'Multi-fight contract' | 'Single fight';
+        type: 'Public' | 'Multi-fight contract' | 'Single fight';
     }>();
     const router = useRouter();
 
@@ -33,7 +33,7 @@ const PromotionCloseOfferReasonScreen: React.FC = () => {
             return;
         }
         switch (type) {
-            case 'Exclusive':
+            case 'Single fight':
                 closeExclusiveOffer(offerId, reason).then(
                     () => {
                         router.push('/(app)/(tabs)/feed')

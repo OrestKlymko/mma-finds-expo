@@ -11,7 +11,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/store/store';
 import {resetPublicOffer} from '@/store/createPublicOfferSlice';
 import {UpdateOfferRequest} from '@/service/request';
-import {formatDate, mapBenefitsToCreateBenefit} from "@/utils/utils";
+import {formatDate, formatDateForBackend, mapBenefitsToCreateBenefit} from "@/utils/utils";
 import {useRouter} from "expo-router";
 import {useAuth} from "@/context/AuthContext";
 
@@ -64,12 +64,6 @@ const PromotionSetDueDatePublicOffer = () => {
     const handleConfirmDate = (date: Date) => {
         setDueDate(date);
         setDatePickerVisible(false);
-    };
-
-    const formatDateForBackend = (date: string): string => {
-        const [day, month, year] = date.split('/');
-        const parsedDate = new Date(`${year}-${month}-${day}`);
-        return parsedDate.toISOString().split('T')[0];
     };
 
     const handleSubmit = () => {

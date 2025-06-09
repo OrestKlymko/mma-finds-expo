@@ -53,7 +53,7 @@ const OpponentDetailsSection: React.FC<Props> = ({offer}) => {
                 <Text style={styles.headerText}>Opponent Information</Text>
                 <Icon
                     name={expanded ? 'chevron-down' : 'chevron-right'}
-                    size={20}
+                    size={24}
                     color={colors.primaryGreen}
                 />
             </TouchableOpacity>

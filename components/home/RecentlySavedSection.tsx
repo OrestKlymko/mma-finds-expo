@@ -32,6 +32,9 @@ export const RecentlySavedSection = (
                     isFavorite={true}
                     horizontal
                     refreshFavorites={refreshFavorites}
+                    onClick={offerId =>
+                        router.push(`/offers/public/${offerId}`)
+                    }
                 />
             </View>
         )}</>;

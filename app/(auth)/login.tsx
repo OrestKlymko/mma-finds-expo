@@ -15,9 +15,9 @@ import {useRouter} from "expo-router";
 import FooterSingUp from "@/components/FooterSingUp";
 import GoBackButton from "@/components/GoBackButton";
 import {useAuth} from "@/context/AuthContext";
-import useAppleAuth from "@/hooks/useAppleAuth";
 import RolePicker from "@/components/RolePicker";
 import {GoogleMethod} from "@/components/method-auth/GoogleMethod";
+import {AppleMethod} from "@/components/method-auth/AppleMethod";
 
 export const useWarmUpBrowser = () => {
     useEffect(() => {
@@ -43,18 +43,15 @@ const LoginScreen = () => {
     const [standardLoading, setAuthLoading] = useState(false);
     const [selectedRole, setSelectedRole] = useState<'MANAGER' | 'PROMOTION' | 'PROMOTION_EMPLOYEE'>('MANAGER');
     const router = useRouter();
+    const [loadingApple, setLoadingApple] = useState(false);
     const handleSignIn = async () => {
         setAuthLoading(true)
         const token = await AsyncStorage.getItem('deviceToken');
         handleLoginToBackend(email, password, 'standard', token);
     };
 
-    const {signInApple, loadingApple} = useAppleAuth(
-        (email, fcm) => handleLoginToBackend(email, null, 'oauth', fcm),
-        (error) => Alert.alert('Apple Sign-In Error', error)
-    );
-
-    const onSuccessOauth = (email: string, fcm: string | null) => {
+    const onSuccessOauth = async (email: string) => {
+        const fcm = await AsyncStorage.getItem('deviceToken') ?? null;
         handleLoginToBackend(email, null, 'oauth', fcm);
     }
 
@@ -181,7 +178,8 @@ const LoginScreen = () => {
                 {/* Кнопка входу через Google */}
 
 
-                <GoogleMethod onSuccess={onSuccessOauth} text={"Sign in with Google"} loading={loadingGoogle} setLoading={setLoadingGoogle}/>
+                <GoogleMethod onSuccess={onSuccessOauth} text={"Sign in with Google"} loading={loadingGoogle}
+                              setLoading={setLoadingGoogle}/>
 
                 <SocialButton
                     text="Sign in with Facebook"
@@ -192,15 +190,8 @@ const LoginScreen = () => {
                 />
 
                 {Platform.OS === 'ios' && (
-                    <SocialButton
-                        isLoading={loadingApple}
-                        disabled={loadingApple}
-                        text="Sign in with Apple"
-                        onPress={signInApple}
-                        iconSource={AppleIcon}
-                        backgroundColor="#FFFFFF"
-                        textColor="#000"
-                    />
+                    <AppleMethod handleSuccessAuth={onSuccessOauth} loadingApple={loadingApple}
+                                 setLoadingApple={setLoadingApple} text={"Sign in with Apple"}/>
                 )}
                 <FooterSingUp/>
             </ScrollView>

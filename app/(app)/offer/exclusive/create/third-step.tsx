@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {MaterialIcons as Icon} from '@expo/vector-icons';
+import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import colors from '@/styles/colors';
 import {useRouter} from "expo-router";
 
@@ -14,11 +14,11 @@ const SuccessCreatePublicOfferScreen: React.FC = () => {
             </View>
 
             <Text style={styles.title}>
-                Private Offer Sent!
+                Exclusive Offer Sent!
             </Text>
 
             <Text style={styles.description}>
-                Your private fight offer has been successfully sent. Await a response!
+                Your exclusive fight offer has been successfully sent. Await a response!
             </Text>
 
             <TouchableOpacity

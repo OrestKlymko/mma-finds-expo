@@ -58,6 +58,7 @@ export const ManagerOfferDetailScreen = () => {
             ]);
             setBenefits(benefitsResponse);
             setOffer(offerResponse.offer);
+
             setChosenFighter(offerResponse?.chosenFighter);
             setFighters(offerResponse.fighters);
             setSubmittedInformation(offerResponse?.submittedInformation);
@@ -80,9 +81,7 @@ export const ManagerOfferDetailScreen = () => {
             return <SuccessFeePaymentSection offerId={id} submittedInformation={submittedInformation}/>
         }
 
-        if (submittedInformation?.statusResponded === 'REJECTED' || fighters[0]?.contractStatus === 'REJECTED') {
-            return <RejectedReasonSection rejectionReason={fighters[0]?.rejectedReason}/>
-        }
+
         return <ManagerOfferDetailFooter
             chosenFighter={chosenFighter}
             submittedInformation={submittedInformation}

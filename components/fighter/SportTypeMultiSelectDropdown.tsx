@@ -3,8 +3,7 @@ import {Text, TouchableOpacity, View, StyleSheet} from 'react-native';
 import {SportTypeResponse} from "@/service/response";
 import {getSportTypes} from "@/service/service";
 import colors from "@/styles/colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
-
+import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 
 
 interface Props {
@@ -52,8 +51,8 @@ export const SportTypeMultiSelectDropdown = ({
                         ? selectedSportTypes.map(s => s.name).join(', ')
                         : 'Sport*'}
                 </Text>
-                <Ionicons
-                    name={showSportList ? 'chevron-up' : 'chevron-down'}
+                <Icon
+                    name={showSportList ? 'chevron-down' : 'chevron-right'}
                     size={24}
                     color={colors.gray}
                 />
@@ -75,7 +74,7 @@ export const SportTypeMultiSelectDropdown = ({
                                     {fs.name}
                                 </Text>
                                 {isSelected && (
-                                    <Ionicons name="checkmark" size={20} color={colors.primaryGreen} />
+                                    <Icon name="check" size={20} color={colors.primaryGreen} />
                                 )}
                             </TouchableOpacity>
                         );

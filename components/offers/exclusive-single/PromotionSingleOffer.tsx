@@ -18,6 +18,7 @@ import {OfferTypeEnum} from "@/models/model";
 import {
     PrivatePromotionTailoringProcess
 } from "@/components/offers/exclusive-single/PrivatePromotionTailoringProcess";
+import {ManageOfferButton} from "@/components/offers/public/ManageOfferButton";
 
 export const PromotionSingleOffer = () => {
     const insets = useSafeAreaInsets();
@@ -72,7 +73,8 @@ export const PromotionSingleOffer = () => {
                 onRefresh={getData}
             />
         }
-        return <SubmittedFightersSection offer={offer} fighters={fighters} offerType={OfferTypeEnum.PRIVATE} chosenFighter={chosenFighter}/>
+        return <SubmittedFightersSection offer={offer} fighters={fighters} offerType={OfferTypeEnum.PRIVATE}
+                                         chosenFighter={chosenFighter}/>
     }
 
     if (contentLoading) {
@@ -98,7 +100,7 @@ export const PromotionSingleOffer = () => {
                 )}
                 <TitleWithAction title={offer?.eventName || 'Event Name'}/>
                 <ExclusiveOfferState offer={offer} offerType={OfferTypeEnum.PRIVATE}/>
-                {offer&&<LocationAndDateEvent offer={offer}/>}
+                {offer && <LocationAndDateEvent offer={offer}/>}
                 {offer?.eventDescription && (
                     <EventDescription eventDescription={offer.eventDescription}/>
                 )}

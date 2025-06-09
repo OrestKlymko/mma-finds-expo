@@ -103,7 +103,7 @@ export default function PromotionAllFighterPickerScreen() {
             const data: FighterInfoRequest = {
                 fighterId: item.fighterId,
                 managerId: item.managerId,
-                response: "ACCEPTED"
+                response: "PENDING"
             }
             if (!offerId) {
                 console.error("Offer ID is required to submit fighters.");

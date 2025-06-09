@@ -120,7 +120,6 @@ const EditFightersProfileScreen = () => {
     // --- 1) Load reference data & manager info
     useEffect(() => {
         if(!fighter) return;
-        console.log(fighter)
         getNationalities().then(data => {
             const found = data.find(n => n.id === fighter.nationalId);
             if (found) {
@@ -149,7 +148,6 @@ const EditFightersProfileScreen = () => {
                     return fighter.sportScore?.sportTypeId === sport.id;
                 }
             });
-            console.log(selected);
             setSelectedSportTypes(selected);
         });
     }, [fighter]);

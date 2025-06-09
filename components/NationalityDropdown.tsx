@@ -36,7 +36,7 @@ export const NationalityDropdown = ({
                     {nationality?.name ||title || 'Nationality*'}
                 </Text>
                 <Icon
-                    name={showNationalityList ? 'chevron-up' : 'chevron-down'}
+                    name={showNationalityList ? 'chevron-down' : 'chevron-right'}
                     size={24}
                     color={colors.gray}
                 />

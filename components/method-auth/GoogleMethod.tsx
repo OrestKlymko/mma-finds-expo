@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {GoogleSignin, isSuccessResponse, isErrorWithCode, statusCodes} from "@react-native-google-signin/google-signin";
 
 type GoogleMethodProps = {
-    onSuccess(email: string, fcm: string | null): void;
+    onSuccess(email: string): void;
     text: string
     loading: boolean
     setLoading: (loading: boolean) => void
@@ -24,8 +24,7 @@ export const GoogleMethod = ({onSuccess, text,loading,setLoading}: GoogleMethodP
             if (isSuccessResponse(response)) {
                 const {user} = response.data;
                 const {email} = user;
-                const fcm = await AsyncStorage.getItem('deviceToken');
-                onSuccess(email, fcm ?? '');
+                onSuccess(email);
             }else {
                 console.error("Google Signin failed:", response); //TODO
                 setLoading(false);

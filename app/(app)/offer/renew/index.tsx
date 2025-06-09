@@ -8,6 +8,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {renewDueDate, renewDueDateMultifight, renewExclusiveOfferDueDate,} from '@/service/service';
 import {useLocalSearchParams, useRouter} from "expo-router";
+import {formatDateForBackend} from "@/utils/utils";
 
 const RenewDueDateScreen = () => {
     const [dueDate, setDueDate] = useState<Date | null>(null);
@@ -36,39 +37,34 @@ const RenewDueDateScreen = () => {
     const formatDate = (date: Date) => {
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     };
-    const formatDateForBackend = (date: string): string => {
-        const [day, month, year] = date.split('/');
-        const parsedDate = new Date(`${year}-${month}-${day}`);
-        return parsedDate.toISOString().split('T')[0];
-    };
+
 
     const handleSubmit = () => {
         if (!dueDate) {
             Alert.alert('Please select a due date!');
             return;
         }
-
         switch (type) {
-            case 'Single Bout':
+            case 'Single fight':
                 setLoading(true);
                 renewExclusiveOfferDueDate(
                     offerId,
                     formatDateForBackend(formatDate(dueDate)),
                 )
                     .then(() => {
-                        router.back();
+                        router.push('/(app)/(tabs)/feed')
                     })
                     .finally(() => setLoading(false));
                 break;
 
-            case 'Multi-Fight':
+            case 'Multi-fight contract':
                 setLoading(true);
                 renewDueDateMultifight(
                     offerId,
                     formatDateForBackend(formatDate(dueDate)),
                 )
                     .then(() => {
-                        router.back();
+                        router.push('/(app)/(tabs)/feed')
                     })
                     .finally(() => setLoading(false));
                 break;
@@ -76,7 +72,7 @@ const RenewDueDateScreen = () => {
                 setLoading(true);
                 renewDueDate(offerId, formatDateForBackend(formatDate(dueDate)))
                     .then(() => {
-                        router.back();
+                        router.push('/(app)/(tabs)/feed')
                     })
                     .finally(() => setLoading(false));
         }

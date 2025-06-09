@@ -29,17 +29,17 @@ const MyFighters = () => {
                     setFighters(response);
                 })
                 .finally(() => setContentLoading(false));
-        }, []),
+        }, [entityId]),
     );
 
     const handleClickOnFighter = (fighter: ShortInfoFighter) => {
         router.push(`/(app)/manager/fighter/${fighter.id}`);
     };
 
-    const filteredFighters = fighters.filter(fighter => {
-        if (searchQuery && !fighter.name.includes(searchQuery)) return false;
-        return true;
+    const filteredFighters = fighters.filter(f => {
+        return f.name.toLowerCase().includes(searchQuery.trim().toLowerCase());
     });
+
 
     if (contentLoading) {
         return <ContentLoader/>;

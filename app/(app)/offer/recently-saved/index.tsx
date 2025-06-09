@@ -14,12 +14,13 @@ import colors from '../../../../styles/colors';
 import {OfferList} from "@/components/offers/OfferList";
 import GoBackButton from "@/components/GoBackButton";
 import {PublicOfferInfo} from "@/service/response";
+import {useRouter} from "expo-router";
 
 const RecentlySavedOfferScreen = () => {
     const [publicOffers, setPublicOffers] = useState<PublicOfferInfo[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const insets = useSafeAreaInsets();
-
+    const router = useRouter();
     const refreshFavorites = async () => {
         const storedFavorites = await AsyncStorage.getItem('favoriteOffers');
         if (storedFavorites) {
@@ -39,6 +40,9 @@ const RecentlySavedOfferScreen = () => {
                 offers={publicOffers}
                 isFavorite={true}
                 refreshFavorites={refreshFavorites}
+                onClick={offerId =>
+                    router.push(`/offers/public/${offerId}`)
+                }
             />
         ) : (
             <Text style={styles.noOffersText}>No Public Offers Available</Text>

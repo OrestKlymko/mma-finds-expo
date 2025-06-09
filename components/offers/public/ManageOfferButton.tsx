@@ -6,7 +6,7 @@ import {useRouter} from "expo-router";
 interface ManageOfferButtonProps {
     offerId?: string | null;
     closedReason?: string | null;
-    type?: string | null;
+    type?: 'Public' | 'Multi-fight contract' | 'Single fight';
 }
 
 export const ManageOfferButton: React.FC<ManageOfferButtonProps> = ({

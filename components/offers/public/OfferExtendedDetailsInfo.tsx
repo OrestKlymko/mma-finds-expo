@@ -51,7 +51,7 @@ const OfferExtendedDetailsInfo = ({offer, benefits}: Prop) => {
                 <Text style={styles.moreInfoButtonText}>More Information</Text>
                 <Icon
                     name={moreInfoVisible ? 'chevron-down' : 'chevron-right'}
-                    size={20}
+                    size={24}
                     color={colors.primaryGreen}
                 />
             </TouchableOpacity>

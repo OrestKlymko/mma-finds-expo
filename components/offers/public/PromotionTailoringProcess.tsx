@@ -46,7 +46,7 @@ export const PromotionTailoringProcess = ({
             );
         }
     }, [offer, submittedInformation]);
-
+    console.log(submittedInformation);
     return submittedInformation ? (
         <>
             <PromotionTailoringTabs

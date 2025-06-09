@@ -44,7 +44,7 @@ const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress, selectedInLi
                 ]}>
                 <Ionicons
                     name="chevron-forward"
-                    size={30}
+                    size={20}
                     color={colors.primaryGreen}
                     style={styles.arrowIcon}
                 />

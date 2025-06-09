@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Notifier } from 'react-native-notifier';
+import {Notifier} from 'react-native-notifier';
 import {CustomToast} from "@/components/CustomToast";
 import {useRouter} from "expo-router";
 
@@ -27,8 +27,8 @@ export type NotificationItem = {
 
 const makeItem = (n: Notifications.Notification): NotificationItem => ({
     title: n.request.content.title ?? 'No title',
-    body:  n.request.content.body  ?? '',
-    data:  n.request.content.data  as PushData,
+    body: n.request.content.body ?? '',
+    data: n.request.content.data as PushData,
 });
 
 export function usePushNotifications() {
@@ -37,13 +37,14 @@ export function usePushNotifications() {
         // ===== 1. реєструємо permission + токен (можеш відправити на бек)
         (async () => {
             if (!Device.isDevice) return;
-            const { status } = await Notifications.getPermissionsAsync();
+            const {status} = await Notifications.getPermissionsAsync();
             if (status !== 'granted') {
                 await Notifications.requestPermissionsAsync();
             }
             const token = await Notifications.getExpoPushTokenAsync();
             console.log('Expo push token', token.data);
-            // відправ у бекенд, якщо треба
+            console.log(token.data);
+            AsyncStorage.setItem('deviceToken', token.data);
         })();
 
         // ===== 2. Foreground listener

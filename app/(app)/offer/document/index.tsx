@@ -13,6 +13,7 @@ import {
     renewDocumentPublicOfferDueDate,
 } from '@/service/service';
 import {useLocalSearchParams, useRouter} from "expo-router";
+import {formatDateForBackend} from "@/utils/utils";
 
 const RenewDocumentDueDateScreen = () => {
     const [dueDate, setDueDate] = useState<Date | null>(null);
@@ -42,11 +43,7 @@ const RenewDocumentDueDateScreen = () => {
     const formatDate = (date: Date) => {
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     };
-    const formatDateForBackend = (date: string): string => {
-        const [day, month, year] = date.split('/');
-        const parsedDate = new Date(`${year}-${month}-${day}`);
-        return parsedDate.toISOString().split('T')[0];
-    };
+
     const handleSubmit = () => {
         if (!dueDate) {
             Alert.alert('Please select a due date!');
