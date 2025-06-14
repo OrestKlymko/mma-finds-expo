@@ -72,7 +72,7 @@ const ExclusiveOfferDueDateScreen = () => {
             moreInfo: addMoreInfo ?? '',
             numberOfFights: parseInt(numberOfFights, 10),
             weightClass: weightClass?.map(wc => wc.id),
-            dueDate: formatDateForBackend(dueDate.toLocaleDateString()),
+            dueDate: formatDateForBackend(dueDate),
             fighterId: fighterId,
             minCatchWeight: weightClass?.filter(wc => wc.name === 'Catchweight')[0]
                 ?.minCatchWeight,

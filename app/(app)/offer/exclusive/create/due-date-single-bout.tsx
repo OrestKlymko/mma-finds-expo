@@ -76,7 +76,7 @@ const ExclusiveOfferDueDateScreen = () => {
         setLoading(true);
 
         const dataToSend: CreateExclusiveOfferRequest = {
-            dueDate: formatDateForBackend(dueDate.toLocaleDateString()),
+            dueDate: formatDateForBackend(dueDate),
             weightClass: weightClass?.id,
             tapologyLinkOpponents: opponentTapology,
             purseWin: purseValues?.win,

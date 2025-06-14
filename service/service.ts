@@ -68,8 +68,8 @@ import {
 } from './response';
 import {buildQueryString} from "@/utils/utils";
 
-export const API_BASE_URL = 'https://api.mmafinds.com/api';
-// export const API_BASE_URL = 'http://localhost:8080/api';
+// export const API_BASE_URL = 'https://api.mmafinds.com/api';
+export const API_BASE_URL = 'http://localhost:8080/api';
 
 // export const API_BASE_URL = 'https://api.dev.mmafinds.com/api';
 

@@ -92,7 +92,7 @@ const PromotionTailoringPriceAndDocumentScreen = () => {
         const choosenDocument = documents.filter(doc => doc.selected);
         const newDocument = documents.filter(doc => doc.isCustom && doc.selected);
         const formattedDate = dueDate
-            ? formatDateForBackend(formatDate(dueDate))
+            ? formatDateForBackend(dueDate)
             : null;
         if (!formattedDate) {
             Alert.alert('Please select a valid date.');

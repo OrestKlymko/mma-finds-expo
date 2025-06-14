@@ -86,6 +86,13 @@ const LoginScreen = () => {
                 setLoadingGoogle(false);
             })
             .catch(err => {
+                if(err.status===404){
+                    Alert.alert(
+                        'Error',
+                        'User with this email not found, please sign up',
+                    );
+                    return;
+                }
                 if (err.status === 407) {
                     Alert.alert(
                         'Error',

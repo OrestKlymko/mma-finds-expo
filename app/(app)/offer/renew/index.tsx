@@ -49,7 +49,7 @@ const RenewDueDateScreen = () => {
                 setLoading(true);
                 renewExclusiveOfferDueDate(
                     offerId,
-                    formatDateForBackend(formatDate(dueDate)),
+                    formatDateForBackend(dueDate),
                 )
                     .then(() => {
                         router.push('/(app)/(tabs)/feed')
@@ -61,7 +61,7 @@ const RenewDueDateScreen = () => {
                 setLoading(true);
                 renewDueDateMultifight(
                     offerId,
-                    formatDateForBackend(formatDate(dueDate)),
+                    formatDateForBackend(dueDate),
                 )
                     .then(() => {
                         router.push('/(app)/(tabs)/feed')
@@ -70,7 +70,7 @@ const RenewDueDateScreen = () => {
                 break;
             default:
                 setLoading(true);
-                renewDueDate(offerId, formatDateForBackend(formatDate(dueDate)))
+                renewDueDate(offerId, formatDateForBackend(dueDate))
                     .then(() => {
                         router.push('/(app)/(tabs)/feed')
                     })

@@ -125,7 +125,7 @@ export function SingleBoutOfferFlow({
         );
         const newDocument = documents.filter(doc => doc.isCustom && doc.selected);
         const formattedDate = dueDate
-            ? formatDateForBackend(formatDate(dueDate))
+            ? formatDateForBackend(dueDate)
             : null;
         if (!formattedDate) {
             Alert.alert('Please select a valid date.');

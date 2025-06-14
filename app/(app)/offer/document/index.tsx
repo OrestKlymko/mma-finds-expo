@@ -52,7 +52,7 @@ const RenewDocumentDueDateScreen = () => {
         setLoading(true);
         switch (typeOffer) {
             case 'Exclusive':
-                renewDocumentExclusiveOfferDueDate(offerId, formatDateForBackend(formatDate(dueDate)))
+                renewDocumentExclusiveOfferDueDate(offerId, formatDateForBackend(dueDate))
                     .then(() => {
                         Alert.alert('Due date renewed successfully!');
                         router.back();
@@ -66,7 +66,7 @@ const RenewDocumentDueDateScreen = () => {
                     });
                 break;
             case 'Multi-fight contract':
-                renewDocumentMultiFightOfferDueDate(offerId, formatDateForBackend(formatDate(dueDate)))
+                renewDocumentMultiFightOfferDueDate(offerId, formatDateForBackend(dueDate))
                     .then(() => {
                         Alert.alert('Due date renewed successfully!');
                         router.back();
@@ -80,7 +80,7 @@ const RenewDocumentDueDateScreen = () => {
                     });
                 break;
             case 'Public':
-                renewDocumentPublicOfferDueDate(offerId, formatDateForBackend(formatDate(dueDate)))
+                renewDocumentPublicOfferDueDate(offerId, formatDateForBackend(dueDate))
                     .then(() => {
                         Alert.alert('Due date renewed successfully!');
                         router.back();

@@ -67,12 +67,13 @@ export const formatDateFromLocalDate = (date: string | number[] | undefined) => 
 };
 
 
-export const formatDateForBackend = (date: string): string => {
-  const [day, month, year] = date.split(/[.\-/]/);
-  const dd = day.padStart(2, '0');
-  const mm = month.padStart(2, '0');
-  const dateIso = new Date(`${year}-${mm}-${dd}T00:00:00`);
-  return dateIso.toISOString().split('T')[0]; // Returns YYYY-MM-DD format
+export const formatDateForBackend = (date: Date): string => {
+  if(!date) return '';
+  const day = date.getDay();
+    const month = (date.getMonth() + 1)<10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+    const year = date.getFullYear();
+    console.log(`${year}-${month}-${day < 10 ? `0${day}` : day}`)
+  return `${year}-${month}-${day < 10 ? `0${day}` : day}`; // e.g., 2026-05-25
 };
 
 

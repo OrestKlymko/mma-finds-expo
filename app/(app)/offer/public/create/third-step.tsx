@@ -94,7 +94,7 @@ const PromotionSetDueDatePublicOffer = () => {
             minWins: minWin,
             minLoss: minLoss,
             tapologyLinkOpponents: opponentTapology,
-            dueDate: formatDateForBackend(dueDate.toLocaleDateString()),
+            dueDate: formatDateForBackend(dueDate),
             benefit: mapBenefitsToCreateBenefit(benefits),
             minCatchWeight: weightClass?.minCatchWeight,
             maxCatchWeight: weightClass?.maxCatchWeight,
