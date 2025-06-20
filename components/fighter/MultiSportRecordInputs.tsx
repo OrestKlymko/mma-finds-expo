@@ -33,22 +33,46 @@ interface MultiSportRecordInputsProps {
     hasSubmitted?: boolean;
 }
 
+const DISABLED_AMATEUR_SPORTS = [
+    'Bare Knuckle',
+    'K1 with MMA Gloves',
+    'Muay Thai with MMA Gloves',
+];
+
 export const MultiSportRecordInputs: React.FC<MultiSportRecordInputsProps> = ({
                                                                                   selectedSportTypes,
                                                                                   records,
                                                                                   setRecords,
                                                                                   hasSubmitted = false,
                                                                               }) => {
+    // ✨ хелпер – чи приховувати аматорський блок для конкретного спорту
+    const isAmateurDisabled = useCallback(
+        (name: string) => DISABLED_AMATEUR_SPORTS.includes(name),
+        [],
+    );
 
-
+    // ⚙️ оновлення поля
     const updateField = useCallback(
         (sportId: number, field: keyof RecordFields, value: string) => {
+            // блокуємо аматорські поля, якщо тип спорту в списку
+            if (
+                field.startsWith('am') &&
+                isAmateurDisabled(
+                    selectedSportTypes.find(st => st.id === sportId)?.name ?? ''
+                )
+            ) {
+                return; // ігноруємо ввід
+            }
+
             setRecords(prev => ({
                 ...prev,
-                [sportId]: {...prev[sportId], [field]: value.replace(/[^0-9]/g, '')},
+                [sportId]: {
+                    ...prev[sportId],
+                    [field]: value.replace(/[^0-9]/g, ''),
+                },
             }));
         },
-        [setRecords],
+        [setRecords, selectedSportTypes, isAmateurDisabled],
     );
 
     if (!selectedSportTypes.length) return null;
@@ -57,21 +81,31 @@ export const MultiSportRecordInputs: React.FC<MultiSportRecordInputsProps> = ({
         <View style={styles.container}>
             {selectedSportTypes.map(sport => {
                 const id = sport.id;
+                const disableAmateur = isAmateurDisabled(sport.name);
+
+                // дефолти: одразу 0 для amateur, якщо заблоковано
                 const record: RecordFields = records[id] ?? {
                     proWins: '',
                     proLoss: '',
                     proDraw: '',
-                    amWins: '',
-                    amLoss: '',
-                    amDraw: '',
+                    amWins: disableAmateur ? '0' : '',
+                    amLoss: disableAmateur ? '0' : '',
+                    amDraw: disableAmateur ? '0' : '',
                 };
+
+                // гарантовано фіксуємо 0 при кожному рендері, якщо потрібно
+                if (disableAmateur) {
+                    ['amWins', 'amLoss', 'amDraw'].forEach(f => {
+                        if (record[f as keyof RecordFields] !== '0') {
+                            record[f as keyof RecordFields] = '0';
+                        }
+                    });
+                }
 
                 return (
                     <View key={id} style={styles.card}>
                         {/* Header */}
-                        <View
-                            style={styles.cardHeader}
-                        >
+                        <View style={styles.cardHeader}>
                             <Text style={styles.cardTitle}>{sport.name}</Text>
                         </View>
 
@@ -88,17 +122,19 @@ export const MultiSportRecordInputs: React.FC<MultiSportRecordInputsProps> = ({
                                 hasSubmitted={hasSubmitted}
                             />
 
-                            {/* Amateur */}
-                            <AmateurRecordInputs
-                                hasSubmitted={hasSubmitted}
-                                sportType={sport.name}
-                                amWins={record.amWins}
-                                setAmWins={val => updateField(id, 'amWins', val)}
-                                amLoss={record.amLoss}
-                                setAmLoss={val => updateField(id, 'amLoss', val)}
-                                amDraw={record.amDraw}
-                                setAmDraw={val => updateField(id, 'amDraw', val)}
-                            />
+                            {/* Amateur (тільки якщо не заблоковано) */}
+                            {!disableAmateur && (
+                                <AmateurRecordInputs
+                                    hasSubmitted={hasSubmitted}
+                                    sportType={sport.name}
+                                    amWins={record.amWins}
+                                    setAmWins={val => updateField(id, 'amWins', val)}
+                                    amLoss={record.amLoss}
+                                    setAmLoss={val => updateField(id, 'amLoss', val)}
+                                    amDraw={record.amDraw}
+                                    setAmDraw={val => updateField(id, 'amDraw', val)}
+                                />
+                            )}
                         </View>
                     </View>
                 );
@@ -106,6 +142,7 @@ export const MultiSportRecordInputs: React.FC<MultiSportRecordInputsProps> = ({
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     container: {

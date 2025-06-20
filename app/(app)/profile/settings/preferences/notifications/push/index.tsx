@@ -85,15 +85,15 @@ const NotificationSettingScreen = () => {
                 <Text style={styles.title}>Notifications</Text>
 
                 <View style={styles.section}>
-                    <View style={styles.item}>
-                        <Text style={styles.itemText}>Email Notifications</Text>
-                        <Switch
-                            value={emailNotification}
-                            onValueChange={setEmailNotification}
-                            trackColor={{ false: colors.lightGray, true: colors.primaryGreen }}
-                            thumbColor={emailNotification ? colors.white : colors.gray}
-                        />
-                    </View>
+                    {/*<View style={styles.item}>*/}
+                    {/*    <Text style={styles.itemText}>Email Notifications</Text>*/}
+                    {/*    <Switch*/}
+                    {/*        value={emailNotification}*/}
+                    {/*        onValueChange={setEmailNotification}*/}
+                    {/*        trackColor={{ false: colors.lightGray, true: colors.primaryGreen }}*/}
+                    {/*        thumbColor={emailNotification ? colors.white : colors.gray}*/}
+                    {/*    />*/}
+                    {/*</View>*/}
 
                     <View style={styles.item}>
                         <Text style={styles.itemText}>Push Notifications</Text>

@@ -17,7 +17,7 @@ const YourReferralsScreen = () => {
                 styles.container,
                 { paddingBottom: insets.bottom},
             ]}>
-            <GoBackButton />
+            <GoBackButton shouldGoBack={true}/>
 
             {/* Title Section */}
             <Text style={styles.title}>Your Invites</Text>

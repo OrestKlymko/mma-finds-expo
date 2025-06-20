@@ -22,19 +22,19 @@ const STATE_CONFIG: Record<
     { label: string; icon: React.ComponentProps<typeof MaterialIcons>['name']; bg: string; fg: string }
 > = {
     APPROVED: {
-        label: 'Approved',
+        label: 'Verified',
         icon: 'check-circle',
         bg: colors.primaryGreen,
         fg: colors.white,
     },
     PENDING: {
-        label: 'Pending',
+        label: 'Waiting Verification',
         icon: 'hourglass-full',
         bg: colors.orange,
         fg: colors.white,
     },
     REJECTED: {
-        label: 'Rejected',
+        label: 'Failed Verification',
         icon: 'cancel',
         bg: colors.darkError,
         fg: colors.white,

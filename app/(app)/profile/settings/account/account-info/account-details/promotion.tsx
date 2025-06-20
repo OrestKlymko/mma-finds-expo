@@ -112,6 +112,7 @@ const ChangeDetailAccountPromotionScreen = () => {
 
         setLoading(true);
         const formData = new FormData();
+        formData.append("id", entityId || '');
         formData.append('profileImage', profileImage as unknown as Blob);
         formData.append('country', country || '');
         formData.append('continent', continent || '');

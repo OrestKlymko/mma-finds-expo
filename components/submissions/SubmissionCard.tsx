@@ -108,7 +108,7 @@ export const SubmissionCard = ({
             </View>
             {item.closedReason && item.closedReason.trim().length > 0 && (
                 <View style={styles.closedOverlay}>
-                    <Text style={styles.closedOverlayText}>{item.closedReason}</Text>
+                    <Text style={styles.closedOverlayText}>Closed with reason: {item.closedReason}</Text>
                 </View>
             )}
         </TouchableOpacity>

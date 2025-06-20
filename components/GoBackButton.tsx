@@ -34,7 +34,7 @@ const GoBackButton = ({
 
     const handleBack = () => {
 
-        if(shouldGoBack){
+        if(shouldGoBack&&router.canGoBack()){
             router.back();
         }
         if (specificScreen) {
@@ -43,6 +43,7 @@ const GoBackButton = ({
         }
         const prev = popPrev();
         actionAfterUnmount?.();
+        console.log(prev);
         if (prev) {
             router.navigate(prev);
         } else if (router.canGoBack()) {

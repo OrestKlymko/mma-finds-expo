@@ -14,7 +14,7 @@ export const SearchFighterSection = () => {
                 placeholder="Search for a fighter..."
                 placeholderTextColor={colors.gray}
                 onFocus={() => {
-                    //ROUTER TO MAIN LIST OF FIGHTER AND MANAGER
+                    router.push('/search');
                 }}
             />
             <TouchableOpacity>

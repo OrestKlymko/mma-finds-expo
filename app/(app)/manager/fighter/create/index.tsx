@@ -327,7 +327,11 @@ const CreateFightersProfileScreen = () => {
                             color={emailAvailable ? colors.primaryGreen : '#FF3B30'}
                         />
                         <Text style={[styles.statusText, {color: emailAvailable ? colors.primaryGreen : '#FF3B30'}]}>
-                            {emailAvailable ? 'Email is available' : 'Email is already registered'}
+                            { emailAvailable
+                                ? 'No fighter with that email exists yet'
+                                : 'A fighter with that email already exists'
+                            }
+
                         </Text>
                     </View>
                 )}
@@ -349,7 +353,10 @@ const CreateFightersProfileScreen = () => {
                             color={nameAvailable ? colors.primaryGreen : '#FF3B30'}
                         />
                         <Text style={[styles.statusText, {color: nameAvailable ? colors.primaryGreen : '#FF3B30'}]}>
-                            {nameAvailable ? 'Name is available' : 'Name is already registered'}
+                            { nameAvailable
+                                ? 'No fighter with that name exists yet'
+                                : 'A fighter with that name already exists'
+                            }
                         </Text>
                     </View>
                 )}

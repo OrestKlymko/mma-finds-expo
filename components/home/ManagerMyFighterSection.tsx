@@ -18,7 +18,7 @@ export const ManagerMyFighterSection = ({
             <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>My Fighters</Text>
                 <TouchableOpacity
-                    onPress={() => router.push(('/profile/my-fighters'))}>
+                    onPress={() => router.push(('/(app)/(tabs)/feed'))}>
                     <Text style={styles.seeAll}>See All</Text>
                 </TouchableOpacity>
             </View>

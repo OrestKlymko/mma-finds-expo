@@ -24,7 +24,7 @@ export const ManagerHomeHeaderSection = () => {
                     style={styles.searchInput}
                     placeholder="Search for an offer..."
                     placeholderTextColor={colors.gray}
-                    onFocus={() => router.push('/(app)/offer')} //TODO: Check correct fighter offer screen
+                    onFocus={() => router.push('/search')} //TODO: Check correct fighter offer screen
                 />
                 <TouchableOpacity>
                     <Ionicons name="search" size={24} color={colors.primaryBlack} />

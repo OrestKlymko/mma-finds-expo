@@ -7,32 +7,17 @@ import {useAuth} from '@/context/AuthContext';
 import {
     featureFighterOnOffer,
     featureYourOffer,
-    getCredit,
+    getCredit, getCreditPlans,
     payForCredit,
-    setDefaultPaymentMethod,
 } from '@/service/service';
-import {initPaymentSheet, presentPaymentSheet,} from '@stripe/stripe-react-native';
-import {PayCreditRequest} from '@/service/request';
 import {useLocalSearchParams, useRouter} from "expo-router";
 import {payWithStripe} from "@/service/create-entity/stripePayment";
 
 type CreditOption = {
     id: number;
-    label: string;
-    price: string;
+    label: number;
+    price: number;
 }
-
-const manager:CreditOption[] = [
-    {id: 1, label: '1', price: '9,99'},
-    {id: 5, label: '5', price: '39,99'},
-    {id: 10, label: '10', price: '69,99'},
-];
-
-const promotion:CreditOption[] = [
-    {id: 1, label: '1', price: '99,99'},
-    {id: 5, label: '5', price: '399,99'},
-    {id: 10, label: '10', price: '699,99'},
-];
 
 const ChooseCreditOptionScreen = () => {
 
@@ -50,14 +35,33 @@ const ChooseCreditOptionScreen = () => {
 
 
     useEffect(() => {
-        if (role === 'MANAGER') {
-            setCreditOptions(manager);
-        } else {
-            setCreditOptions(promotion);
-        }
+
+        getCreditPlans().then(res => {
+            const managerCreditOptions = res.filter(credit => credit.role === 'MANAGER');
+            const promotionCreditOptions = res.filter(credit => credit.role === 'PROMOTION');
+
+            if (role === 'MANAGER') {
+                const options = managerCreditOptions.map((option, index) => ({
+                    id: index + 1,
+                    label: option.credit,
+                    price: option.euro,
+                }));
+                setCreditOptions(options)
+            } else {
+                const options = promotionCreditOptions.map((option, index) => ({
+                    id: index + 1,
+                    label: option.credit,
+                    price: option.euro,
+                }));
+                setCreditOptions(options)
+            }
+        })
         getCredit().then(res => {
             setFeaturingCredit(res.featuringCredit);
         });
+
+        getCreditPlans().then()
+
     }, [role]);
 
     const handleOptionSelect = (id: number) => {
@@ -72,7 +76,7 @@ const ChooseCreditOptionScreen = () => {
             return;
         }
 
-        const amount = parseFloat(selected.price.replace(',', '.')); // 9.99 → 9.99
+        const amount = parseFloat(selected.price.toString()); // 9.99 → 9.99
 
         setLoading(true);
         try {
@@ -80,9 +84,11 @@ const ChooseCreditOptionScreen = () => {
             if (!paid) return; // юзер передумав
 
             // успішна оплата → начисляємо кредити/фічеримо
-            await payForCredit({ credit: selected.label, valueToPay: amount.toString() });
+            await payForCredit({credit: selected.label.toString(), valueToPay: amount.toString()});
             if (offerId && fighterId) {
                 await featureFighterOnOffer(offerId, fighterId);
+                router.push('/manager/fighter/success')
+                return;
             } else if (offerId) {
                 await featureYourOffer(offerId);
             }
@@ -203,7 +209,7 @@ const ChooseCreditOptionScreen = () => {
                                         selectedOption === option.id && styles.selectedText,
                                     ]}>
                                     {option.label}{' '}
-                                    {option.label === '1' ? 'Feature Credit' : 'Feature Credits'}
+                                    {option.label === 1 ? 'MMA Finds Credit' : 'MMA Finds Credits'}
                                 </Text>
                                 <Text
                                     style={[

@@ -6,10 +6,13 @@ import Profile from "@/assets/profile.svg";
 import Email from "@/assets/email.svg";
 import Order from "@/assets/order.svg";
 import colors from "@/styles/colors";
+import {useAuth} from "@/context/AuthContext";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
+import React from "react";
 
 
 export default function TabsLayout() {
-
+    const {role} = useAuth();
     return (
         <Tabs
             backBehavior={'history'}
@@ -26,53 +29,58 @@ export default function TabsLayout() {
                     headerShown: false,
                     tabBarIcon: ({focused}) => (
                         <View style={styles.iconContainer}>
-                            <Home  height={focused ? 26 : 22}
-                                   width={focused ? 26 : 22}
-                                   color={focused ? colors.primaryGreen : colors.gray}/>
+                            <Home height={focused ? 26 : 22}
+                                  width={focused ? 26 : 22}
+                                  color={focused ? colors.primaryGreen : colors.gray}/>
                         </View>
                     ),
                 }}
             /><Tabs.Screen
-                name="messages"
-                options={{
-                    title: "Messages",
-                    headerShown: false,
-                    tabBarIcon: ({focused}) => (
-                        <View style={styles.iconContainer}>
-                            <Email  height={focused ? 26 : 22}
-                                    width={focused ? 26 : 22}
-                                    color={focused ? colors.primaryGreen : colors.gray}/>
-                        </View>
-                    ),
-                }}
-            /><Tabs.Screen
+            name="messages"
+            options={{
+                title: "Messages",
+                headerShown: false,
+                tabBarIcon: ({focused}) => (
+                    <View style={styles.iconContainer}>
+                        <Email height={focused ? 26 : 22}
+                               width={focused ? 26 : 22}
+                               color={focused ? colors.primaryGreen : colors.gray}/>
+                    </View>
+                ),
+            }}
+        /><Tabs.Screen
             name="search"
             options={{
                 title: "Search",
                 headerShown: false,
                 tabBarIcon: ({focused}) => (
                     <View style={styles.iconContainer}>
-                        <SearchLogo   height={focused ? 46 : 42}
-                                      width={focused ? 46 : 42}
-                                     color={focused ? colors.primaryGreen : colors.gray}/>
+                        <SearchLogo height={focused ? 46 : 42}
+                                    width={focused ? 46 : 42}
+                                    color={focused ? colors.primaryGreen : colors.gray}/>
                     </View>
                 ),
             }}
         />
             <Tabs.Screen
-            name="feed"
-            options={{
-                title: "Feed",
-                headerShown: false,
-                tabBarIcon: ({focused}) => (
-                    <View style={styles.iconContainer}>
-                        <Order  height={focused ? 26 : 22}
-                                width={focused ? 26 : 22}
-                                color={focused ? colors.primaryGreen : colors.gray}/>
-                    </View>
-                ),
-            }}
-        />
+                name="feed"
+                options={{
+                    title: "Feed",
+                    headerShown: false,
+                    tabBarIcon: ({focused}) => (
+                        <View style={styles.iconContainer}>
+                            {role !== 'MANAGER' ? <Order height={focused ? 26 : 22}
+                                                         width={focused ? 26 : 22}
+                                                         color={focused ? colors.primaryGreen : colors.gray}/> :
+                                <MaterialCommunityIcons
+                                    name={'account-group'}
+                                    size={focused ? 33 : 30}
+                                    color={focused ? colors.primaryGreen : colors.gray}
+                                />}
+                        </View>
+                    ),
+                }}
+            />
             <Tabs.Screen
                 name="profile"
                 options={{
@@ -80,9 +88,9 @@ export default function TabsLayout() {
                     headerShown: false,
                     tabBarIcon: ({focused}) => (
                         <View style={styles.iconContainer}>
-                            <Profile  height={focused ? 26 : 22}
-                                      width={focused ? 26 : 22}
-                                      color={focused ? colors.primaryGreen : colors.gray}/>
+                            <Profile height={focused ? 26 : 22}
+                                     width={focused ? 26 : 22}
+                                     color={focused ? colors.primaryGreen : colors.gray}/>
                         </View>
                     ),
                 }}

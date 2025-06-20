@@ -130,8 +130,10 @@ const CreatePublicOfferFirstStepScreen = () => {
                     <Text style={styles.label}>Benefits</Text>
                     <BenefitBottomSheet
                         benefitsChoosen={benefits}
-                        onConfirm={selectedBenefits =>
+                        onConfirm={selectedBenefits => {
                             dispatch(setBenefits(selectedBenefits))
+                            console.log(selectedBenefits)
+                        }
                         }
                     />
 

@@ -91,7 +91,7 @@ const SubmitFighterOfferScreen: React.FC = () => {
                     <Text style={styles.greateChoice}>Great Choice!</Text>
                     <Text style={styles.title}>
                         {offer?.eventName} |{' '}
-                        {convertDateToNormalView(offer?.eventDate)}
+                        {convertDateToNormalView(offer?.eventDate.split("-"))}
                     </Text>
 
                     <Text style={styles.description}>

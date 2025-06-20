@@ -21,7 +21,7 @@ const FeaturedOffersListScreen = () => {
                 {/* Back Button */}
                 <TouchableOpacity
                     style={styles.backButton}
-                    onPress={() => router.back()}>
+                    onPress={() => router.replace('/')}>
                     <Icon name="chevron-left" size={24} color={colors.white} />
                     <Text style={styles.backText}>Back</Text>
                 </TouchableOpacity>
@@ -30,17 +30,17 @@ const FeaturedOffersListScreen = () => {
                 <View style={styles.topSection}>
                     <Icon name="star-outline" size={72} color={colors.white} />
                     <Text style={styles.title}>Featured Offers</Text>
-                    <Text style={styles.subtitle}>Boost Your Fight Offers&apos; Visibility!</Text>
+                    <Text style={styles.subtitle}>Boost the visibility of your fight offers!</Text>
                     <Text style={styles.description}>
-                        Featured offers stay at the top of the fight offers feed, increasing exposure and
-                        attracting high-quality fighters.
+                        Featured offers appear at the top of the fight offer feed, increasing visibility and helping you
+                        attract more high-quality fighters.
                     </Text>
 
                     <View style={styles.referralSection}>
                         <View style={styles.referralContainer}>
                             <TouchableOpacity
                                 style={styles.featuredButton}
-                                onPress={() => router.push('/(app)/(tabs)/feed')}>
+                                onPress={() => router.push('/offer/public/feature/list')}>
                                 <Text style={{color: colors.primaryBlack, fontWeight: '500'}}>
                                     Feature Your Offers
                                 </Text>

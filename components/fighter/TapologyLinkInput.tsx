@@ -53,7 +53,7 @@ export const TapologyLinkInput = ({
                     trackColor={{false: colors.gray, true: colors.primaryGreen}}
                     thumbColor={noTapologyLink ? colors.white : colors.gray}
                 />
-                <Text style={styles.switchLabel}>I don&#39;t have a Tapology link</Text>
+                <Text style={styles.switchLabel}>Fighter doesn&#39;t have a Tapology link</Text>
             </View>
         </>
     );

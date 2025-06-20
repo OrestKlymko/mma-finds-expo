@@ -29,7 +29,7 @@ export const FighterManageButtonWithSendExclusiveOffer = ({
                     router.push({
                         pathname: '/messages/private', params: {
                             receiverUserId: fighter?.managerId,
-                            avatar: fighter?.imageLink,
+                            avatar: fighter?.managerImageLink,
                             senderName: fighter?.managerName,
                         }
                     })

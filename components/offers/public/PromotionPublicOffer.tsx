@@ -60,6 +60,7 @@ export const PromotionOfferDetailsScreen = () => {
             setChosenFighter(offerInfo.chosenFighter);
             setPreviousInfo(offerInfo.previousOfferPrice);
             setBenefits(benefitFromBe);
+            console.log('Benefits loaded:', benefitFromBe);
         } catch (error) {
             console.error('Error loading offer content:', error);
         } finally {

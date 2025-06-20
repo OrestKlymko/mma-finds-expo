@@ -4,21 +4,25 @@ import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
-import {getPublicOffers} from "@/service/service";
 import GoBackButton from "@/components/GoBackButton";
 import colors from "@/styles/colors";
 import ContentLoader from "@/components/ContentLoader";
 import {OfferList} from "@/components/offers/OfferList";
+import {getAllPublicOffers} from "@/service/service";
+import {useAuth} from "@/context/AuthContext";
+import {useRouter} from "expo-router";
 
 const YourFeaturedOffersScreen = () => {
     const [publicOffers, setPublicOffers] = useState<any[]>([]);
+    const router = useRouter();
+    const {entityId} = useAuth();
     const [searchQuery, setSearchQuery] = useState('');
     const insets = useSafeAreaInsets();
     const [contentLoading, setContentLoading] = useState(false);
     useFocusEffect(
         useCallback(() => {
             setContentLoading(true)
-            getPublicOffers().then(res => {
+            getAllPublicOffers(entityId).then(res => {
                 setPublicOffers(
                     res.filter(
                         (offer: any) => offer.isOfferFeatured,
@@ -29,7 +33,7 @@ const YourFeaturedOffersScreen = () => {
     );
 
     const renderContent = () => {
-        return <OfferList offers={publicOffers} />;
+        return <OfferList offers={publicOffers} onClick={offerId => router.push(`/(public)/offers/public/${offerId}`)} />;
     };
 
     if(contentLoading){
@@ -37,7 +41,7 @@ const YourFeaturedOffersScreen = () => {
     }
     return (
         <View style={{flex: 1, backgroundColor: colors.background}}>
-            <GoBackButton/>
+            <GoBackButton shouldGoBack={true}/>
             <View style={[styles.container, {paddingBottom: insets.bottom}]}>
 
                 {/* Title */}

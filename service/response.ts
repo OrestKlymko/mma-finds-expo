@@ -1,7 +1,7 @@
 import {TaskStatus} from './request';
 import {OfferTypeEnum} from "@/models/model";
 
-export type USER_ROLE = 'MANAGER' | 'PROMOTION' | 'PROMOTION_EMPLOYEE';
+export type USER_ROLE = 'MANAGER' | 'PROMOTION' | 'PROMOTION_EMPLOYEE' | 'ANONYMOUS';
 export type VerificationState = 'PENDING' | 'APPROVED' | 'REJECTED' | 'NONE';
 export type StatusResponse =
     | 'ACCEPTED'
@@ -160,12 +160,13 @@ export type ShortInfoFighter = {
     feePayment: string;
     fighterStateApprove?: 'ACTIVE' | 'INACTIVE';
     verificationState: VerificationState;
+    weightClass: string;
+    sportTypes: string[];
 };
 
 export type CreatePaymentIntentResponse = {
     clientSecret: string;
 };
-
 
 
 export type InvitationLinkResponse = {
@@ -186,8 +187,16 @@ export type CreditRemainingResponse = {
     referralCredit: number;
 };
 
+export type CreditPlanResponse = {
+    id: number;
+    role: USER_ROLE;
+    credit: number;
+    euro: number;
+}
+
 export type VerificationStatusResponse = {
     status: VerificationState;
+    method: 'EMAIL' | 'DOCUMENT' | null | undefined;
 };
 
 export type TicketResponse = {
@@ -211,7 +220,8 @@ export type PaymentSetupIntentResponse = {
 };
 
 export type PaymentStatusResponse = {
-    paid: boolean;
+    paid: boolean| null;
+    paymentIntentId: string| null;
 }
 export type SubAccountResponse = {
     id: string;
@@ -479,6 +489,7 @@ export type EventTaskResponse = {
 };
 
 export type Benefit = {
+    id: string; // UUID, обов'язковий (primary key)
     additionalTeamMembers: number | null;
     customOption: string | null;
     foodBreakfast: boolean | null;
@@ -500,9 +511,10 @@ export type Benefit = {
     travelSupportFlightTickets: boolean | null;
     travelSupportIsOn: boolean | null;
     benefitName: string | null;
-    currency: string | null;
+    currency: string; // not null with default 'EUR'
     maxKmCovered: number | null;
 };
+
 
 export type MultiContractShortInfo = {
     offerId: string;

@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {Dimensions, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
-import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
+import {MaterialCommunityIcons, MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import {Image} from "expo-image";
 import {PublicOfferInfo} from "@/service/response";
 import {useAuth} from "@/context/AuthContext";
@@ -115,7 +115,21 @@ export const OfferCard: React.FC<OfferCardProps> = ({
                     </Text>
                 )}
             </View>
-
+            {(item.verifiedState === 'NONE' || item.verifiedState === 'PENDING') && (
+                <View style={styles.reviewOverlay}>
+                    <MaterialCommunityIcons name="account-clock-outline" size={24} color="black"/>
+                    <Text style={styles.reviewOverlayText}>
+                        Waiting for profile verification.
+                    </Text>
+                </View>
+            )}
+            {(item.closedReason) && (
+                <View style={styles.reviewOverlay}>
+                    <Text style={styles.closedReasonText}>
+                        Closed with reason: {item.closedReason || 'Offer is closed'}
+                    </Text>
+                </View>
+            )}
             <Icon
                 name="chevron-right"
                 size={24}
@@ -123,12 +137,6 @@ export const OfferCard: React.FC<OfferCardProps> = ({
                 style={styles.iconStyle}
             />
 
-            {/* Якщо офер закритий */}
-            {item.closedReason && item.closedReason.trim().length > 0 && (
-                <View style={styles.closedOverlay}>
-                    <Text style={styles.closedOverlayText}>{item.closedReason}</Text>
-                </View>
-            )}
         </TouchableOpacity>
     );
 };
@@ -221,5 +229,28 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: '600',
         textAlign: 'center',
+    },
+    reviewOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(255,255,255,0.9)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+    },
+    reviewOverlayText: {
+        color: colors.primaryGreen,
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginTop: 5,
+    },
+    closedReasonText: {
+        color: colors.darkError,
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginTop: 5,
     },
 });

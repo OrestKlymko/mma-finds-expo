@@ -25,6 +25,15 @@ export type LoginRequest = {
     userRole: USER_ROLE;
 };
 
+export type UserRoleRequest = {
+    email: string | undefined;
+}
+
+type UserRoleResponse={
+    role: USER_ROLE;
+}
+export type UserRoles = UserRoleResponse[];
+
 export type RecoveryPasswordRequest = {
     email: string;
     newPassword: string;
@@ -201,6 +210,14 @@ export type SendNotificationRequest = {
     offerId?: string;
     role?: string;
 };
+
+export type VerificationCodeRequest = {
+    code: string;
+}
+
+export type VerificationEmailRequest = {
+    email: string;
+}
 
 export type ChangeProfileRequest = {
     entityId: string | null | undefined;

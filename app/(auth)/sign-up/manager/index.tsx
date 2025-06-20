@@ -25,7 +25,12 @@ import {PhoneNumberComponent} from "@/components/PhoneNumberComponent";
 import FooterSignIn from "@/context/FooterSignIn";
 import SocialMediaModal from "@/components/SocialMediaModal";
 import {SignUpDataManager} from "@/models/model";
-import {changeNotificationState, createManagerSecond, submitFighterOnExclusiveOffer} from "@/service/service";
+import {
+    changeNotificationState,
+    createManager,
+    createManagerSecond,
+    submitFighterOnExclusiveOffer
+} from "@/service/service";
 import {LoginResponse} from "@/service/response";
 import {createFormDataForManagerAsSecondProfile} from "@/service/create-entity/formDataService";
 import GoBackButton from "@/components/GoBackButton";
@@ -118,7 +123,7 @@ export default function Index() {
             const formData = await createFormDataForManagerAsSecondProfile(
                 dataToSend,
             );
-            createManagerSecond(formData)
+            createManager(formData)
                 .then(async res => {
                     await handleSuccessAuth(res);
                     router.push('/(app)/(tabs)');

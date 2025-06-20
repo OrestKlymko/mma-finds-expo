@@ -14,10 +14,11 @@ import {UpdateOfferRequest} from '@/service/request';
 import {formatDate, formatDateForBackend, mapBenefitsToCreateBenefit} from "@/utils/utils";
 import {useRouter} from "expo-router";
 import {useAuth} from "@/context/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PromotionSetDueDatePublicOffer = () => {
     const router = useRouter();
-    const {entityId}=useAuth();
+    const {entityId} = useAuth();
     const [dueDate, setDueDate] = useState<Date | null>(null);
     const [showPicker, setShowPicker] = useState(false);
     const [isDatePickerVisible, setDatePickerVisible] = useState(false);
@@ -67,7 +68,7 @@ const PromotionSetDueDatePublicOffer = () => {
     };
 
     const handleSubmit = () => {
-        if(!entityId){
+        if (!entityId) {
             Alert.alert('Error', 'Start a new offer from the beginning.');
             return;
         }
@@ -78,7 +79,7 @@ const PromotionSetDueDatePublicOffer = () => {
 
         setLoading(true);
 
-        const dataToSend:UpdateOfferRequest = {
+        const dataToSend: UpdateOfferRequest = {
             eventId: event?.id,
             rounds: fightLength?.rounds,
             minutes: fightLength?.minutes,
@@ -115,33 +116,40 @@ const PromotionSetDueDatePublicOffer = () => {
         createPublicOffer(dataToSend)
             .then(_ => {
                 dispatch(resetPublicOffer());
-                getShortInfoPromotion(entityId)
-                    .then(res => {
-                        if (!res.isVerified) {
-                            Alert.alert(
-                                'Need Verification',
-                                'Your offer will be published after verification of your organization. You can check the status of verification in the profile section.',
-                                [
-                                    {
-                                        text: 'Go to Verification',
-                                        onPress: () => router.push('/profile/settings/account/account-info/verification',{
-                                            routeToMain: 'true',
-                                        }),
-                                    },
-                                    {
-                                        text: 'Cancel',
-                                        style: 'cancel',
-                                        onPress: () => router.push('/(app)/(tabs)'),
-                                    },
-                                ],
-                                {cancelable: false},
-                            );
-                            return;
-                        } else {
-                            router.push('/offer/public/create/success-step');
-                        }
-                    })
-                    .finally(() => setLoading(false));
+                AsyncStorage.getItem("verificationNeededShowed").then(value => {
+                    if (value && value === "true") {
+                        router.push('/(app)/(tabs)/feed')
+                    } else {
+                        getShortInfoPromotion(entityId)
+                            .then(res => {
+                                if (!res.isVerified) {
+                                    AsyncStorage.setItem("verificationNeededShowed", "true");
+                                    Alert.alert(
+                                        'Verification Required',
+                                        'We need to verify your promotion before we can publish this offer. You can check the verification status anytime in your profile.',
+                                        [
+                                            {
+                                                text: 'Go to Verification',
+                                                onPress: () => router.push('/profile/settings/account/account-info/verification', {
+                                                    routeToMain: 'true',
+                                                }),
+                                            },
+                                            {
+                                                text: 'Cancel',
+                                                style: 'cancel',
+                                                onPress: () => router.push('/(app)/(tabs)/feed'),
+                                            },
+                                        ],
+                                        {cancelable: false},
+                                    );
+                                    return;
+                                } else {
+                                    router.push('/offer/public/create/success-step');
+                                }
+                            })
+                            .finally(() => setLoading(false));
+                    }
+                })
             })
             .catch(err => {
                 console.error(err);
@@ -154,24 +162,24 @@ const PromotionSetDueDatePublicOffer = () => {
 
     return (
         <View style={{flex: 1, backgroundColor: colors.white}}>
-            <GoBackButton />
+            <GoBackButton/>
             <View style={[styles.container, {paddingBottom: insets.bottom}]}>
 
                 <View style={styles.illustrationContainer}>
-                    <Icon name="calendar-clock" size={80} color={colors.primaryBlack} />
+                    <Icon name="calendar-clock" size={80} color={colors.primaryBlack}/>
                 </View>
 
                 <Text style={styles.title}>Set a Due Date!</Text>
 
                 <Text style={styles.subtitle}>
-                    It’s important to set a due date by which managers must submit their
+                    It’s important to set a due date by which fighter representatives must submit their
                     fighter applications.
                 </Text>
 
                 <TouchableOpacity
                     style={styles.selectFieldButton}
                     onPress={() => setDatePickerVisible(true)}>
-                    <Icon name="calendar-outline" size={24} color={colors.primaryBlack} />
+                    <Icon name="calendar-outline" size={24} color={colors.primaryBlack}/>
                     <Text style={styles.selectFieldText}>
                         {dueDate ? `Due Date: ${formatDate(dueDate)}` : 'Set a Due Date'}
                     </Text>
@@ -181,7 +189,7 @@ const PromotionSetDueDatePublicOffer = () => {
                     mode="date"
                     display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                     locale="en-GB"
-                    pickerContainerStyleIOS={{alignSelf:'center'}}
+                    pickerContainerStyleIOS={{alignSelf: 'center'}}
                     minimumDate={new Date()}
                     onConfirm={handleConfirmDate}
                     onCancel={() => setDatePickerVisible(false)}
@@ -192,7 +200,7 @@ const PromotionSetDueDatePublicOffer = () => {
                     onPress={handleSubmit}
                     disabled={loading}>
                     {loading ? (
-                        <ActivityIndicator size="small" color={colors.white} />
+                        <ActivityIndicator size="small" color={colors.white}/>
                     ) : (
                         <Text style={styles.submitButtonText}>
                             Create Public Fight Offer

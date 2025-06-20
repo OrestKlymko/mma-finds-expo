@@ -55,6 +55,11 @@ export const PromotionProfile = () => {
                         pathToScreen: '/profile/offer-documents',
                     },
                     {
+                        label: 'Manage Access',
+                        icon: 'key-outline',
+                        pathToScreen: '/profile/offer-documents',
+                    },
+                    {
                         label: 'Sub-Accounts',
                         icon: 'account-multiple-outline',
                         pathToScreen: '/profile/sub-accounts',

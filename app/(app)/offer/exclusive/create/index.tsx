@@ -30,8 +30,8 @@ const CreateExclusiveOfferScreen = () => {
     const handleInfoPress = useCallback((rule: string) => {
         Alert.alert(
             rule === 'Single Bout'
-                ? 'Create a fight offer for one specific matchup with a pre-selected opponent.'
-                : 'Create a fight offer for multiple matchups within your promotion.',
+                ? 'Create a private offer for one specific matchup with a pre-selected opponent.'
+                : 'Create a private offer for multiple matchups within your promotion.',
         );
     }, []);
 

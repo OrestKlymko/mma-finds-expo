@@ -1,114 +1,136 @@
-import React, {useEffect, useState} from 'react';
-import {Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
-import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useAuth} from "@/context/AuthContext";
-import {useFocusEffect, useRouter} from "expo-router";
-import {getCredit} from "@/service/service";
-import GoBackButton from "@/components/GoBackButton";
-import colors from "@/styles/colors";
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+    Modal,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
+import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useAuth } from '@/context/AuthContext';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { getCredit } from '@/service/service';
+import GoBackButton from '@/components/GoBackButton';
+import colors from '@/styles/colors';
 
+/**
+ * BalanceOverviewScreen
+ * - Показує загальну кількість кредитів угорі.
+ * - Деталізує, з яких саме типів кредитів складається баланс.
+ */
 const BalanceOverviewScreen = () => {
     const [isEarnNowModalVisible, setEarnNowModalVisible] = useState(false);
     const insets = useSafeAreaInsets();
     const router = useRouter();
-    const {token, methodAuth, role} = useAuth();
+    const { token, methodAuth, role } = useAuth();
     const [featuringCredit, setFeaturingCredit] = useState(0);
     const [referralCredit, setReferralCredit] = useState(0);
-    const toggleEarnNowModal = () => {
-        setEarnNowModalVisible(!isEarnNowModalVisible);
-    };
 
-    useFocusEffect(
-        React.useCallback(() => {
-            getCredit().then(res => {
-                setFeaturingCredit(res.featuringCredit);
-                setReferralCredit(res.referralCredit);
-            });
-        }, []),
-    );
+    const totalCredits = featuringCredit + referralCredit;
 
-    useEffect(() => {
-        getCredit().then(res => {
+    /** Fetch credits */
+    const fetchCredits = () =>
+        getCredit().then((res) => {
             setFeaturingCredit(res.featuringCredit);
             setReferralCredit(res.referralCredit);
         });
-    }, [token, methodAuth]);
+
+    // on screen focus (pull-to-refresh effect)
+    useFocusEffect(
+        useCallback(() => {
+            if (token) {
+                fetchCredits();
+            }
+        }, [token])
+    );
+    // on auth change
+    useEffect(() => {
+        if (methodAuth && token) {
+            fetchCredits();
+        }
+    }, [methodAuth, token]);
+
+    const toggleEarnNowModal = () => setEarnNowModalVisible((v) => !v);
 
     return (
-        <View style={styles.flexContainer}>
+        <View style={styles.container}>
             <ScrollView
                 showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={[{paddingBottom: insets.bottom}]}>
-                {/* Go Back Button */}
-                <GoBackButton/>
-
-                {/* Title Section */}
+                contentContainerStyle={{ paddingBottom: insets.bottom }}
+            >
+                {/* ─────────── HEADER ─────────── */}
+                <GoBackButton />
                 <Text style={styles.title}>Balance Overview</Text>
 
-                {/* Referral Credits Section */}
+                {/* ─────────── CURRENT BALANCE ─────────── */}
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Referral Credits</Text>
-                    <View style={styles.creditCard}>
-                        <Text style={styles.creditAmount}>
-                            {referralCredit}{' '}
-                            {referralCredit === 1 || featuringCredit === 0
-                                ? 'Credit'
-                                : 'Credits'}
+                    <Text style={styles.sectionTitle}>You currently have:</Text>
+
+                    <View style={styles.creditCardTotal}>
+                        <Text style={[styles.creditAmount, styles.totalAmount]}>
+                            {featuringCredit + referralCredit} MMA Finds Credits
                         </Text>
                     </View>
+
+                    {/* role-specific helper */}
+                    {role === 'MANAGER' ? (
+                        <Text style={styles.creditDescription}>
+                            Use your credits to feature your fighters, increase visibility, and boost
+                            their chances of getting the fight.
+                        </Text>
+                    ) : (
+                        <Text style={styles.creditDescription}>
+                            Use your credits to feature your public fight offers, increase visibility,
+                            and reach more fighters in less time.
+                        </Text>
+                    )}
+                </View>
+
+                {/* ─────────── CALL-TO-ACTION ─────────── */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Want more credits?</Text>
+
                     <Text style={styles.creditDescription}>
-                        Want to earn more credits? Invite new members and earn extra credits
-                        to use on your next purchase.
+                        Invite new members and earn extra credits, or purchase more anytime.
                     </Text>
-                    <TouchableOpacity onPress={toggleEarnNowModal}>
-                        <Text style={styles.linkText}>Earn Now!</Text>
+
+                    {/* Earn Credits */}
+                    <TouchableOpacity onPress={() => router.push('/(app)/profile/invite-friends')}>
+                        <Text style={styles.linkText}>Earn Credits</Text>
+                    </TouchableOpacity>
+
+                    {/* Purchase Credits */}
+                    <TouchableOpacity
+                        style={{ marginTop: 12 }}
+                        onPress={() =>
+                            router.push({
+                                pathname: '/profile/balance/credit-option',
+                                params: { offerId: undefined, fighterId: undefined },
+                            })
+                        }
+                    >
+                        <Text style={styles.linkText}>Purchase Credits</Text>
                     </TouchableOpacity>
                 </View>
 
-                {/* Feature Credits Section */}
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Feature Credits</Text>
-                    <View style={styles.creditCard}>
-                        <Text style={styles.creditAmount}>
-                            {featuringCredit}{' '}
-                            {featuringCredit === 1 || featuringCredit === 0
-                                ? 'Credit'
-                                : 'Credits'}
-                        </Text>
-                    </View>
-                    <Text style={styles.creditDescription}>
-                        {role === 'PROMOTION'
-                            ? 'Purchase credits to feature your fight offers, increasing their visibility and improving the chances of securing the right match.'
-                            : 'Purchase credits to feature your fighter in a specific fight offer and maximize the chance of selection.'}
-                    </Text>
-                    <TouchableOpacity
-                        onPress={() => {
-                            router.push({
-                                pathname: '/profile/balance/credit-option', params: {
-                                    offerId: undefined,
-                                    fighterId: undefined,
-                                }
-                            });
-                        }}>
-                        <Text style={styles.linkText}>Purchase Now!</Text>
-                    </TouchableOpacity>
-                </View>
             </ScrollView>
 
-            {/* Bottom Modal for "Earn Now!" */}
+            {/* -------- EARN NOW MODAL -------- */}
             <Modal
                 animationType="fade"
-                transparent={true}
+                transparent
                 visible={isEarnNowModalVisible}
-                onRequestClose={toggleEarnNowModal}>
-                <View style={styles.modalContainer}>
+                onRequestClose={toggleEarnNowModal}
+            >
+                <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
                         <TouchableOpacity
                             style={styles.modalCloseButton}
-                            onPress={toggleEarnNowModal}>
-                            <Icon name="close" size={24} color={colors.primaryBlack}/>
+                            onPress={toggleEarnNowModal}
+                        >
+                            <Icon name="close" size={24} color={colors.primaryBlack} />
                         </TouchableOpacity>
 
                         <Icon
@@ -117,10 +139,10 @@ const BalanceOverviewScreen = () => {
                             color={colors.primaryGreen}
                             style={styles.modalIcon}
                         />
-                        <Text style={styles.modalTitle}>Share & earn up to €100!</Text>
+                        <Text style={styles.modalTitle}>Share &amp; earn up to €50 per referral!</Text>
                         <Text style={styles.modalDescription}>
-                            Give your friends a 10% discount on their first order, and you&apos;ll
-                            both enjoy the benefits.
+                            Give your contacts 10% off their first platform payment, and earn credits
+                            when they complete it.
                         </Text>
 
                         <TouchableOpacity
@@ -128,8 +150,9 @@ const BalanceOverviewScreen = () => {
                             onPress={() => {
                                 toggleEarnNowModal();
                                 router.push('/(app)/profile/invite-friends');
-                            }}>
-                            <Text style={styles.modalButtonText}>Invite User</Text>
+                            }}
+                        >
+                            <Text style={styles.modalButtonText}>Invite Contact</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -139,38 +162,22 @@ const BalanceOverviewScreen = () => {
 };
 
 export default BalanceOverviewScreen;
+
 const styles = StyleSheet.create({
-    flexContainer: {
+    container: {
         flex: 1,
         backgroundColor: colors.white,
         paddingHorizontal: 4,
     },
-
-    /** Back Button **/
-    backButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 24,
-        marginTop: 16,
-    },
-    backText: {
-        fontSize: 16,
-        fontWeight: '400',
-        color: colors.primaryBlack,
-        marginLeft: 8,
-    },
-
-    /** Title **/
     title: {
         fontSize: 25,
         fontWeight: '500',
         color: colors.primaryBlack,
         textAlign: 'center',
         lineHeight: 30,
-        marginBottom: 40,
+        marginBottom: 24,
     },
-
-    /** Section **/
+    // --- Sections
     section: {
         marginBottom: 32,
         paddingHorizontal: 24,
@@ -181,6 +188,7 @@ const styles = StyleSheet.create({
         color: colors.primaryBlack,
         marginBottom: 15,
     },
+    // --- Credit cards
     creditCard: {
         backgroundColor: colors.lightGray,
         borderRadius: 8,
@@ -188,10 +196,22 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24,
         marginBottom: 12,
     },
+    creditCardTotal: {
+        backgroundColor: colors.primaryGreen + '20', // light tint
+        borderRadius: 8,
+        paddingVertical: 28,
+        paddingHorizontal: 24,
+        marginBottom: 12,
+        alignItems: 'center',
+    },
     creditAmount: {
         fontSize: 20,
         fontWeight: '500',
         color: colors.primaryGreen,
+    },
+    totalAmount: {
+        fontSize: 24,
+        fontWeight: '600',
     },
     creditDescription: {
         fontSize: 14,
@@ -204,9 +224,8 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         color: colors.primaryGreen,
     },
-
-    /** Modal **/
-    modalContainer: {
+    // --- Modal
+    modalOverlay: {
         flex: 1,
         justifyContent: 'flex-end',
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
@@ -237,8 +256,6 @@ const styles = StyleSheet.create({
     modalDescription: {
         fontSize: 16,
         textAlign: 'center',
-        fontWeight: '400',
-        fontFamily: 'Roboto',
         color: colors.primaryBlack,
         marginBottom: 20,
         lineHeight: 20,
@@ -249,7 +266,6 @@ const styles = StyleSheet.create({
         paddingVertical: 17,
         paddingHorizontal: 32,
         alignItems: 'center',
-        marginTop: 8,
         width: '100%',
         marginBottom: 50,
     },

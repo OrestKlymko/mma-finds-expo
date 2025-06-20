@@ -87,51 +87,80 @@ export const formatTime = (
   return `${day}, ${startTime} - ${endTime} CET`;
 };
 
-export const renderBenefitList = (b: Benefit) => {
+export const renderBenefitList = (b: Benefit): string[] => {
   const items: string[] = [];
-  if (b.foodBreakfast) items.push('Breakfast Included');
-  if (b.foodFullBoard) items.push('Full board Included');
-  if (b.foodHalfBoard) items.push('Half board Included');
-  if (b.foodNone) items.push('No Food Coverage');
+
+  /* ---------- Food ---------- */
+  if (b.foodBreakfast) items.push('Breakfast included');
+  if (b.foodHalfBoard) items.push('Half board');
+  if (b.foodFullBoard) items.push('Full board');
+  if (b.foodNone) items.push('No food coverage');
+
   if (b.foodDailyAllowance && Number(b.foodDailyAllowance) > 0) {
-    items.push(`Daily Allowance: ${b.foodDailyAllowance}`);
+    items.push(
+        `Daily allowance: ${b.foodDailyAllowance} ${b.currency ?? 'EUR'}`
+    );
   }
-  if (b.peopleCovered) items.push(`People Covered: ${b.peopleCovered}`);
 
-  if (b.hotelAccommodationIsOn) {
-    items.push('Hotel Accommodation Provided');
-    if (b.hotelAccommodationNumberOfNights) {
-      items.push(`${b.hotelAccommodationNumberOfNights} Night(s) Included`);
-    }
-    if (b.hotelAccommodationRoomsOne) {
-      items.push(`Single Rooms: ${b.hotelAccommodationRoomsOne}`);
-    }
-    if (b.hotelAccommodationRoomsTwo) {
-      items.push(`Double Rooms: ${b.hotelAccommodationRoomsTwo}`);
-    }
-    if (b.hotelAccommodationRoomsThree) {
-      items.push(`Triple Rooms: ${b.hotelAccommodationRoomsThree}`);
-    }
-  }
-  if (b.gymAccess) items.push('Gym Access');
-  if (b.saunaAccess) items.push('Sauna Access');
-  if (b.hotTubAccess) items.push('Hot Tub Access');
+  /* ---------- Attendance ---------- */
+  if (b.peopleCovered)
+    items.push(`People covered: ${b.peopleCovered.replace('+', ' + ')}`);
 
-  if (b.travelSupportIsOn) {
-    items.push('Travel Support Provided');
-    if (b.travelSupportFlightTickets) items.push('Flight Tickets Covered');
-    if (b.travelSupportExpensesPerKm) {
-      items.push(`Expenses Per Km: ${b.travelSupportExpensesPerKm}`);
-    }
-    if (b.transportFromAirport) items.push('Transport from airport included');
-  }
   if (b.additionalTeamMembers && b.additionalTeamMembers > 0) {
-    items.push(`Additional Team Members: ${b.additionalTeamMembers}`);
+    items.push(`Additional team members: ${b.additionalTeamMembers}`);
   }
-  if (b.customOption) items.push(`Custom Benefits: ${b.customOption}`);
+
+  /* ---------- Hotel ---------- */
+  if (b.hotelAccommodationIsOn) {
+    if (b.hotelAccommodationNumberOfNights) {
+      items.push(
+          `Hotel: ${b.hotelAccommodationNumberOfNights} night${
+              b.hotelAccommodationNumberOfNights === '1' ? '' : 's'
+          }`
+      );
+    } else {
+      items.push('Hotel accommodation provided');
+    }
+
+    const addRoom = (count: string | undefined |null, label: string) => {
+      if (count && Number(count) > 0) items.push(`${label}: ${count}`);
+    };
+    addRoom(b.hotelAccommodationRoomsOne, 'Single rooms');
+    addRoom(b.hotelAccommodationRoomsTwo, 'Double rooms');
+    addRoom(b.hotelAccommodationRoomsThree, 'Triple rooms');
+  }
+
+  /* ---------- Travel support ---------- */
+  if (b.travelSupportIsOn) {
+    const travel: string[] = [];
+    if (b.travelSupportFlightTickets) travel.push('flight tickets');
+    if (b.travelSupportExpensesPerKm) {
+      travel.push(
+          `${b.travelSupportExpensesPerKm}${
+              b.currency ? ' ' + b.currency : ''
+          }/km`
+      );
+    }
+    if (b.maxKmCovered && b.maxKmCovered > 0)
+      travel.push(`up to ${b.maxKmCovered} km`);
+
+    items.push(`Travel support: ${travel.join(', ')}`);
+  }
+
+  /* ---------- Transport (independent) ---------- */
+  if (b.transportFromAirport) items.push('Transport from airport');
+
+  /* ---------- Facilities ---------- */
+  if (b.gymAccess) items.push('Gym access');
+  if (b.saunaAccess) items.push('Sauna access');
+  if (b.hotTubAccess) items.push('Hot-tub access');
+
+  /* ---------- Custom ---------- */
+  if (b.customOption?.trim()) items.push(b.customOption.trim());
 
   return items;
 };
+
 
 export const mapBenefitsToCreateBenefit = (
   benefits: BenefitsSelection | undefined,

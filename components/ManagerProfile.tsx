@@ -51,7 +51,7 @@ const ManagerProfile = () => {
                         icon: 'currency-usd',
                         pathToScreen: '/profile/balance',
                     },
-                    {label: 'My Fighters', icon: 'account-group', pathToScreen: '/profile/my-fighters'},
+                    {label: 'My Fighters', icon: 'account-group', pathToScreen: '/(app)/(tabs)/feed'},
                     {label: 'All Promotions', icon: 'office-building', pathToScreen: '/promotion'},
                     {
                         label: 'Invite & Earn',

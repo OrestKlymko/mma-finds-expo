@@ -13,6 +13,7 @@ interface FighterCardProps {
 
 const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress, selectedInList}) => {
     const isRejected = fighter?.contractStatus === 'REJECTED';
+    console.log(fighter);
     const isUnverified = fighter?.verificationState !== 'APPROVED';
     const isRejectOrNonResponse = fighter.responseFighter && fighter.responseFighter !== 'ACCEPTED'
     const shortCountry = () => {
@@ -22,6 +23,14 @@ const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress, selectedInLi
             return fighter.country;
         }
     };
+
+    const shortSportTypes = () => {
+        if (fighter?.sportTypes?.join(',')?.length > 25) {
+            return fighter.sportTypes.slice(0, 25) + '...';
+        } else {
+            return fighter.sportTypes;
+        }
+    }
 
     return (
         <View style={{position: 'relative'}}>
@@ -65,17 +74,19 @@ const FighterCard: React.FC<FighterCardProps> = ({fighter, onPress, selectedInLi
                         {fighter?.formattedName?.replace('""', '').trim() || fighter?.name?.trim()}
                     </Text>
                     <View style={{flexDirection: 'row'}}>
-                        <Text style={styles.fighterInfo}>Age: </Text>
-                        <Text style={styles.fighterInfoValue}>{fighter?.age} Years</Text>
-                    </View>
-                    <View style={{flexDirection: 'row'}}>
                         <Text style={styles.fighterInfo}>Based In: </Text>
                         <Text style={styles.fighterInfoValue}>{shortCountry()}</Text>
                     </View>
                     <View style={{flexDirection: 'row'}}>
-                        <Text style={styles.fighterInfo}>Foundation Style: </Text>
+                        <Text style={styles.fighterInfo}>Weight Class: </Text>
                         <Text style={styles.fighterInfoValue}>
-                            {fighter?.foundationStyle}
+                            {fighter?.weightClass}
+                        </Text>
+                    </View>
+                    <View style={{flexDirection: 'row'}}>
+                        <Text style={styles.fighterInfo}>Sports: </Text>
+                        <Text style={styles.fighterInfoValue}>
+                            {shortSportTypes()}
                         </Text>
                     </View>
                 </View>

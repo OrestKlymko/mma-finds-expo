@@ -46,6 +46,7 @@ import {SportTypeSingleSelectDropdown} from "@/components/SportTypeSingleSelectD
 import PurseExclusiveFightComponent from "@/components/offers/PurseExclusiveFightComponent";
 import {useRouter} from "expo-router";
 import {FighterForExclusiveOffer} from "@/components/fighter/FightersForExclusiveOffer";
+import {OfferTypeEnum} from "@/models/model";
 
 interface SingleBoutOfferFlowProps {
     eventId?: any;
@@ -172,7 +173,7 @@ export function SingleBoutOfferFlow({
     return (
         <View style={styles.container}>
             <EventName event={event}/>
-            <FighterForExclusiveOffer fighterChosen={fightersChosen}/>
+            <FighterForExclusiveOffer fighterChosen={fightersChosen} typeOffer={OfferTypeEnum.PRIVATE}/>
             <RuleSelector
                 mmaRule={mmaRule ?? 'Amateur'}
                 setMmaRule={mmaRuleChoose => dispatch(setMmaRule(mmaRuleChoose))}
@@ -237,7 +238,10 @@ export function SingleBoutOfferFlow({
 
             <BenefitBottomSheet
                 benefitsChoosen={benefits}
-                onConfirm={selectedBenefits => dispatch(setBenefits(selectedBenefits))}
+                onConfirm={selectedBenefits => {
+                    dispatch(setBenefits(selectedBenefits))
+                    console.log(selectedBenefits)
+                }}
             />
             <FloatingLabelInput
                 label="Add More Info"

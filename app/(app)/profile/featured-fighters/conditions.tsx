@@ -15,7 +15,7 @@ const HowItWorksScreenInviteFriends = () => {
 
     return (
         <View style={{flex: 1, backgroundColor: colors.background}}>
-            <GoBackButton />
+            <GoBackButton shouldGoBack={true}/>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -27,7 +27,7 @@ const HowItWorksScreenInviteFriends = () => {
                 <Text style={styles.title}>How It Works</Text>
                 <Text style={styles.subtitle}>
                     Boosting your fighter&apos;s visibility is simple!{'\n'}
-                    Just follow these straightforward steps:
+                    Just follow these steps:
                 </Text>
 
                 {/* Steps Section */}
@@ -42,10 +42,9 @@ const HowItWorksScreenInviteFriends = () => {
                             />
                         </View>
                         <View style={styles.stepTextContainer}>
-                            <Text style={styles.stepTitle}>Choose Offer</Text>
+                            <Text style={styles.stepTitle}>Select Fighter</Text>
                             <Text style={styles.stepDescription}>
-                                Select the fight offer where you&apos;ve submitted your fighter that
-                                you would like to feature.
+                                Choose the fighter you represent that you&apos;d like to feature.
                             </Text>
                         </View>
                     </View>
@@ -54,6 +53,18 @@ const HowItWorksScreenInviteFriends = () => {
                     <View style={styles.step}>
                         <View style={styles.iconContainer}>
                             <Icon name="tag" size={24} color={colors.primaryBlack} />
+                        </View>
+                        <View style={styles.stepTextContainer}>
+                            <Text style={styles.stepTitle}>Choose Offer</Text>
+                            <Text style={styles.stepDescription}>
+                                Pick the fight offer where you&apos;ve submitted this fighter and want to boost their visibility.
+                            </Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.step}>
+                        <View style={styles.iconContainer}>
+                            <Icon name="star" size={24} color={colors.primaryBlack} />
                         </View>
                         <View style={styles.stepTextContainer}>
                             <Text style={styles.stepTitle}>Feature Your Fighter</Text>
@@ -75,8 +86,8 @@ const HowItWorksScreenInviteFriends = () => {
                         <View style={styles.stepTextContainer}>
                             <Text style={styles.stepTitle}>Enhance Visibility</Text>
                             <Text style={styles.stepDescription}>
-                                Experience enhanced visibility and increased chances of
-                                selection for your fighter with our featuring option.
+                                Enjoy increased visibility and better chances of selection for your fighter with the featuring
+                                option.
                             </Text>
                         </View>
                     </View>

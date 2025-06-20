@@ -23,7 +23,7 @@ const SuccessCreatePublicOfferScreen: React.FC = () => {
 
             {/* Опис */}
             <Text style={styles.description}>
-                {`${name} has been picked for the fight! We’ll notify you once they make a decision.`}
+                {`${name} has been picked for the fight! We’ll notify you once his team make a decision.`}
             </Text>
 
             {/* Кнопка */}

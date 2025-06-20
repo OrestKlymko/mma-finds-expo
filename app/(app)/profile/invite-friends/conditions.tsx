@@ -12,7 +12,7 @@ const HowItWorksScreenInviteFriends = () => {
 
     return (
         <View style={{flex: 1, backgroundColor: colors.background}}>
-            <GoBackButton />
+            <GoBackButton shouldGoBack={true}/>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}

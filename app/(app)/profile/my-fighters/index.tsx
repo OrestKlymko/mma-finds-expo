@@ -26,6 +26,7 @@ const MyFighters = () => {
             setContentLoading(true);
             getShortInfoFightersByManager(entityId)
                 .then(response => {
+                    console.log(response);
                     setFighters(response);
                 })
                 .finally(() => setContentLoading(false));

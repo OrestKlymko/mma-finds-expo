@@ -11,24 +11,24 @@ import {
     View,
     ActivityIndicator,
 } from 'react-native';
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
+import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
 
 import FloatingLabelInput from '@/components/FloatingLabelInput';
-import { formatDateFromLocalDate } from '@/utils/utils';
+import {formatDateFromLocalDate} from '@/utils/utils';
 import colors from '@/styles/colors';
 
 export interface DocumentRow {
-    documentId:    string;
-    documentName:  string;
-    documentType:  'FILE' | 'TEXT';
-    response:      string;          // value the user is editing
+    documentId: string;
+    documentName: string;
+    documentType: 'FILE' | 'TEXT';
+    response: string;          // value the user is editing
     originalValue: string;          // value that came from backend
-    isLoading:     boolean;
-    hasSuccess:    boolean;
-    onUpload:      () => void;
-    onChangeText:  (t: string) => void;
-    onConfirm:     () => void;
+    isLoading: boolean;
+    hasSuccess: boolean;
+    onUpload: () => void;
+    onChangeText: (t: string) => void;
+    onConfirm: () => void;
 }
 
 interface Props {
@@ -57,11 +57,13 @@ export const RequiredDocumentsSection: React.FC<Props> = ({
     const deadlinePassed =
         dueDate ? new Date(dueDate) < new Date() : false;
 
+    if (!rows || rows.length === 0) return null;
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                style={{ flex: 1 }}
+                style={{flex: 1}}
             >
                 <View style={styles.container}>
                     <Text style={styles.title}>Required documents</Text>
@@ -75,7 +77,7 @@ export const RequiredDocumentsSection: React.FC<Props> = ({
                     )}
 
                     {rows.map((row) => {
-                        const changed   = row.response !== row.originalValue;
+                        const changed = row.response !== row.originalValue;
                         const uploading = row.isLoading;
 
                         return (
@@ -87,7 +89,7 @@ export const RequiredDocumentsSection: React.FC<Props> = ({
                                             label={row.documentName}
                                             value={row.response}
                                             onChangeText={row.onChangeText}
-                                            containerStyle={{ flex: 1 }}
+                                            containerStyle={{flex: 1}}
                                         />
 
                                         {!changed && row.response && row.hasSuccess && (
@@ -104,7 +106,7 @@ export const RequiredDocumentsSection: React.FC<Props> = ({
                                                 onPress={row.onConfirm}
                                                 style={styles.confirmBtn}
                                             >
-                                                <Icon name="check" size={20} color={colors.white} />
+                                                <Icon name="check" size={20} color={colors.white}/>
                                             </TouchableOpacity>
                                         )}
 
@@ -138,14 +140,14 @@ export const RequiredDocumentsSection: React.FC<Props> = ({
                                                 onPress={row.onUpload}
                                                 style={[
                                                     styles.uploadBtn,
-                                                    uploading && { opacity: 0.6 },
+                                                    uploading && {opacity: 0.6},
                                                 ]}
                                                 disabled={uploading}
                                             >
                                                 {uploading ? (
-                                                    <ActivityIndicator size="small" color={colors.white} />
+                                                    <ActivityIndicator size="small" color={colors.white}/>
                                                 ) : (
-                                                    <Icon name="upload" size={20} color={colors.white} />
+                                                    <Icon name="upload" size={20} color={colors.white}/>
                                                 )}
                                             </TouchableOpacity>
 
@@ -154,7 +156,7 @@ export const RequiredDocumentsSection: React.FC<Props> = ({
                                                     name="check"
                                                     size={20}
                                                     color={colors.primaryGreen}
-                                                    style={[styles.checkIcon, { right: 60 }]}
+                                                    style={[styles.checkIcon, {right: 60}]}
                                                 />
                                             )}
                                         </View>
@@ -167,7 +169,7 @@ export const RequiredDocumentsSection: React.FC<Props> = ({
                     {dueDate && (
                         <View style={styles.dueBox}>
                             <Text style={styles.dueTxt}>
-                                <Text style={{ fontWeight: 'bold' }}>Due date: </Text>
+                                <Text style={{fontWeight: 'bold'}}>Due date: </Text>
                                 {formatDateFromLocalDate(dueDate)}
                             </Text>
                         </View>
@@ -180,20 +182,58 @@ export const RequiredDocumentsSection: React.FC<Props> = ({
 
 /* ---------------- styles ------------------------------------- */
 const styles = StyleSheet.create({
-    container:     { marginTop: 20 },
-    title:         { fontWeight: '600', fontSize: 13, marginBottom: 16, color: colors.primaryBlack },
-    docBlock:      { marginBottom: 12 },
-    row:           { flexDirection: 'row', alignItems: 'center', position: 'relative' },
-    fileRow:       { flexDirection: 'row', alignItems: 'center', position: 'relative' },
-    label:         { marginBottom: 8, fontSize: 14, color: colors.primaryBlack },
-    fileBox:       { flex: 1, backgroundColor: colors.lightGray, borderRadius: 8, padding: 12, height: 56, justifyContent: 'center' },
-    fileName:      { color: colors.primaryBlack },
-    uploadBtn:     { marginLeft: 8, backgroundColor: colors.buttonUploadGray, padding: 10, borderRadius: 8, height: 56, justifyContent: 'center', alignItems: 'center' },
-    confirmBtn:    { marginLeft: 8, backgroundColor: colors.primaryGreen, padding: 10, borderRadius: 8, height: 56, justifyContent: 'center', alignItems: 'center' },
-    checkIcon:     { position: 'absolute', right: 10 },
-    spinner:       { position: 'absolute', right: 16 },
-    dueBox:        { marginTop: 10, backgroundColor: colors.lightGray, padding: 12, borderRadius: 8, height: 56, justifyContent: 'center', alignItems: 'center' },
-    dueTxt:        { fontSize: 15, color: colors.primaryBlack },
-    overlay:       { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(255,255,255,0.8)', justifyContent: 'center', alignItems: 'center', zIndex: 10, paddingHorizontal: 20 },
-    overlayTxt:    { textAlign: 'center', fontSize: 16, fontWeight: '600', color: colors.primaryBlack },
+    container: {marginTop: 20},
+    title: {fontWeight: '600', fontSize: 13, marginBottom: 16, color: colors.primaryBlack},
+    docBlock: {marginBottom: 12},
+    row: {flexDirection: 'row', alignItems: 'center', position: 'relative'},
+    fileRow: {flexDirection: 'row', alignItems: 'center', position: 'relative'},
+    label: {marginBottom: 8, fontSize: 14, color: colors.primaryBlack},
+    fileBox: {
+        flex: 1,
+        backgroundColor: colors.lightGray,
+        borderRadius: 8,
+        padding: 12,
+        height: 56,
+        justifyContent: 'center'
+    },
+    fileName: {color: colors.primaryBlack},
+    uploadBtn: {
+        marginLeft: 8,
+        backgroundColor: colors.buttonUploadGray,
+        padding: 10,
+        borderRadius: 8,
+        height: 56,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    confirmBtn: {
+        marginLeft: 8,
+        backgroundColor: colors.primaryGreen,
+        padding: 10,
+        borderRadius: 8,
+        height: 56,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    checkIcon: {position: 'absolute', right: 10},
+    spinner: {position: 'absolute', right: 16},
+    dueBox: {
+        marginTop: 10,
+        backgroundColor: colors.lightGray,
+        padding: 12,
+        borderRadius: 8,
+        height: 56,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    dueTxt: {fontSize: 15, color: colors.primaryBlack},
+    overlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(255,255,255,0.8)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 10,
+        paddingHorizontal: 20
+    },
+    overlayTxt: {textAlign: 'center', fontSize: 16, fontWeight: '600', color: colors.primaryBlack},
 });

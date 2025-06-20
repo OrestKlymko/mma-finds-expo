@@ -40,8 +40,10 @@ export const FighterSportScores = ({
             {/* Data */}
             {sportScore.map((score, idx) => {
                 const proRecord = `${score.proWins}-${score.proLoss}-${score.proDraw}`;
-                const amRecord = `${score.amWins}-${score.amLoss}-${score.amDraw}`;
-
+                let amRecord = `${score.amWins}-${score.amLoss}-${score.amDraw}`;
+                if(amRecord==='0-0-0') {
+                    amRecord = '-';
+                }
                 return (
                     <View
                         key={score.sportTypeId}

@@ -6,8 +6,8 @@ import {CardInfoResponse} from "@/service/response";
 import {
     createPaymentIntentWithoutCharge,
     detachPaymentMethod,
-    getPaymentMethods, setDefaultPaymentMethod,
-    setDefaultPaymentMethodById
+    getPaymentMethods,
+    setDefaultPaymentMethodById, setDefaultPaymentMethodStripe
 } from "@/service/service";
 import colors from "@/styles/colors";
 import GoBackButton from "@/components/GoBackButton";
@@ -113,9 +113,8 @@ const PaymentMethodsScreen = () => {
             }
 
 
-            Alert.alert('Success', 'Payment method added successfully');
-            setDefaultPaymentMethod();
-            loadPaymentMethods();
+            setDefaultPaymentMethodStripe({clientSecret});
+            await loadPaymentMethods();
         } catch (error: any) {
             Alert.alert('Error', 'Failed to add payment method');
         }

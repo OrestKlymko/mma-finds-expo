@@ -55,8 +55,8 @@ const FighterOfferFeedScreen = () => {
                             <Text style={styles.dialText}>All offers</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.dialItem} onPress={() => handleSelect(true)}>
-                            <Ionicons name="person" size={18} color={colors.primaryBlack}/>
-                            <Text style={styles.dialText}>My offers</Text>
+                            <Ionicons name="star-outline" size={18} color={colors.primaryBlack}/>
+                            <Text style={styles.dialText}>Submitted</Text>
                         </TouchableOpacity>
                     </View>
                 )}

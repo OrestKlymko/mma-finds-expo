@@ -4,7 +4,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {getManagerInfoById, updateAccountInfo} from "@/service/service";
+import {getManagerInfoById, updateManager} from "@/service/service";
 import GoBackButton from "@/components/GoBackButton";
 import FloatingLabelInput from "@/components/FloatingLabelInput";
 import SocialMediaModal from "@/components/SocialMediaModal";
@@ -115,7 +115,8 @@ const Manager = () => {
             }as unknown as Blob);
         }
         formData.append('oldPhoto', oldImageLink??'');
-        updateAccountInfo(formData)
+        console.log(formData);
+        updateManager(formData)
             .then(() => {
                 navigation.goBack();
             })

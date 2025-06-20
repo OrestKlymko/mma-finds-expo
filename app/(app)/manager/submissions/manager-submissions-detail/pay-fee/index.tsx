@@ -14,7 +14,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import colors from '@/styles/colors';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { paySuccessFee, rejectPublicOffer } from '@/service/service';
-import { payWithStripe } from '@/service/create-entity/stripePayment';
+import {payWithStripe, payWithStripeSuccessFee} from '@/service/create-entity/stripePayment';
 import { PaySuccessFeeRequest, ResponsorOfferRequest } from '@/service/request';
 import GoBackButton from '@/components/GoBackButton';
 import {SubmittedInformationOffer} from "@/service/response";
@@ -71,11 +71,12 @@ const SuccessFeePaymentScreen: React.FC = () => {
                 onPress: async () => {
                     try {
                         setProcessing('PAY');
-                        await payWithStripe(fee.toFixed(2));
+                        const paymentIntentId = await payWithStripeSuccessFee(fee.toFixed(2));
                         const body: PaySuccessFeeRequest = {
                             offerId,
-                            fighterId: submitted.fighterId,
+                            fighterId: submitted?.fighterId,
                             feePayment: fee.toFixed(2),
+                            paymentIntentId: paymentIntentId,
                         };
                         await paySuccessFee(body);
                         router.push(`/offers/public/${offerId}`)

@@ -83,10 +83,9 @@ const PromotionCloseOfferReasonScreen: React.FC = () => {
                     <Text style={styles.title}>Offer Сlosed</Text>
 
                     <Text style={styles.description}>
-                        We&apos;re sorry to hear that you decided to close this offer.{'\n\n'}
+                        We&apos;re sorry to hear that you decided to close this offer.
                         Please let us know the reason. Your feedback will be shared with all
-                        managers involved in the matchmaking process to help improve future
-                        negotiations.
+                        fighter representatives involved in the matchmaking process.
                     </Text>
 
                     <FloatingLabelInput

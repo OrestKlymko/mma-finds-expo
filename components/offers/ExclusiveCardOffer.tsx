@@ -105,7 +105,7 @@ export const ExclusiveCardOffer: React.FC<ExclusiveCardOfferProps> = ({
             {(item.closedReason) && (
                 <View style={styles.reviewOverlay}>
                     <Text style={styles.closedReasonText}>
-                        {item.closedReason || 'Offer is closed'}
+                        Closed with reason: {item.closedReason || 'Offer is closed'}
                     </Text>
                 </View>
             )}

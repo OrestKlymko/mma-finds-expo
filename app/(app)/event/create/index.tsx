@@ -76,11 +76,12 @@ export function CreateEventScreen() {
             setContentLoading(true);
             getEventById(eventId)
                 .then(res => {
+                    console.log(res);
                     setProfileImage({uri: res.eventImageLink});
                     setEventName(res.eventName);
                     setEventDate(new Date(res.eventDate));
                     setEventDurationFrom(res.eventTime.split('-')[0]);
-                    setEventDurationTo(res.eventTime.split('-')[1]);
+                    setEventDurationTo(res.eventTime.split('-')[1].replace('CET', ''));
                     setEventInfo(res?.description?? '');
                     setLocation(res.eventLocation);
                     setArenaName(res.arenaName);
@@ -125,8 +126,8 @@ export function CreateEventScreen() {
         formData.append('location', location);
         formData.append('arenaName', arenaName);
         formData.append('date', formatedOnBackendDate(eventDate));
-        formData.append('timeTo', eventDurationFrom);
-        formData.append('timeFrom', eventDurationTo);
+        formData.append('timeTo', eventDurationTo);
+        formData.append('timeFrom', eventDurationFrom);
         formData.append('organizerId', organizerId || '');
         formData.append('country', country || '');
         formData.append('continent', continent || '');

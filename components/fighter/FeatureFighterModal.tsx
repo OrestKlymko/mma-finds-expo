@@ -83,7 +83,7 @@ export const FeatureFighterModal = ({
 
         submitOfferByFighterWithoutFeaturing(offerToSubmit.offerId, fighterId)
             .then(() => {
-                router.back();
+                router.push('/(app)/(tabs)/feed');
             })
             .catch(_ => {
                 Alert.alert('Error', 'Failed to submit offer');
@@ -103,10 +103,6 @@ export const FeatureFighterModal = ({
             }}>
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContainer}>
-                    <Image
-                        source={{uri: offerToSubmit?.eventImageLink}}
-                        style={styles.bannerInModal}
-                    />
                     <View style={{paddingHorizontal: 28}}>
                         <Text style={styles.modalTitle}>Feature Your Fighter</Text>
                         <Text style={styles.modalSubtitle}>

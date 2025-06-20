@@ -1,39 +1,37 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Alert, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {
+    ActivityIndicator,
+    Alert,
+    Keyboard,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import FacebookIcon from '@/assets/icons/facebook.png';
-import AppleIcon from '@/assets/icons/apple.png';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as WebBrowser from 'expo-web-browser';
-import {LoginRequest} from "@/service/request";
-import {login} from "@/service/service";
+import {LoginRequest, UserRoleRequest} from "@/service/request";
+import {getRolesOnUser, login} from "@/service/service";
 import colors from "@/styles/colors";
+import * as WebBrowser from 'expo-web-browser';
 import SocialButton from "@/components/method-auth/SocialButton";
 import FloatingLabelInput from "@/components/FloatingLabelInput";
 import {useRouter} from "expo-router";
 import FooterSingUp from "@/components/FooterSingUp";
 import GoBackButton from "@/components/GoBackButton";
 import {useAuth} from "@/context/AuthContext";
-import RolePicker from "@/components/RolePicker";
 import {GoogleMethod} from "@/components/method-auth/GoogleMethod";
 import {AppleMethod} from "@/components/method-auth/AppleMethod";
+import RoleSelectModal, {UserRole} from "@/components/RoleSelectModal";
 
-export const useWarmUpBrowser = () => {
-    useEffect(() => {
-        void WebBrowser.warmUpAsync()
-        return () => {
-            void WebBrowser.coolDownAsync()
-        }
-    }, [])
-}
-WebBrowser.maybeCompleteAuthSession();
 
 type AuthMethod = 'standard' | 'google' | 'apple' | null;
 const LoginScreen = () => {
 
-
-    useWarmUpBrowser()
     const insets = useSafeAreaInsets();
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [email, setEmail] = useState<string>('');
@@ -41,8 +39,13 @@ const LoginScreen = () => {
     const [loadingGoogle, setLoadingGoogle] = useState(false);
     const {setToken, setMethodAuth, setRole, setEntityId} = useAuth();
     const [standardLoading, setAuthLoading] = useState(false);
-    const [selectedRole, setSelectedRole] = useState<'MANAGER' | 'PROMOTION' | 'PROMOTION_EMPLOYEE'>('MANAGER');
+    const [roleModalVisible, setRoleModalVisible] = useState(false);
+    const [availableRoles, setAvailableRoles] = useState<UserRole[]>([]);
     const router = useRouter();
+    const [chosenMethod, setChosenMethod] = useState<AuthMethod>('standard');
+    const [fcmToken, setFcmToken] = useState<string | null>(null);
+    const [chosenEmail, setChosenEmail] = useState<string | null>(null);
+    const [chosenPassword, setChosenPassword] = useState<string | null>(null);
     const [loadingApple, setLoadingApple] = useState(false);
     const handleSignIn = async () => {
         setAuthLoading(true)
@@ -55,24 +58,58 @@ const LoginScreen = () => {
         handleLoginToBackend(email, null, 'oauth', fcm);
     }
 
+
     const handleLoginToBackend = (
         email: string,
         password: string | null,
         method: string,
         token: string | null,
     ) => {
-        if (!selectedRole) {
-            Alert.alert('Error', 'Please select a role');
-            setAuthLoading(false);
-            return;
-        }
-        const loginRequest: LoginRequest = {
+
+        const requestOnRole: UserRoleRequest = {
             email: email.toLowerCase(),
-            password: password,
-            method: method,
-            fcmToken: token,
-            userRole: selectedRole,
-        };
+        }
+        getRolesOnUser(requestOnRole).then(async userRoles => {
+            if (userRoles && userRoles.length == 1) {
+                const loginRequest: LoginRequest = {
+                    email: email.toLowerCase(),
+                    password: password,
+                    method: method,
+                    fcmToken: token,
+                    userRole: userRoles[0].role,
+                };
+                await handleLoginOnBackend(loginRequest);
+                return
+            }
+            Keyboard.dismiss();
+            setFcmToken(token);
+            setChosenMethod(method as AuthMethod);
+            setChosenEmail(email);
+            setChosenPassword(email);
+            showRoleModal(userRoles.map(r => r.role as UserRole));
+        })
+
+
+    };
+
+
+    async function showRoleModal(roles: UserRole[]) {
+        await Promise.race([
+            WebBrowser.dismissBrowser().catch(() => {
+            }),
+            new Promise(res => setTimeout(res, 200)),
+        ]);
+
+        Keyboard.dismiss();
+
+        setAvailableRoles(roles);
+        setAuthLoading(false);
+        setLoadingGoogle(false);
+        setLoadingApple(false);
+        setRoleModalVisible(true);
+    }
+
+    const handleLoginOnBackend = async (loginRequest: LoginRequest) => {
         login(loginRequest)
             .then(async res => {
                 setToken(res.token);
@@ -86,11 +123,12 @@ const LoginScreen = () => {
                 setLoadingGoogle(false);
             })
             .catch(err => {
-                if(err.status===404){
+                if (err.status === 404) {
                     Alert.alert(
                         'Error',
                         'User with this email not found, please sign up',
                     );
+                    setLoadingGoogle(false);
                     return;
                 }
                 if (err.status === 407) {
@@ -104,7 +142,7 @@ const LoginScreen = () => {
                 setLoadingGoogle(false);
 
             })
-    };
+    }
 
 
     const handleFacebookSignIn = async () => {
@@ -115,6 +153,26 @@ const LoginScreen = () => {
     return (
         <View style={{backgroundColor: colors.background, flex: 1}}>
             <GoBackButton specificScreen={'/welcome'}/>
+            <RoleSelectModal
+                visible={roleModalVisible}
+                roles={availableRoles}
+                onClose={() => setRoleModalVisible(false)}
+                onSelect={async (role) => {
+                    setRoleModalVisible(false);
+                    if (!chosenMethod) {
+                        Alert.alert('Error', 'Please go back and try to login again');
+                        return;
+                    }
+                    const loginRequest: LoginRequest = {
+                        email: chosenEmail?.toLowerCase(),
+                        password: chosenPassword,
+                        method: chosenMethod,
+                        fcmToken: fcmToken,
+                        userRole: role,
+                    };
+                    await handleLoginOnBackend(loginRequest);
+                }}
+            />
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -122,6 +180,7 @@ const LoginScreen = () => {
                     styles.container,
                     {paddingBottom: insets.bottom},
                 ]}>
+
                 <Text style={styles.title}>Welcome Back!</Text>
 
                 <Text style={styles.subtitle}>
@@ -157,8 +216,6 @@ const LoginScreen = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                {/*<RoleSelector onSelect={setSelectedRole} selected={selectedRole}/>*/}
-                <RolePicker value={selectedRole} onChange={setSelectedRole}/>
                 <TouchableOpacity
                     style={styles.forgotPassword}
                     onPress={() => router.push({pathname: '/(auth)/password'})}>
@@ -201,6 +258,7 @@ const LoginScreen = () => {
                                  setLoadingApple={setLoadingApple} text={"Sign in with Apple"}/>
                 )}
                 <FooterSingUp/>
+
             </ScrollView>
         </View>
     );

@@ -22,13 +22,13 @@ import {
     ResponseExclusiveOfferRequest,
     ResponsorOfferRequest,
     SendNotificationRequest,
-    UpdateOfferRequest,
+    UpdateOfferRequest, UserRoleRequest, UserRoles, VerificationCodeRequest, VerificationEmailRequest,
 } from './request';
 import {
     Benefit,
     CardInfoResponse, CheckCriteriaExistResponse,
     CountryResponse,
-    CreatePaymentIntentResponse,
+    CreatePaymentIntentResponse, CreditPlanResponse,
     CreditRemainingResponse,
     DecodeTokenFromEmailResponse,
     DecodeTokenInvitationResponse,
@@ -147,6 +147,10 @@ export async function jsonRequest<T>(
 export const login = (body: LoginRequest): Promise<LoginResponse> =>
     jsonRequest<LoginResponse>('/auth/login', 'POST', body);
 
+
+export const getRolesOnUser = (body: UserRoleRequest): Promise<UserRoles> =>
+    jsonRequest<UserRoles>('/auth/roles', 'POST', body);
+
 export const createPromotion = (data: FormData): Promise<LoginResponse> =>
     request<LoginResponse>('/promotion', {method: 'POST', body: data}); // CHECKED
 
@@ -240,9 +244,6 @@ export const createPaymentIntentForStripe = (data: CreatePaymentIntentStripeRequ
 export const chargePaymentIntentOnDefaultMethod = (data: CreatePaymentIntentStripeRequest): Promise<PaymentStatusResponse> =>
     jsonRequest<PaymentStatusResponse>('/stripe/charge-default', 'POST', data);
 
-export const setDefaultPaymentMethod = (): Promise<void> =>
-    request<void>('/payment/default', {method: 'POST'});
-
 export const setDefaultPaymentMethodStripe = (data: DefaultMethodRequest): Promise<void> =>
     jsonRequest<void>('/stripe/set-default', 'POST', data);
 
@@ -264,7 +265,7 @@ export const changePassword = (data: ChangePasswordRequest): Promise<void> =>
 export const getManagerInfoById = (id: string): Promise<ManagerInformationResponse> =>
     request<ManagerInformationResponse>(`/manager/${id}`, {method: 'GET'}); // CHECKED
 
-export const updateAccountInfo = (data: FormData): Promise<void> =>
+export const updateManager = (data: FormData): Promise<void> =>
     request<void>('/manager', {method: 'PUT', body: data});
 
 export const updateAccountInfoPromotion = (data: FormData): Promise<void> =>
@@ -279,6 +280,9 @@ export const deactivateAccount = (): Promise<void> =>
 export const getCredit = (): Promise<CreditRemainingResponse> =>
     request<CreditRemainingResponse>('/payment/credit', {method: 'GET'});
 
+export const getCreditPlans = (): Promise<CreditPlanResponse[]> =>
+    request<CreditPlanResponse[]>('/credit-plans', {method: 'GET'});
+
 export const payForCredit = (data: PayCreditRequest): Promise<void> =>
     jsonRequest<void>('/payment/credit', 'POST', data);
 
@@ -290,6 +294,12 @@ export const sendVerificationDataForPromotion = (data: FormData): Promise<void> 
 
 export const getVerificationStatus = (type: string): Promise<VerificationStatusResponse> =>
     request<VerificationStatusResponse>(`/verification/${type}`, {method: 'GET'});
+
+export const sendVerificationCode = (request: VerificationCodeRequest): Promise<void> =>
+    jsonRequest<void>('/verification/send-code', 'POST', request);
+
+export const generateVerificationCode = (request:VerificationEmailRequest): Promise<void> =>
+    jsonRequest<void>('/verification/generate-code', 'POST', request);
 
 export const sendFeedback = (data: FormData): Promise<void> =>
     request<void>('/feedback', {method: 'POST', body: data});
@@ -452,8 +462,8 @@ export const closeMultiFightOffer = (offerId: string, reason: string): Promise<v
 export const closeExclusiveOffer = (offerId: string, reason: string): Promise<void> =>
     jsonRequest<void>(`/offer/exclusive/${offerId}`, 'POST', {reason});
 
-export const getBenefitsInPublicOffer = (offerId: string): Promise<Benefit> =>
-    request<Benefit>(`/benefit/offer/${offerId}`, {method: 'GET'});// CHECKED
+export const getBenefitsInPublicOffer = (offerId: string): Promise<any> =>
+    request<any>(`/benefit/offer/${offerId}`, {method: 'GET'});// CHECKED
 
 export const featureYourOffer = (offerId: string): Promise<void> =>
     request<void>(`/offer/public/${offerId}/feature`, {method: 'POST'});

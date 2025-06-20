@@ -92,7 +92,7 @@ const HomeScreen = () => {
                 <HomeBanner
                     title="Invite & Earn"
                     image={require('@/assets/InviteFriends.png')}
-                    mainText="Share & get up to €100 off"
+                    mainText="Share & earn up to €500 off"
                     description="Bring in new members and earn rewards!"
                     buttonText="Invite & Earn"
                     onPress={() => {

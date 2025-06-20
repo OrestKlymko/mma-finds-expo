@@ -11,7 +11,7 @@ type NewFeatureSectionProps = {
 export const NewFeatureSection = ({newFeatures}: NewFeatureSectionProps) => {
     return (
         <View style={[styles.section]}>
-            <Text style={styles.sectionTitle}>New Features</Text>
+            <Text style={styles.sectionTitle}>Upcoming Features</Text>
             <FlatList
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
@@ -34,7 +34,7 @@ export const NewFeatureSection = ({newFeatures}: NewFeatureSectionProps) => {
     );
 };
 const screenWidth = Dimensions.get('window').width;
-const CARD_WIDTH = screenWidth - 20 * 2; // 38 зліва та 38 справа
+const CARD_WIDTH = screenWidth - 30 * 2; // 38 зліва та 38 справа
 const styles = StyleSheet.create({
     section: {
         marginBottom: 10,
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     bannerText: {
-        fontSize: 18,
+        fontSize: 16,
         color: '#fff',
         marginBottom: 8,
         textAlign: 'left',

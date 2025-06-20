@@ -4,17 +4,19 @@ import React from "react";
 import colors from "@/styles/colors";
 import {useRouter} from "expo-router";
 import {FighterChosen} from "@/store/createExclusiveOfferSlice";
+import {OfferTypeEnum} from "@/models/model";
 
 
 interface FighterForExclusiveOfferProps {
-    fighterChosen?: FighterChosen[] | undefined
+    fighterChosen?: FighterChosen[] | undefined,
+    typeOffer?: OfferTypeEnum
 }
 
-export const FighterForExclusiveOffer = ({fighterChosen}: FighterForExclusiveOfferProps) => {
+export const FighterForExclusiveOffer = ({fighterChosen, typeOffer}: FighterForExclusiveOfferProps) => {
     const router = useRouter();
 
     return <>
-        <Text style={styles.label}>Fighters</Text>
+        <Text style={styles.label}>{typeOffer&&typeOffer===OfferTypeEnum.PRIVATE?'Choose reciepients':'Fighter*'}</Text> // TODO: change label for private offer
         <TouchableOpacity
             style={[styles.inputRow]}
             onPress={() => {

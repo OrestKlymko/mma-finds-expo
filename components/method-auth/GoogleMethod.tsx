@@ -11,6 +11,14 @@ type GoogleMethodProps = {
     loading: boolean
     setLoading: (loading: boolean) => void
 };
+export const useWarmUpBrowser = () => {
+    useEffect(() => {
+        void WebBrowser.warmUpAsync()
+        return () => {
+            void WebBrowser.coolDownAsync()
+        }
+    }, [])
+}
 
 WebBrowser.maybeCompleteAuthSession();
 

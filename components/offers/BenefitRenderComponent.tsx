@@ -8,28 +8,33 @@ type Props = {
     benefits: any;
 }
 
-export const BenefitRenderComponent = ({benefits}: Props) => {
-    return <>{benefits && renderBenefitList(benefits).length > 0 && (
+export const BenefitRenderComponent = ({ benefits }: Props) => {
+    const list = benefits ? renderBenefitList(benefits) : [];
+
+    if (list.length === 0) return null;
+
+    return (
         <>
             <View style={styles.greenSectionHeader}>
                 <Text style={styles.greenSectionHeaderText}>Benefits</Text>
             </View>
             <View style={styles.benefitsContainer}>
-                {renderBenefitList(benefits).map((item, index) => (
+                {list.map((item, index) => (
                     <View key={index} style={styles.benefitItem}>
                         <Icon
                             name="check-circle-outline"
                             size={18}
                             color={colors.primaryGreen}
-                            style={{marginRight: 8}}
+                            style={{ marginRight: 8 }}
                         />
                         <Text style={styles.benefitText}>{item}</Text>
                     </View>
                 ))}
             </View>
         </>
-    )}</>;
+    );
 };
+
 
 const styles = StyleSheet.create({
     greenSectionHeader: {
